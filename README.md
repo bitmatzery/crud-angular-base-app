@@ -1,59 +1,125 @@
-# CrudAngularBaseApp
+# <div align="center">Crud Management Application</div>
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
+## <div align="center">📝 Описание проекта</div>
 
-## Development server
+Это Frontend приложение для управления сущностями, построенное на современном стеке технологий:
 
-To start a local development server, run:
+### 🏗 Архитектура
+
+#### Frontend: Angular 20
+
+#### Backend API: https://api.escuelajs.co/docs#/
+
+
+#### Приложение позволяет просматривать, создавать, редактировать и удалять продукты и пользователей с валидацией данных и обработкой ошибок.
+
+### ✨ Основные функции
+
+<div style="line-height: 2.5;">
+
+📋 **Список всех продуктов и пользователей**  
+👤 **Просмотр детальной информации**  
+🔑 **Авторизация пользователей**  
+✏️ **Редактирование данных**  
+➕ **Создание новых пользователей и продуктов**  
+🗑️ **Удаление продуктов и пользователей**  
+🔍 **Валидация данных**   
+⏳ **Индикаторы загрузки**  
+🛠️ **Обработка ошибок**
+
+</div>
+
+## 🛠 Технологический стек
+
+### <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="20" style="vertical-align: middle;"> Frontend
+
+<div>
+  <img src="https://img.shields.io/badge/Angular-20.3.8-DD0031?logo=angular" height="25">
+  <div style="font-size: 0.8em; margin-top: 5px;">Фреймворк для UI</div>
+</div>
+
+### 📂 Структура проекта
+
+#### Frontend
+
+<pre>
+src/
+├── app/
+│   ├── core/                                   # Сервисы, интерсепторы, guard'ы (Singleton)
+│   │   ├── auth/                               # Модуль авторизации
+│   │   ├── http/                               # Модуль http api
+│   │   └── utils/                              # Утилиты
+│   ├── modules/                                # Feature-модули
+│   │   ├── home/                               # Модуль home
+│   │   │   └── pages/                          # Страницы/контейнеры
+│   │   ├── products/                           # Модуль продуктов
+│   │   │   ├── components/                     # Компоненты модуля
+│   │   │   ├── models/                         # Модели модуля
+│   │   │   ├── pages/                          # Страницы/контейнеры
+│   │   │   └── services/                       # Сервисы модуля
+│   │   └── users/                              # Модуль пользователей
+│   │       ├── components/                     # Компоненты модуля
+│   │       ├── models/                         # Модели модуля
+│   │       ├── pages/                          # Страницы/контейнеры
+│   │       └── services/                       # Сервисы модуля
+│   └── scss/                                   # Глобальные стили
+│   └── shared/                                 # Переиспользуемые компоненты
+│       ├── common-ui/                          # Переиспользуемый UI 
+│       │   ├── components-ui/                  # Переиспользуемые UI компоненты
+│       │   │   ├── header-navbar/
+│       │   │   └── search-filtration-items/
+│       │   └── layout-ui/                      # Переиспользуемые UI модули
+│       │       ├── header/
+│       │       └── footer/
+│       │                     
+│       └── validators/      # Кастомные валидаторы
+├── assets/                  # Статические файлы
+└── environments/            # Конфигурация окружения
+</pre>
+
+### Установка и запуск
+
+#### Требования
+
+<img src="https://img.shields.io/badge/Node.js-20.19%2B-339933?logo=nodedotjs&logoColor=white" height="25">
+
+
+### Установите зависимости:
+
+```bash
+npm install
+```
+
+### Запустите приложение:
 
 ```bash
 ng serve
 ```
+Приложение будет доступно по адресу: http://localhost:4200
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+### Разработка
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+#### Building
 
 ```bash
-ng generate --help
+npm run build
 ```
 
-## Building
+### Тесты 
 
-To build the project run:
+#### Unit tests
 
 ```bash
-ng build
+npm test
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+#### End-to-end tests
 
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
-## Additional Resources
+<div align="center"> <h2>💝 Разработано с ❤️</h2> <p> <a href="https://github.com/bitmatzery"> <img src="https://img.shields.io/badge/Author-bitmatzery-blue?style=for-the-badge" height="30"> </a> </p> <p>© 2025 Все права защищены</p> <p> <span style="vertical-align: middle;">Made with </span> <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="16" style="vertical-align: middle;"> <span style="vertical-align: middle;"> </div>
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
