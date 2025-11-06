@@ -1,0 +1,16 @@
+.header {
+  background-color: #2196f3;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+
+  .container {
+    align-items: center;
+  }
+
+  &__text {
+    color: #fff;
+    font-size: 40px;
+    line-height: 44px;
+  }
+}

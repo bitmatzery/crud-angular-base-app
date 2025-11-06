@@ -1,0 +1,13 @@
+<ng-container *ngIf="filteredItems$ | async as items; else loading">
+    <product-list-ui
+      [items]="items"
+      [displayType]="displayListType"
+      (filterItems) = onFilteredItemsAndNavigate($event)
+      (categoryItems) = onCategorySelect($event)
+    >
+    </product-list-ui>
+</ng-container>
+
+<ng-template #loading>
+  <div>Loading...</div>
+</ng-template>

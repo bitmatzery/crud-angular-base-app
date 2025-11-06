@@ -1,0 +1,89 @@
+<div class="container">
+  <mat-toolbar class="header-navbar" color="primary">
+    <!-- Левая часть - навигация -->
+    <div class="header-navbar_nav-link">
+      <button mat-button routerLink="/home">HOME</button>
+      <button mat-button routerLink="/products">Products</button>
+      <button mat-button routerLink="/users">Users</button>
+    </div>
+
+    <!-- Правая часть - авторизация -->
+    <div class="login-form-wrapper">
+      <ng-container *ngIf="isLoggedIn$ | async as isLoggedIn; else showLoginForm">
+        <!-- Если пользователь авторизован -->
+        <div class="user-info">
+          <span class="username-text">Привет, {{ userEmail$ | async }}!</span>
+          <button
+            class="logout-button"
+            mat-icon-button
+            type="button"
+            aria-label="Logout"
+            (click)="onLogout()"
+          >
+            <mat-icon>logout</mat-icon>
+          </button>
+        </div>
+      </ng-container>
+
+      <!-- Шаблон для неавторизованного пользователя -->
+      <ng-template #showLoginForm>
+        <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+          <mat-form-field class="login-form-field" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              placeholder="Введите email"
+              formControlName="email"
+              type="email"
+              aria-label="Email"
+            />
+            <mat-error *ngIf="form.get('email')?.hasError('required')">
+              Email обязателен
+            </mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">
+              Введите корректный email
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="login-form-field" appearance="outline">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              placeholder="Введите пароль"
+              formControlName="password"
+              type="password"
+              aria-label="Password"
+            />
+            <mat-error *ngIf="form.get('password')?.hasError('required')">
+              Пароль обязателен
+            </mat-error>
+          </mat-form-field>
+
+          <button
+            class="login-button"
+            mat-raised-button
+            type="submit"
+            aria-label="Login"
+            [disabled]="!form.valid"
+          >
+            <mat-icon>login</mat-icon>
+            Войти
+          </button>
+        </form>
+      </ng-template>
+    </div>
+  </mat-toolbar>
+
+  <!-- Логи доступа -->
+  <div class="access-logs">
+    <h3>Recent Access Attempts</h3>
+    <div class="log-entry" *ngFor="let log of logService.getLogs()">
+      <span class="timestamp">{{ log.timestamp | date:'medium' }}</span>
+      <span class="user" [class.guest]="log.email === 'Guest'">
+        {{ log.email }}
+      </span>
+      <span class="role">({{ log.userRole }})</span>
+      <span class="url">attempted to access: {{ log.targetUrl }}</span>
+    </div>
+  </div>
+</div>

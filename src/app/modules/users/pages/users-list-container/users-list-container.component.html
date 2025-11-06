@@ -1,0 +1,14 @@
+  <!-- <ng-container *ngIf="users$ | ngrxPush as users"> -->
+  <ng-container *ngIf="filteredUsers$ | async as users; else loading">
+    <users-list-ui
+      [users] = "users"
+      (deleteUser)="OnDeleteUser($event)"
+      (filterUsers)="onFilteredUsersAndNavigate($event)"
+    >
+    </users-list-ui>
+  </ng-container>
+
+  <ng-template #loading>
+    <div>Loading...</div>
+  </ng-template>
+

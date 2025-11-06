@@ -1,0 +1,22 @@
+<div class="user-card">
+  <div class="user-card__body">
+    <div class="user-card__body-text">
+      <p>ID:</p>
+      <span>{{ user.id }}</span>
+      <p>Роль:</p>
+      <span>{{ user.role }}</span>
+      <p>Имя:</p>
+      <span>{{ user.name }}</span>
+      <p>Эл. почта:</p>
+      <span>{{ user.email }}</span>
+      <p>Дата регистрации:</p>
+      <span>{{ user.creationAt | date: "short"}}</span>
+    </div>
+    <div class="user-card__body-avatar">
+      <img [src]="user.avatar" alt="user_avatar">
+    </div>
+  </div>
+  <div class="button-container"> <!-- добавьте этот контейнер -->
+    <button (click)="OnDeleteUser(user.id)">Удалить пользователя</button>
+  </div>
+</div>

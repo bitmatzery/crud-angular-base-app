@@ -1,0 +1,44 @@
+<div class="search-wrapper">
+  <mat-form-field class="search-form-field" appearance="outline">
+    <mat-label>Поиск пользователя</mat-label>
+    <input
+      autofocus
+      matInput
+      placeholder="Введите название"
+      type="text"
+      [(ngModel)]="filterName"
+    />
+    <button
+      *ngIf="filterName"
+      matSuffix
+      mat-icon-button
+      aria-label="clear"
+      (click)="clearFilterName()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+    <button
+      *ngIf="!filterName"
+      mat-icon-button
+      matIconPrefix
+      matTooltip="search"
+      matTooltipPosition="before"
+      class="mat-small"
+    >
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+  <button
+    class="search-button"
+    mat-raised-button
+    color="primary"
+    matTooltip="search"
+    matTooltipPosition="before"
+    color="primary"
+    (click)="OnFilteredItems()"
+  >
+    <mat-icon>search</mat-icon>
+    <span>Поиск</span>
+  </button>
+</div>
+

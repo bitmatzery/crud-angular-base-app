@@ -1,0 +1,202 @@
+.container {
+  width: 100%;
+}
+
+.header-navbar {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0 16px !important;
+  min-height: 64px !important;
+  width: 100% !important;
+
+  // Принудительно задаем видимость
+  background: #3f51b5 !important;
+  color: white !important;
+  position: relative !important;
+  z-index: 1000 !important;
+
+  // Левая часть - навигация
+  .header-navbar_nav-link {
+    display: flex !important;
+    gap: 16px;
+    align-items: center;
+
+    button {
+      color: white !important;
+      font-weight: 500;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+
+  // Правая часть - авторизация
+  .login-form-wrapper {
+    display: flex !important;
+    align-items: center;
+    gap: 16px;
+
+    // Форма логина
+    .login-form {
+      display: flex !important;
+      align-items: center;
+      gap: 12px;
+
+      // Поля формы
+      .login-form-field {
+        width: 200px;
+
+        // Стили для полей ввода в темной теме
+        .mat-form-field-outline {
+          color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .mat-form-field-label {
+          color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        .mat-input-element {
+          color: white !important;
+          caret-color: white !important;
+        }
+
+        // Placeholder
+        .mat-form-field-label,
+        .mat-form-field-placeholder {
+          color: rgba(255, 255, 255, 0.7) !important;
+        }
+      }
+
+      // Кнопка логина
+      .login-button {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+
+        &:hover:not([disabled]) {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        &[disabled] {
+          background-color: rgba(255, 255, 255, 0.05);
+          color: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+
+    // Информация о пользователе
+    .user-info {
+      display: flex !important;
+      align-items: center;
+      gap: 12px;
+
+      .username-text {
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      .logout-button {
+        color: white;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
+}
+
+// Логи доступа
+.access-logs {
+  margin: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fafafa;
+
+  h3 {
+    margin: 0 0 12px 0;
+    color: #333;
+  }
+
+  .log-entry {
+    display: flex;
+    gap: 12px;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    font-size: 12px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .timestamp {
+      color: #666;
+      min-width: 180px;
+    }
+
+    .user {
+      font-weight: bold;
+      color: #0066cc;
+      min-width: 120px;
+
+      &.guest {
+        color: #999;
+      }
+    }
+
+    .role {
+      color: #28a745;
+      min-width: 80px;
+    }
+
+    .url {
+      color: #333;
+      flex: 1;
+    }
+  }
+}
+
+// Адаптивность для мобильных устройств
+@media (max-width: 768px) {
+  .header-navbar {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px !important;
+    min-height: auto !important;
+
+    .header-navbar_nav-link {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .login-form-wrapper {
+      flex-direction: column;
+      width: 100%;
+
+      .login-form {
+        flex-direction: column;
+        width: 100%;
+
+        .login-form-field {
+          width: 100% !important;
+        }
+
+        .login-button {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .access-logs {
+    margin: 16px;
+    padding: 12px;
+
+    .log-entry {
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+}

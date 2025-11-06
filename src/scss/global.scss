@@ -1,0 +1,55 @@
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Roboto Condensed", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color:  #040404;
+  min-width: 300px;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+//:root {
+//  // base
+//  --content-width: 1600px;
+//  --content-max-width: 1800px;
+//  --container-offset: 10px;
+//  --container-width: calc(var(--content-width) + (var(--container-offset) * 2));
+//  --container-max-width: calc(var(--content-max-width) + (var(--container-offset) * 2));
+//}
+//
+//.big-container {
+//  margin: 0 auto;
+//  min-height: 100%;
+//  padding: 0 var(--container-offset);
+//  max-width: var(--container-max-width);
+//}
+//
+//.container {
+//  margin: 0 auto;
+//  min-height: 100%;
+//  padding: 0 var(--container-offset);
+//  max-width: var(--container-width);
+//}
+
+img {
+  object-fit: cover;
+}
+

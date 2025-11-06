@@ -1,0 +1,57 @@
+@use "../scss/app-theme";
+@use "../scss/normalize";
+
+// Современный импорт для Angular Material 15+
+@use "@angular/material" as mat;
+
+// Создание темы с новым синтаксисом
+@include mat.core();
+
+// Используем встроенные функции Material
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  )
+));
+
+// Применяем тему ко всем компонентам
+@include mat.all-component-themes($theme);
+
+// Ваши кастомные стили
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Roboto Condensed", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #040404;
+  min-width: 300px;
+}
+
+.add-user-fab-button {
+  position: fixed !important;
+  bottom: 5em !important;
+  right: 10em !important;
+  z-index: 100;
+}
+
+mat-progress-bar {
+  margin-top: 2px;
+}
+
+.ql-editor:focus {
+  border: 1px solid #80bdff !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}

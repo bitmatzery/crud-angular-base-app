@@ -1,12 +1,21 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {provideRouter, withEnabledBlockingInitialNavigation} from '@angular/router';
 
-import { routes } from './app.routes';
+import { appRoutes } from './app.routes';
+import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {authTokenInterceptor} from './core/auth/auth.interceptor';
+import {API_URL} from './core/http/api-url.token';
+import {environment} from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes)
+    provideRouter(appRoutes, withEnabledBlockingInitialNavigation()),
+    provideHttpClient(withInterceptors([authTokenInterceptor])),
+    {
+      provide: API_URL,
+      useValue: environment.api_url,
+    },
   ]
 };

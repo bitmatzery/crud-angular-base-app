@@ -1,0 +1,17 @@
+<ng-container>
+  <div class="container">
+    <h1>Список Пользователей</h1>
+    <users-list-filter
+      (filterUsers)="OnFilteredUsers($event)"
+    ></users-list-filter>
+    <div class="cards">
+      <div class="card" *ngFor="let user of users">
+        <users-user-card-ui
+          [user] = user
+          (deleteUser)="OnDeleteUser($event)"
+        >
+        </users-user-card-ui>
+      </div>
+    </div>
+  </div>
+</ng-container>

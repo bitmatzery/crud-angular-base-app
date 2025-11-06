@@ -1,0 +1,20 @@
+//:host {
+//  width: 254px;
+//  height: 343px;
+//}
+
+.container {
+  width: 254px;
+  height: 100%;
+  margin-bottom: 10px;
+}
+
+.product-card {
+  //gap: 10px;
+
+  &__img{
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+

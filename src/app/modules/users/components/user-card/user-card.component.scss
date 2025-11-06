@@ -1,0 +1,49 @@
+.user-card {
+  border-radius: 20px;
+  background-color: aqua;
+  font-size: 20px;
+  line-height: 24px;
+  margin: 10px 0;
+
+  &__body {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    p {
+      font-weight: 700;
+    }
+  }
+
+  img {
+    max-width: 256px;
+    max-height: 256px;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+
+  button {
+    padding: 20px;
+    border-radius: 20px;
+    background-color: rgb(133, 218, 244);
+    font-size: 20px;
+    border: 2px solid rgba($color: red, $alpha: 0.8);
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2);
+    }
+
+    &:active {
+      background-color: rgba($color: red, $alpha: 0.75);
+      box-shadow: 12px 12px 2px 1px rgba($color: red, $alpha: 0.7);
+    }
+  }
+}
+
+
