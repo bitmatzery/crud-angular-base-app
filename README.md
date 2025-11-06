@@ -1,4 +1,4 @@
-# <div align="center">Store Management Application Management Application</div>
+# <div align="center">Store Management Application</div>
 
 ## <div align="center">📝 Описание проекта</div>
 
