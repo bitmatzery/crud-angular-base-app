@@ -42,7 +42,6 @@ export class UsersListContainerComponent implements OnInit, OnDestroy {
         this.onFilteredUsersAndNavigate(filterParam);
       }
     });
-
   }
 
   private filterUsers(filterParams: string): Observable<IUser[]> {

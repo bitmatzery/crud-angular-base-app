@@ -1,16 +1,17 @@
 import {
   ChangeDetectionStrategy,
-  Component, EventEmitter, inject, Output,
+  Component, EventEmitter, inject, OnInit, Output,
   ViewEncapsulation
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {first} from 'rxjs';
 
 @Component({
   selector: 'search-filtration-items-ui',
@@ -20,17 +21,31 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchFiltrationItemsComponent {
+export class SearchFiltrationItemsComponent implements OnInit {
   @Output() filterItems = new EventEmitter();
   protected filterName = '';
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute); // Доступ к параметрам маршрута
+
+  ngOnInit() {
+    this.route.queryParams.pipe(first()).subscribe(params => {
+      const filterParam: string = params['search'];
+      if (filterParam) {
+        this.filterName = filterParam
+      }
+    });
+  }
 
   OnFilteredItems() {
-    this.filterItems.emit(this.filterName);
+    if (!this.filterName.trim()) {
+      this.clearFilterName();
+      return;
+    }
+    this.filterItems.emit(this.filterName.trim());
   }
 
   clearFilterName() {
     this.filterName = '';
-    this.filterItems.emit(this.filterName);
+    this.filterItems.emit(this.filterName.trim());
   }
 }
