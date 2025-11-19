@@ -1,0 +1,26 @@
+<div class="safe-image-container" [class]="className" [ngStyle]="getStyleObject()">
+  <img
+    [src]="currentImage"
+    [alt]="alt"
+    [loading]="getLoadingAttr()"
+    (load)="onImageLoad()"
+    (error)="onImageError()"
+    [class.safe-image--loading]="isLoading"
+    [class.safe-image--error]="hasError"
+    class="safe-image"
+    #imageElement>
+
+  <!-- Индикатор загрузки только для внешних изображений -->
+  <div *ngIf="isLoading && !hasError" class="safe-image-loading">
+    <img [src]="loadingImage" alt="Loading..." class="loading-spinner-img">
+    <span class="loading-text">Loading image...</span>
+  </div>
+
+  <!-- Сообщение об ошибке -->
+  <div *ngIf="hasError && !isLoading" class="safe-image-error">
+    <div class="error-content">
+      <img [src]="errorImage" alt="Error" class="error-image">
+      <span class="error-text">Image not available</span>
+    </div>
+  </div>
+</div>
