@@ -1,0 +1,302 @@
+@use "@angular/material" as mat;
+
+.search-container {
+  position: relative;
+  padding-top: 10px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.search-field {
+  width: 100%;
+
+  ::ng-deep .mat-mdc-form-field-outline {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  .search-input {
+    color: white;
+    font-size: 14px;
+    font-family: 'Roboto Condensed', sans-serif;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+  }
+
+  .search-icon {
+    color: rgba(255, 255, 255, 0.7);
+    margin-right: 8px;
+  }
+
+  .clear-button {
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: white;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  margin-top: 8px;
+  z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
+  animation: fadeIn 0.2s ease-out;
+
+  .search-results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 12px;
+    color: #6b7280;
+    background: #f9fafb;
+    border-radius: 12px 12px 0 0;
+
+    .close-results {
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  .search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f3f4f6;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: #f9fafb;
+    }
+
+    .product-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-right: 12px;
+      flex-shrink: 0;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .product-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .product-info {
+      flex: 1;
+      min-width: 0;
+
+      .product-title {
+        font-size: 14px;
+        color: #374151;
+        margin-bottom: 4px;
+        line-height: 1.2;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .product-price {
+        font-size: 14px;
+        font-weight: 600;
+        color: #059669;
+        margin-bottom: 2px;
+      }
+
+      .product-category {
+        font-size: 12px;
+        color: #6b7280;
+      }
+    }
+  }
+
+  .search-results-footer {
+    padding: 12px 16px;
+    border-top: 1px solid #f3f4f6;
+    text-align: center;
+
+    .view-all-btn {
+      width: 100%;
+      font-size: 14px;
+      font-weight: 500;
+      color: #6366f1;
+
+      &:hover {
+        background: rgba(99, 102, 241, 0.1);
+      }
+    }
+  }
+}
+
+.search-no-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  margin-top: 8px;
+  z-index: 1000;
+  padding: 20px;
+
+  .no-results-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+
+    .no-results-icon {
+      color: #9ca3af;
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .no-results-text {
+      font-size: 14px;
+      color: #6b7280;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Темная тема
+:host-context(.dark-theme) {
+  .search-results {
+    background: #374151;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+    .search-results-header {
+      background: #4b5563;
+      color: #d1d5db;
+      border-bottom-color: #6b7280;
+    }
+
+    .search-result-item {
+      border-bottom-color: #4b5563;
+
+      &:hover {
+        background: #4b5563;
+      }
+
+      .product-image {
+        background: #4b5563;
+      }
+
+      .product-info .product-title {
+        color: #f3f4f6;
+      }
+
+      .product-info .product-price {
+        color: #10b981;
+      }
+
+      .product-info .product-category {
+        color: #9ca3af;
+      }
+    }
+
+    .search-results-footer {
+      border-top-color: #4b5563;
+
+      .view-all-btn {
+        color: #8b5cf6;
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.1);
+        }
+      }
+    }
+  }
+
+  .search-no-results {
+    background: #374151;
+
+    .no-results-content {
+      .no-results-icon {
+        color: #6b7280;
+      }
+
+      .no-results-text {
+        color: #d1d5db;
+      }
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .search-container {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-container {
+    max-width: 200px;
+  }
+
+  .search-results,
+  .search-no-results {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    top: 120px;
+    max-height: 60vh;
+  }
+}
