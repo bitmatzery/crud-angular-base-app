@@ -19,7 +19,34 @@ $theme: mat.define-theme((
 // Применяем тему ко всем компонентам
 @include mat.all-component-themes($theme);
 
-// Ваши кастомные стили
+// CSS переменные для кастомных свойств
+:root {
+  --header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --footer-gradient: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  --header-height: 70px;
+  --footer-padding: 60px 0 40px;
+  --border-radius: 12px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --transition: all 0.3s ease;
+}
+
+// Темная тема
+.dark-theme {
+  --header-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --footer-gradient: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+}
+
+// Авто тема (системные настройки)
+.auto-theme {
+  @media (prefers-color-scheme: dark) {
+    --header-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --footer-gradient: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  }
+}
+
+// Базовые стили
 *,
 ::after,
 ::before {
@@ -35,23 +62,118 @@ body {
   font-family: "Roboto Condensed", sans-serif;
   font-weight: 400;
   font-size: 14px;
-  line-height: 1.2;
-  color: #040404;
+  line-height: 1.5;
+  color: var(--mat-theme-text);
+  background-color: var(--mat-theme-background);
   min-width: 300px;
+  margin: 0;
 }
 
+// Утилитарные классы
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mb-4 {
+  margin-bottom: 24px;
+}
+
+// Кастомные стили для компонентов
 .add-user-fab-button {
   position: fixed !important;
   bottom: 5em !important;
   right: 10em !important;
   z-index: 100;
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--shadow-lg) !important;
+  transition: var(--transition) !important;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg) !important;
+  }
 }
 
 mat-progress-bar {
   margin-top: 2px;
+  border-radius: 4px;
 }
 
 .ql-editor:focus {
   border: 1px solid #80bdff !important;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+  border-radius: var(--border-radius);
+}
+
+// Анимации
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+// Responsive helpers
+@media (max-width: 1200px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --header-height: 60px;
+    --footer-padding: 40px 0 24px;
+  }
+
+  body {
+    font-size: 13px;
+  }
+}
+
+// Print styles
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
