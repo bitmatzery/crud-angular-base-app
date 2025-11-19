@@ -1,10 +1,44 @@
-<ng-container>
-<!--  <lib-product-list-container [displayType]="displayType.BOTH">-->
-<!--  </lib-product-list-container>-->
+<div class="home-container">
+  <h1>Главная страница магазина</h1>
 
-  <product-list-container [displayType]="displayType.PRODUCTS">
-  </product-list-container>
+  <!-- Сообщения об ошибках инициализации -->
+  <div *ngIf="initializationMessage"
+       class="initialization-message"
+       [class.error]="initializationError"
+       [class.recovering]="isRecovering">
+    <span>{{ initializationMessage }}</span>
+    <div class="action-buttons">
+      <button *ngIf="initializationError && !isRecovering"
+              class="retry-btn"
+              (click)="retryInitialization()">
+        Повторить
+      </button>
+      <button *ngIf="initializationError && !isRecovering"
+              class="recovery-btn"
+              (click)="forceDataRecovery()">
+        Восстановить данные
+      </button>
+      <div *ngIf="isRecovering" class="recovery-progress">
+        <div class="spinner"></div>
+        <span>Восстановление...</span>
+      </div>
+    </div>
+  </div>
 
-  <product-list-container [displayType]="displayType.CATEGORIES">
-  </product-list-container>
-</ng-container>
+  <!-- Секция категорий -->
+  <section class="categories-section">
+    <h2>Категории товаров</h2>
+    <product-list-container [displayType]="displayType.CATEGORIES">
+    </product-list-container>
+  </section>
+
+  <!-- Секция продуктов -->
+  <section class="products-section">
+    <h2>Все товары</h2>
+    <product-list-container [displayType]="displayType.PRODUCTS">
+    </product-list-container>
+  </section>
+
+  <!-- Отступ перед футером -->
+  <div class="footer-spacer"></div>
+</div>
