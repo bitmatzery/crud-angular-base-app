@@ -1,5 +1,130 @@
-<mat-toolbar class="footer" color="primary">
-  <div class="container">
-    <span class="footer__text">Store Footer</span>
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Основной контент футера -->
+    <div class="footer-content">
+      <!-- Информация о компании -->
+      <div class="footer-section">
+        <div class="footer-logo">
+          <app-logo class="footer-logo" [size]="32" variant="inverted"></app-logo>
+          <span class="site-name">AlwaysMarket</span>
+        </div>
+        <p class="footer-description">
+          Лучший маркетплейс для ваших покупок. Широкий ассортимент товаров по доступным ценам.
+        </p>
+        <div class="social-links">
+          <a mat-icon-button href="#" aria-label="Facebook" class="social-link">
+            <mat-icon>facebook</mat-icon>
+          </a>
+          <a mat-icon-button href="#" aria-label="Twitter" class="social-link">
+            <mat-icon>twitter</mat-icon>
+          </a>
+          <a mat-icon-button href="#" aria-label="Instagram" class="social-link">
+            <mat-icon>photo_camera</mat-icon>
+          </a>
+          <a mat-icon-button href="#" aria-label="LinkedIn" class="social-link">
+            <mat-icon>linkedin</mat-icon>
+          </a>
+        </div>
+      </div>
+
+      <!-- Категории -->
+      <div class="footer-section">
+        <h3 class="section-title">Категории</h3>
+        <ul class="footer-links">
+          <li><a routerLink="/products" class="footer-link">Все товары</a></li>
+          <li><a routerLink="/products/electronics" class="footer-link">Электроника</a></li>
+          <li><a routerLink="/products/fashion" class="footer-link">Мода и стиль</a></li>
+          <li><a routerLink="/products/home" class="footer-link">Дом и сад</a></li>
+          <li><a routerLink="/products/sports" class="footer-link">Спорт и отдых</a></li>
+          <li><a routerLink="/products/books" class="footer-link">Книги</a></li>
+        </ul>
+      </div>
+
+      <!-- Помощь покупателю -->
+      <div class="footer-section">
+        <h3 class="section-title">Помощь</h3>
+        <ul class="footer-links">
+          <li><a routerLink="/help" class="footer-link">Центр поддержки</a></li>
+          <li><a routerLink="/shipping" class="footer-link">Доставка и оплата</a></li>
+          <li><a routerLink="/returns" class="footer-link">Возвраты</a></li>
+          <li><a routerLink="/guarantee" class="footer-link">Гарантия</a></li>
+          <li><a routerLink="/faq" class="footer-link">Частые вопросы</a></li>
+          <li><a routerLink="/contact" class="footer-link">Контакты</a></li>
+        </ul>
+      </div>
+
+      <!-- О компании -->
+      <div class="footer-section">
+        <h3 class="section-title">Компания</h3>
+        <ul class="footer-links">
+          <li><a routerLink="/about" class="footer-link">О нас</a></li>
+          <li><a routerLink="/careers" class="footer-link">Карьера</a></li>
+          <li><a routerLink="/news" class="footer-link">Новости</a></li>
+          <li><a routerLink="/partners" class="footer-link">Партнерам</a></li>
+          <li><a routerLink="/press" class="footer-link">Пресс-центр</a></li>
+          <li><a routerLink="/investors" class="footer-link">Инвесторам</a></li>
+        </ul>
+      </div>
+
+      <!-- Контактная информация -->
+      <div class="footer-section">
+        <h3 class="section-title">Контакты</h3>
+        <div class="contact-info">
+          <div class="contact-item">
+            <mat-icon>phone</mat-icon>
+            <span>8-800-123-45-67</span>
+          </div>
+          <div class="contact-item">
+            <mat-icon>email</mat-icon>
+            <span>support@alwaysmarket.ru</span>
+          </div>
+          <div class="contact-item">
+            <mat-icon>location_on</mat-icon>
+            <span>Москва, ул. Примерная, 123</span>
+          </div>
+          <div class="contact-item">
+            <mat-icon>schedule</mat-icon>
+            <span>Пн-Вс: 9:00-21:00</span>
+          </div>
+        </div>
+
+        <div class="newsletter">
+          <h4>Рассылка</h4>
+          <p>Подпишитесь на новости и акции</p>
+          <div class="newsletter-form">
+            <mat-form-field appearance="outline" class="newsletter-field">
+              <input matInput placeholder="Ваш email" type="email">
+            </mat-form-field>
+            <button mat-raised-button color="primary" class="subscribe-btn">
+              <mat-icon>send</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Нижняя часть футера -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <div class="copyright">
+          <span>&copy; 2025 AlwaysMarket. Все права защищены.</span>
+        </div>
+
+        <div class="footer-bottom-links">
+          <a routerLink="/privacy" class="bottom-link">Политика конфиденциальности</a>
+          <a routerLink="/terms" class="bottom-link">Условия использования</a>
+          <a routerLink="/sitemap" class="bottom-link">Карта сайта</a>
+        </div>
+
+        <div class="payment-methods">
+          <div class="payment-icons">
+            <mat-icon class="payment-icon">credit_card</mat-icon>
+            <mat-icon class="payment-icon">account_balance</mat-icon>
+            <mat-icon class="payment-icon">payments</mat-icon>
+            <mat-icon class="payment-icon">smartphone</mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</mat-toolbar>
+</footer>

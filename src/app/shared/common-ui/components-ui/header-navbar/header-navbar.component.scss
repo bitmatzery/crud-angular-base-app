@@ -1,202 +1,339 @@
-.container {
-  width: 100%;
-}
+@use "@angular/material" as mat;
+@use 'sass:map';
 
 .header-navbar {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  padding: 0 16px !important;
-  min-height: 64px !important;
-  width: 100% !important;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow-md);
+  padding: 0;
+  background: var(--header-gradient) !important;
+  min-height: var(--header-height);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
-  // Принудительно задаем видимость
-  background: #3f51b5 !important;
-  color: white !important;
-  position: relative !important;
-  z-index: 1000 !important;
-
-  // Левая часть - навигация
-  .header-navbar_nav-link {
-    display: flex !important;
-    gap: 16px;
+  .navbar-container {
+    display: flex;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    height: 100%;
+    gap: 24px;
+  }
 
-    button {
-      color: white !important;
-      font-weight: 500;
+  .logo-section {
+    flex-shrink: 0;
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      gap: 12px;
+      transition: var(--transition);
+      padding: 8px 0; // Добавили отступы для логотипа
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+      }
+
+      app-logo {
+        height: 36px;
+        width: auto;
+      }
+
+      .site-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: white;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
     }
   }
 
-  // Правая часть - авторизация
-  .login-form-wrapper {
-    display: flex !important;
-    align-items: center;
-    gap: 16px;
+  .center-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
 
-    // Форма логина
-    .login-form {
-      display: flex !important;
-      align-items: center;
-      gap: 12px;
+    .nav-menu {
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
 
-      // Поля формы
-      .login-form-field {
-        width: 200px;
-
-        // Стили для полей ввода в темной теме
-        .mat-form-field-outline {
-          color: rgba(255, 255, 255, 0.5) !important;
-        }
-
-        .mat-form-field-label {
-          color: rgba(255, 255, 255, 0.7) !important;
-        }
-
-        .mat-input-element {
-          color: white !important;
-          caret-color: white !important;
-        }
-
-        // Placeholder
-        .mat-form-field-label,
-        .mat-form-field-placeholder {
-          color: rgba(255, 255, 255, 0.7) !important;
-        }
-      }
-
-      // Кнопка логина
-      .login-button {
+      .nav-button {
         color: white;
-        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 10px 24px;
+        min-width: auto;
+        transition: var(--transition);
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 1.2;
+        margin: 0 2px;
 
-        &:hover:not([disabled]) {
-          background-color: rgba(255, 255, 255, 0.2);
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-1px);
+          box-shadow: var(--shadow-sm);
         }
 
-        &[disabled] {
-          background-color: rgba(255, 255, 255, 0.05);
-          color: rgba(255, 255, 255, 0.3);
+        &.active {
+          background: rgba(255, 255, 255, 0.25);
+          box-shadow: var(--shadow-sm);
+        }
+
+        mat-icon {
+          margin-right: 8px;
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
         }
       }
     }
+  }
 
-    // Информация о пользователе
-    .user-info {
-      display: flex !important;
-      align-items: center;
-      gap: 12px;
+  .right-section {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 
-      .username-text {
-        font-weight: 500;
-        font-size: 14px;
+    .search-wrapper {
+      margin-top: 8px;
+      margin-right: 12px;
+    }
+
+    .theme-toggle {
+      color: white;
+      margin: 4px 0;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .auth-section {
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        color: white;
+        padding: 8px 0;
+
+        .username-text {
+          font-size: 14px;
+          font-weight: 500;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .logout-button {
+          color: white;
+          transition: var(--transition);
+          margin: 4px;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+          }
+        }
       }
 
-      .logout-button {
-        color: white;
+      .login-form {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 8px 0;
 
-        &:hover {
-          background-color: rgba(255, 255, 255, 0.1);
+        .form-fields {
+          display: flex;
+          gap: 12px;
+        }
+
+        .login-form-field {
+          width: 150px;
+
+          ::ng-deep .mat-mdc-form-field-outline {
+            color: rgba(255, 255, 255, 0.3);
+          }
+
+          ::ng-deep .mat-mdc-text-field-wrapper {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+          }
+
+          .form-input {
+            color: white;
+            font-size: 14px;
+
+            &::placeholder {
+              color: rgba(255, 255, 255, 0.6);
+            }
+          }
+
+          ::ng-deep .mat-mdc-form-field-label {
+            color: rgba(255, 255, 255, 0.7) !important;
+          }
+
+          ::ng-deep .mat-mdc-form-field-infix {
+            padding-top: 8px !important;
+            padding-bottom: 8px !important;
+          }
+        }
+
+        .login-button {
+          background: rgba(255, 255, 255, 0.2);
+          color: white;
+          border-radius: 20px;
+          padding: 0 24px;
+          height: 44px;
+          transition: var(--transition);
+          font-weight: 500;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          margin: 4px 0;
+
+          &:hover:not([disabled]) {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+          }
+
+          &[disabled] {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+          }
+
+          mat-icon {
+            margin-right: 8px;
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
         }
       }
     }
   }
 }
 
-// Логи доступа
 .access-logs {
-  margin: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: #fafafa;
+  padding: 16px;
+  background: var(--mat-theme-surface);
+  border-top: 1px solid var(--mat-theme-divider);
+  font-size: 12px;
+  animation: fadeIn 0.3s ease-out;
 
   h3 {
     margin: 0 0 12px 0;
-    color: #333;
+    color: var(--mat-theme-secondary-text);
+    font-weight: 600;
   }
 
   .log-entry {
     display: flex;
     gap: 12px;
-    padding: 8px;
-    border-bottom: 1px solid #eee;
-    font-size: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--mat-theme-divider);
+    transition: var(--transition);
+
+    &:hover {
+      background: var(--mat-theme-hover);
+    }
 
     &:last-child {
       border-bottom: none;
     }
 
     .timestamp {
-      color: #666;
+      color: var(--mat-theme-secondary-text);
       min-width: 180px;
+      font-family: monospace;
     }
 
     .user {
-      font-weight: bold;
-      color: #0066cc;
+      font-weight: 500;
       min-width: 120px;
 
       &.guest {
-        color: #999;
+        color: var(--mat-theme-error);
       }
     }
 
     .role {
-      color: #28a745;
+      color: var(--mat-theme-secondary-text);
       min-width: 80px;
     }
 
     .url {
-      color: #333;
+      color: var(--mat-theme-text);
       flex: 1;
     }
   }
 }
 
-// Адаптивность для мобильных устройств
-@media (max-width: 768px) {
-  .header-navbar {
-    flex-direction: column;
-    gap: 16px;
+// Адаптивность
+@media (max-width: 1200px) {
+  .navbar-container {
     padding: 16px !important;
-    min-height: auto !important;
-
-    .header-navbar_nav-link {
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .login-form-wrapper {
-      flex-direction: column;
-      width: 100%;
-
-      .login-form {
-        flex-direction: column;
-        width: 100%;
-
-        .login-form-field {
-          width: 100% !important;
-        }
-
-        .login-button {
-          width: 100%;
-        }
-      }
-    }
+    gap: 16px !important;
   }
 
-  .access-logs {
-    margin: 16px;
-    padding: 12px;
+  .login-form .form-fields {
+    flex-direction: column;
+    gap: 8px !important;
+  }
 
-    .log-entry {
-      flex-direction: column;
-      gap: 4px;
-    }
+  .login-form-field {
+    width: 130px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .center-section {
+    display: none !important;
+  }
+
+  .right-section {
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-wrapper {
+    display: none;
+  }
+
+  .login-form {
+    flex-direction: column;
+    gap: 12px !important;
+  }
+
+  .form-fields {
+    flex-direction: column;
+  }
+
+  .site-name {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-section .login-form-field {
+    width: 120px !important;
+  }
+
+  .user-info .username-text {
+    display: none;
+  }
+
+  .navbar-container {
+    padding: 12px 16px !important;
   }
 }
