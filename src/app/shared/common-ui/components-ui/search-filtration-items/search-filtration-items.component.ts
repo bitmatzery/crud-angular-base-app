@@ -23,9 +23,11 @@ import {first} from 'rxjs';
 })
 export class SearchFiltrationItemsComponent implements OnInit {
   @Output() filterItems = new EventEmitter();
-  protected filterName = '';
-  private readonly router = inject(Router);
+
   private readonly route = inject(ActivatedRoute); // Доступ к параметрам маршрута
+
+  protected filterName = '';
+
 
   ngOnInit() {
     this.route.queryParams.pipe(first()).subscribe(params => {

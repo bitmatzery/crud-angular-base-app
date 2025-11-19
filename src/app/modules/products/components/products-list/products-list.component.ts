@@ -1,44 +1,56 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ProductCardComponent} from '../product-card/product-card.component';
-import {CategoryDTO, ProductDTO} from '../../models/data-dto/product-dto-model';
-import {
-  SearchFiltrationItemsComponent
-} from '../../../../shared/common-ui/components-ui/search-filtration-items/search-filtration-items.component';
-import {CategoryProductCardComponent} from '../category-product-card/ category-product-card.component';
-import {DisplayType} from '../../models/data-dto/display-type.enum';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ProductCardComponent } from '../product-card/product-card.component';
+import { Category, Product } from '../../models/product.interface';
+import { SearchFiltrationItemsComponent } from '../../../../shared/common-ui/components-ui/search-filtration-items/search-filtration-items.component';
+import { CategoryProductCardComponent } from '../category-product-card/category-product-card.component'; // Правильный импорт
+import { DisplayType } from '../../models/display-type.enum';
 
 @Component({
   selector: 'product-list-ui',
-  imports: [CommonModule, ProductCardComponent, SearchFiltrationItemsComponent, CategoryProductCardComponent],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ProductCardComponent,
+    SearchFiltrationItemsComponent,
+    CategoryProductCardComponent // Теперь компонент правильно импортирован
+  ],
   templateUrl: './products-list.component.html',
   styleUrls: ['./products-list.component.scss'],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsListComponent {
-  @Input({required: true}) items!: (ProductDTO | CategoryDTO)[];
+  @Input({ required: true }) items!: (Product | Category)[];
   @Input() displayType: DisplayType = DisplayType.PRODUCTS;
+  @Input() selectedCategory: Category | null = null;
 
-  @Output() filterItems = new EventEmitter();
-  @Output() categoryItems = new EventEmitter<Event>();
+  @Output() filterItems = new EventEmitter<string>();
+  @Output() categoryItems = new EventEmitter<string>();
 
   protected readonly DisplayType = DisplayType;
 
-  protected isProduct(item: any): item is ProductDTO {
-    return (item as ProductDTO).title !== undefined;
+  protected isProduct(item: any): item is Product {
+    return (item as Product).title !== undefined;
   }
 
-  protected isCategory(item: any): item is CategoryDTO {
-    return (item as CategoryDTO).name !== undefined;
+  protected isCategory(item: any): item is Category {
+    return (item as Category).name !== undefined;
   }
 
-  OnFilteredItems(event: { param: string }) {
-    this.filterItems.emit(event)
+  OnFilteredItems(event: any) {
+    const searchTerm = typeof event === 'string' ? event : event?.param || '';
+    console.log('Emitting filter:', searchTerm);
+    this.filterItems.emit(searchTerm);
   }
 
-  onCategorySelect(event: Event) {
-    this.categoryItems.emit(event);
+  onCategorySelect(event: any) {
+    const categoryId = typeof event === 'string' ? event : event?.param || '';
+    console.log('Emitting category:', categoryId);
+    this.categoryItems.emit(categoryId);
   }
 
+  isCategorySelected(category: Category): boolean {
+    return this.selectedCategory?.id === category.id;
+  }
 }

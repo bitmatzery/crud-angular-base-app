@@ -1,13 +1,48 @@
-<ng-container *ngIf="filteredItems$ | async as items; else loading">
+<ng-container *ngIf="(filteredItems$ | async) as items; else loading">
+  <div class="container-header" *ngIf="displayType === DisplayType.PRODUCTS">
+    <div class="filters-info">
+      <span *ngIf="(selectedCategory$ | async) as category" class="category-badge">
+        Категория: {{ category.name }}
+        <button (click)="clearAllFilters()" class="clear-btn">×</button>
+      </span>
+      <span *ngIf="searchFilterValue" class="search-badge">
+        Поиск: "{{ searchFilterValue }}"
+        <span *ngIf="searchResultsCount$ | async as count" class="results-count">
+          (найдено: {{ count }})
+        </span>
+        <button (click)="clearAllFilters()" class="clear-btn">×</button>
+      </span>
+      <span *ngIf="searchFilterValue" class="search-note">
+        🔍 Поиск выполняется локально по загруженным данным
+      </span>
+    </div>
+  </div>
+
+  <!-- Контейнер для виртуального скролла -->
+  <div
+    #scrollContainer
+    class="scroll-container"
+    [class.scrollable]="displayType === DisplayType.PRODUCTS"
+    [class.categories-container]="displayType === DisplayType.CATEGORIES">
+
     <product-list-ui
       [items]="items"
-      [displayType]="displayListType"
-      (filterItems) = onFilteredItemsAndNavigate($event)
-      (categoryItems) = onCategorySelect($event)
-    >
+      [displayType]="displayType"
+      [selectedCategory]="selectedCategory$ | async"
+      (filterItems)="onFilteredItems($event)"
+      (categoryItems)="onCategorySelect($event)">
     </product-list-ui>
+
+    <!-- Индикатор загрузки для пагинации -->
+    <div *ngIf="displayType === DisplayType.PRODUCTS && (loadingProducts$ | async)" class="loading-more">
+      <div class="spinner"></div>
+      <span>Загрузка товаров...</span>
+    </div>
+  </div>
 </ng-container>
 
 <ng-template #loading>
-  <div>Loading...</div>
+  <div class="loading-container">
+    <div>Загрузка...</div>
+  </div>
 </ng-template>

@@ -1,8 +1,8 @@
-import {ProductDTO} from '../../models/data-dto/product-dto-model';
+import {Product} from '../../models/product.interface';
 
 
 export type ProductListVM = {
-  products: ProductDTO[]  | null
+  products: Product[]  | null
 }
 
 // export type ProductListVM = DeepReadonly<ProductDTO[]>

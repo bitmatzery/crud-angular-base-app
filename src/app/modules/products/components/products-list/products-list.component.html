@@ -1,11 +1,13 @@
 <ng-container>
   <div class="container">
-    <h1>{{ displayType === DisplayType.PRODUCTS ? 'Список Товаров' : 'Категории' }}</h1>
+    <h1>{{ displayType === DisplayType.PRODUCTS ? 'Все Товары' : 'Категории' }}</h1>
+
     <search-filtration-items-ui
       *ngIf="displayType === DisplayType.PRODUCTS"
       (filterItems)="OnFilteredItems($event)"
     >
     </search-filtration-items-ui>
+
     <div class="items">
       <ng-container *ngFor="let item of items">
         <product-card-ui
@@ -13,10 +15,12 @@
           [product]="item"
         >
         </product-card-ui>
+
         <lib-category-product-card
           *ngIf="isCategory(item)"
           [category]="item"
-          (filterItems)="OnFilteredItems($event)"
+          [isSelected]="isCategorySelected(item)"
+          (categoryItems)="onCategorySelect($event)"
         >
         </lib-category-product-card>
       </ng-container>

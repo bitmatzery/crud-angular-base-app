@@ -1,12 +1,13 @@
 <div class="search-wrapper">
   <mat-form-field class="search-form-field" appearance="outline">
-    <mat-label>Поиск пользователя</mat-label>
+    <mat-label>Поиск товаров</mat-label>
     <input
       autofocus
       matInput
-      placeholder="Введите название"
+      placeholder="Введите название, описание или цену"
       type="text"
       [(ngModel)]="filterName"
+      (keyup.enter)="OnFilteredItems()"
     />
     <button
       *ngIf="filterName"
@@ -41,4 +42,3 @@
     <span>Поиск</span>
   </button>
 </div>
-

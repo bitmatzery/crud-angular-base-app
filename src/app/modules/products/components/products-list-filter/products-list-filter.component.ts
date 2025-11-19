@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'lib-products-list-filter-ui',
+  selector: 'search-filtration-items-ui',
   standalone: true,
   imports: [CommonModule, FormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule],
   templateUrl: './products-list-filter.component.html',
@@ -20,18 +20,18 @@ import { MatInputModule } from '@angular/material/input';
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductsListFilterComponent {
-  @Output() filterItems = new EventEmitter();
+export class SearchFiltrationItemsComponent {
+  @Output() filterItems = new EventEmitter<string>();
   protected filterName = '';
-  private readonly router = inject(Router);
 
   OnFilteredItems() {
+    console.log('Filtering with:', this.filterName);
     this.filterItems.emit(this.filterName);
   }
 
   clearFilterName() {
     this.filterName = '';
+    console.log('Clearing filter');
     this.filterItems.emit(this.filterName);
-    // this.router.navigate(['/products']);
   }
 }
