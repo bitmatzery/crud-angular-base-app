@@ -1,17 +1,35 @@
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ProductDTO} from '../../models/data-dto/product-dto-model';
-
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Product } from '../../models/product.interface';
+import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/safe-image/safe-image.component';
 
 @Component({
   selector: 'product-card-ui',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SafeImageComponent],
   templateUrl: './product-card.component.html',
-  styleUrls: ['./product-card.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./product-card.component.scss']
 })
 export class ProductCardComponent {
-  @Input({required: true}) product!: ProductDTO;
+  @Input({required: true}) product!: Product;
+
+  getImageOptions() {
+    return {
+      size: 'medium' as const,
+      lazy: true,
+      aspectRatio: '16/9'
+    };
+  }
+  onImageLoaded(event: string): void {
+    console.log('Product image loaded:', event);
+  }
+
+  onImageError(event: string): void {
+    console.log('Image error details:', {
+      originalSrc: this.product.images,
+      fallbackUsed: event,
+      timestamp: new Date().toISOString()
+    });
+    console.error('Product image failed to load:', event);
+  }
 }

@@ -1,0 +1,17 @@
+<div
+  class="category-card"
+  [class.category-card--selected]="isSelected"
+  (click)="onCategoryClick()">
+  <app-safe-image
+    class="category-card__image"
+    [src]="category.image"
+    [alt]="category.name"
+    [options]="getImageOptions()"
+    (imageLoaded)="onImageLoaded($event)"
+    (imageError)="onImageError($event)">
+  </app-safe-image>
+
+  <div class="category-card__content">
+    <h3 class="category-card__title">{{ category.name }}</h3>
+  </div>
+</div>

@@ -1,10 +1,16 @@
-<ng-container>
-  <div class="container">
-    <div class="product-card">
-      <img class="product-card__img"
-                 [src]="product.images[0]" alt="product_image">
-      <h3>${{ product.price }}</h3>
-      <h2>{{ product.title }}</h2>
-    </div>
+<div class="product-card">
+  <app-safe-image
+    className="product-card__image"
+    [src]="product.images"
+    [alt]="product.title"
+    [options]="getImageOptions()"
+    (imageLoaded)="onImageLoaded($event)"
+    (imageError)="onImageError($event)">
+  </app-safe-image>
+
+  <div class="product-card__content">
+    <h3 class="product-card__price">${{ product.price }}</h3>
+    <h2 class="product-card__title">{{ product.title }}</h2>
+    <p class="product-card__description">{{ product.description | slice:0:100 }}...</p>
   </div>
-</ng-container>
+</div>
