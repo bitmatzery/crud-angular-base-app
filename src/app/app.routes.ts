@@ -16,7 +16,6 @@ export const appRoutes: Routes = [
     path: 'products',
     loadComponent: () => import('@store/products').then(c => c.ProductsListContainerComponent),
     data: { displayType: 'products' },
-    canActivate: [canActivateAuth],
   },
   {
     path: 'categories',
