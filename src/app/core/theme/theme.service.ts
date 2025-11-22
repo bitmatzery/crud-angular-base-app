@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { BehaviorSubject, Observable, fromEvent } from 'rxjs';
-import { map, distinctUntilChanged, startWith } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 export type Theme = 'light' | 'dark' | 'auto';
 
@@ -9,103 +8,78 @@ export type Theme = 'light' | 'dark' | 'auto';
   providedIn: 'root'
 })
 export class ThemeService {
-  private document = inject(DOCUMENT);
-
-  private themeSubject = new BehaviorSubject<Theme>(this.getInitialTheme());
-  public currentTheme$: Observable<Theme> = this.themeSubject.asObservable();
-
-  // Observable для примененной темы (с учетом auto)
-  public appliedTheme$: Observable<'light' | 'dark'> = this.currentTheme$.pipe(
-    map(theme => this.getAppliedTheme(theme)),
-    distinctUntilChanged()
-  );
+  cookieService = inject(CookieService);
+  private currentTheme = new BehaviorSubject<Theme>('light');
+  public currentTheme$ = this.currentTheme.asObservable();
+  private mediaQuery: MediaQueryList;
 
   constructor() {
-    // Следим за системными настройками для авто-темы
-    if (window.matchMedia) {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    // Слушаем изменения системной темы
+    this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    this.mediaQuery.addEventListener('change', this.handleSystemThemeChange.bind(this));
 
-      fromEvent<MediaQueryListEvent>(mediaQuery, 'change')
-        .pipe(
-          map(event => event.matches ? 'dark' : 'light'),
-          startWith(mediaQuery.matches ? 'dark' : 'light'),
-          distinctUntilChanged()
-        )
-        .subscribe(() => {
-          if (this.themeSubject.value === 'auto') {
-            this.applyTheme('auto');
-          }
-        });
+    this.loadInitialTheme();
+  }
+
+  private loadInitialTheme(): void {
+    const savedTheme = this.cookieService.get('theme') as Theme;
+
+    if (savedTheme) {
+      this.setTheme(savedTheme);
+    } else {
+      // Если нет сохраненной темы, используем системную
+      this.setTheme('auto');
     }
   }
 
-  private getInitialTheme(): Theme {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    return savedTheme || 'auto';
+  private handleSystemThemeChange(event: MediaQueryListEvent): void {
+    if (this.currentTheme.value === 'auto') {
+      this.applyThemeToBody('auto');
+    }
   }
 
   setTheme(theme: Theme): void {
-    this.themeSubject.next(theme);
-    localStorage.setItem('theme', theme);
-    this.applyTheme(theme);
+    this.currentTheme.next(theme);
+    this.applyThemeToBody(theme);
+    this.cookieService.set('theme', theme);
   }
 
-  private applyTheme(theme: Theme): void {
-    const html = this.document.documentElement;
-
-    // Удаляем все классы тем
-    html.classList.remove('light-theme', 'dark-theme', 'auto-theme');
+  private applyThemeToBody(theme: Theme): void {
+    // Удаляем все тематические классы
+    document.body.classList.remove('light-theme', 'dark-theme', 'auto-theme');
 
     if (theme === 'auto') {
-      // Определяем системную тему
-      const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      html.classList.add(isDark ? 'dark-theme' : 'light-theme');
-      html.classList.add('auto-theme');
+      document.body.classList.add('auto-theme');
     } else {
-      html.classList.add(`${theme}-theme`);
+      document.body.classList.add(theme + '-theme');
     }
-
-    // Обновляем meta theme-color для мобильных браузеров
-    this.updateThemeColor(theme);
-  }
-
-  private updateThemeColor(theme: Theme): void {
-    const themeColorMeta = this.document.querySelector('meta[name="theme-color"]');
-    let color = '#6366f1'; // По умолчанию
-
-    const appliedTheme = this.getAppliedTheme(theme);
-    if (appliedTheme === 'dark') {
-      color = '#1f2937';
-    } else {
-      color = '#6366f1';
-    }
-
-    if (themeColorMeta) {
-      themeColorMeta.setAttribute('content', color);
-    } else {
-      // Создаем meta тег если его нет
-      const meta = this.document.createElement('meta');
-      meta.name = 'theme-color';
-      meta.content = color;
-      this.document.head.appendChild(meta);
-    }
-  }
-
-  private getAppliedTheme(theme: Theme): 'light' | 'dark' {
-    if (theme === 'auto') {
-      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    return theme as 'light' | 'dark';
   }
 
   toggleTheme(): void {
+    const current = this.currentTheme.value;
     const themes: Theme[] = ['light', 'dark', 'auto'];
-    const currentIndex = themes.indexOf(this.themeSubject.value);
+    const currentIndex = themes.indexOf(current);
     const nextIndex = (currentIndex + 1) % themes.length;
     this.setTheme(themes[nextIndex]);
   }
 
   getCurrentTheme(): Theme {
-    return this.themeSubject.value;
+    return this.currentTheme.value;
+  }
+
+  // Метод для получения актуальной темы (для автотемы возвращает системную)
+  getResolvedTheme(): 'light' | 'dark' {
+    const current = this.currentTheme.value;
+
+    if (current === 'auto') {
+      return this.mediaQuery.matches ? 'dark' : 'light';
+    }
+
+    return current;
+  }
+
+  // Проверка, использует ли система темную тему
+  isSystemDark(): boolean {
+    return this.mediaQuery.matches;
   }
 }
