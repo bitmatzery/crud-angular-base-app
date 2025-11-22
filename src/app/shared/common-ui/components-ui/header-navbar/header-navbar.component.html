@@ -3,7 +3,7 @@
     <!-- Логотип и название -->
     <div class="logo-section">
       <a routerLink="/home" class="logo-link">
-        <app-logo class="header-logo" [size]="36" variant="inverted"></app-logo>
+        <logo-ui class="header-logo" [size]="36" variant="inverted"></logo-ui>
         <span class="site-name">AlwaysMarket</span>
       </a>
     </div>
@@ -38,11 +38,11 @@
     <div class="right-section">
       <!-- Поиск с отступом сверху -->
       <div class="search-wrapper">
-        <app-header-search (search)="onSearch($event)" class="header-search"></app-header-search>
+        <header-search-ui (search)="onSearch($event)" class="header-search"></header-search-ui>
       </div>
 
       <!-- Переключение темы -->
-      <app-theme-toggle class="theme-toggle"></app-theme-toggle>
+      <theme-toggle-ui class="theme-toggle"></theme-toggle-ui>
 
       <!-- Авторизация -->
       <div class="auth-section">

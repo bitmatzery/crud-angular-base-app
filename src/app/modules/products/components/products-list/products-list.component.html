@@ -16,13 +16,13 @@
         >
         </product-card-ui>
 
-        <lib-category-product-card
+        <category-product-card-ui
           *ngIf="isCategory(item)"
           [category]="item"
           [isSelected]="isCategorySelected(item)"
           (categoryItems)="onCategorySelect($event)"
         >
-        </lib-category-product-card>
+        </category-product-card-ui>
       </ng-container>
     </div>
   </div>

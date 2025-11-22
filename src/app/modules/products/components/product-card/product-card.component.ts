@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../models/product.interface';
 import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/safe-image/safe-image.component';
@@ -8,7 +8,8 @@ import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/s
   standalone: true,
   imports: [CommonModule, SafeImageComponent],
   templateUrl: './product-card.component.html',
-  styleUrls: ['./product-card.component.scss']
+  styleUrls: ['./product-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCardComponent {
   @Input({required: true}) product!: Product;
@@ -20,16 +21,17 @@ export class ProductCardComponent {
       aspectRatio: '16/9'
     };
   }
+  // Логи
   onImageLoaded(event: string): void {
-    console.log('Product image loaded:', event);
+    // Логи console.log('Product image loaded:', event);
   }
 
   onImageError(event: string): void {
-    console.log('Image error details:', {
+    /* // Логи console.log('Image error details:', {
       originalSrc: this.product.images,
       fallbackUsed: event,
       timestamp: new Date().toISOString()
     });
-    console.error('Product image failed to load:', event);
+    console.error('Product image failed to load:', event);*/
   }
 }

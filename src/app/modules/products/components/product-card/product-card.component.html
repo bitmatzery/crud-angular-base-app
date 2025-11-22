@@ -1,12 +1,12 @@
 <div class="product-card">
-  <app-safe-image
+  <safe-image-ui
     className="product-card__image"
     [src]="product.images"
     [alt]="product.title"
     [options]="getImageOptions()"
     (imageLoaded)="onImageLoaded($event)"
     (imageError)="onImageError($event)">
-  </app-safe-image>
+  </safe-image-ui>
 
   <div class="product-card__content">
     <h3 class="product-card__price">${{ product.price }}</h3>

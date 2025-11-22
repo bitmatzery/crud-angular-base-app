@@ -12,7 +12,7 @@ export interface SafeImageOptions {
 }
 
 @Component({
-  selector: 'app-safe-image',
+  selector: 'safe-image-ui',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './safe-image.component.html',

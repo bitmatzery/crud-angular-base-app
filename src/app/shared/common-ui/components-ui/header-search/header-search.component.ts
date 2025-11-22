@@ -1,19 +1,20 @@
-import { Component, Output, EventEmitter, OnDestroy, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
-import { Subject, Observable, of } from 'rxjs';
-import { debounceTime, takeUntil, distinctUntilChanged, switchMap, catchError, tap } from 'rxjs/operators';
+import {Component, EventEmitter, inject, OnDestroy, OnInit, Output} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {Router} from '@angular/router';
+import {Observable, of, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {Product} from '../../../../modules/products/models/product.interface';
 import {ProductsStore} from '../../../../modules/products/store/products.store';
 import {ProductsApiService} from '../../../../modules/products/services/data-services/products-api.service';
+import {MatIconButton} from '@angular/material/button';
 
 
 @Component({
-  selector: 'app-header-search',
+  selector: 'header-search-ui',
   standalone: true,
   imports: [
     CommonModule,
@@ -21,79 +22,9 @@ import {ProductsApiService} from '../../../../modules/products/services/data-ser
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatIconButton
   ],
-  template: `
-    <div class="search-container">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-icon matPrefix class="search-icon">search</mat-icon>
-        <input
-          matInput
-          placeholder="Поиск товаров..."
-          [formControl]="searchControl"
-          class="search-input"
-          aria-label="Поиск товаров"
-          type="search"
-          (focus)="onFocus()"
-          (blur)="onBlur()"
-        />
-        <button
-          *ngIf="searchControl.value"
-          matSuffix
-          mat-icon-button
-          aria-label="Очистить поиск"
-          (click)="clearSearch()"
-          class="clear-button"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <!-- Выпадающие результаты поиска -->
-      <div *ngIf="showResults && searchResults.length > 0" class="search-results">
-        <div class="search-results-header">
-          <span>Найдено товаров: {{ searchResults.length }}</span>
-          <button mat-icon-button class="close-results" (click)="hideResults()">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-        <div
-          *ngFor="let product of searchResults; trackBy: trackByProductId"
-          class="search-result-item"
-          (click)="selectProduct(product)"
-        >
-          <div class="product-image">
-            <img
-              [src]="getProductImage(product)"
-              [alt]="product.title"
-              (error)="onImageError($event)"
-              class="product-img"
-            >
-          </div>
-          <div class="product-info">
-            <div class="product-title">{{ product.title }}</div>
-            <div class="product-price">{{ product.price | currency:'RUB':'symbol' }}</div>
-            <div class="product-category" *ngIf="product.category">
-              {{ product.category.name }}
-            </div>
-          </div>
-        </div>
-        <div class="search-results-footer">
-          <button mat-button class="view-all-btn" (click)="viewAllResults()">
-            Показать все результаты
-          </button>
-        </div>
-      </div>
-
-      <!-- Сообщение об отсутствии результатов -->
-      <div *ngIf="showResults && searchResults.length === 0 && hasSearched && searchControlValue.length > 2"
-           class="search-no-results">
-        <div class="no-results-content">
-          <mat-icon class="no-results-icon">search_off</mat-icon>
-          <span class="no-results-text">По запросу "{{ searchControlValue }}" ничего не найдено</span>
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './header-search.component.html',
   styleUrls: ['./header-search.component.scss']
 })
 export class HeaderSearchComponent implements OnInit, OnDestroy {
@@ -206,7 +137,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     const searchTerm = this.searchControl.value;
     if (searchTerm) {
       this.router.navigate(['/products'], {
-        queryParams: { search: searchTerm }
+        queryParams: {search: searchTerm}
       });
       this.showResults = false;
     }

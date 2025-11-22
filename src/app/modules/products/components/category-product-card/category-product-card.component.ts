@@ -4,12 +4,11 @@ import { Category } from '../../models/product.interface';
 import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/safe-image/safe-image.component';
 
 @Component({
-  selector: 'lib-category-product-card',
+  selector: 'category-product-card-ui',
   standalone: true,
   imports: [CommonModule, SafeImageComponent],
   templateUrl: './category-product-card.component.html',
   styleUrls: ['./category-product-card.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryProductCardComponent { // Правильное имя класса
@@ -27,16 +26,15 @@ export class CategoryProductCardComponent { // Правильное имя кл�
   }
 
   onCategoryClick(): void {
-    console.log('Category card clicked:', this.category.id);
+    // Логи console.log('Category card clicked:', this.category.id);
     this.categoryItems.emit(this.category.id.toString());
   }
 
-  // Добавляем недостающие методы
   onImageLoaded(event: string): void {
-    console.log('Category image loaded:', event);
+    // Логи console.log('Category image loaded:', event);
   }
 
   onImageError(event: string): void {
-    console.error('Category image failed to load:', event);
+    // Логи console.error('Category image failed to load:', event);
   }
 }

@@ -7,7 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import {Theme, ThemeService} from '../../../../core/theme/theme.service';
 
 @Component({
-  selector: 'app-theme-toggle',
+  selector: 'theme-toggle-ui',
   standalone: true,
   imports: [
     CommonModule,

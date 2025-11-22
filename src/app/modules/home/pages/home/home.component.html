@@ -1,6 +1,7 @@
 <div class="home-container">
-  <h1>Главная страница магазина</h1>
-
+  <div class="home__title">
+    <h1>Главная страница магазина</h1>
+  </div>
   <!-- Сообщения об ошибках инициализации -->
   <div *ngIf="initializationMessage"
        class="initialization-message"
@@ -27,14 +28,12 @@
 
   <!-- Секция категорий -->
   <section class="categories-section">
-    <h2>Категории товаров</h2>
     <product-list-container [displayType]="displayType.CATEGORIES">
     </product-list-container>
   </section>
 
   <!-- Секция продуктов -->
   <section class="products-section">
-    <h2>Все товары</h2>
     <product-list-container [displayType]="displayType.PRODUCTS">
     </product-list-container>
   </section>

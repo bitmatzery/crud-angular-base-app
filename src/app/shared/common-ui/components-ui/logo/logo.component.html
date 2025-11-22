@@ -1,0 +1,10 @@
+<div class="logo-container" [class]="className" [style.height.px]="size">
+  <img
+    [src]="logoSrc"
+    [alt]="altText"
+    [style.height.px]="size"
+    class="logo-image"
+    [class.inverted]="variant === 'inverted'"
+    [class.monochrome]="variant === 'monochrome'"
+  />
+</div>

@@ -1,0 +1,19 @@
+.logo-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.logo-image {
+  width: auto;
+  transition: all 0.3s ease;
+
+  &.inverted {
+    filter: brightness(0) invert(1);
+  }
+
+  &.monochrome {
+    filter: grayscale(1) brightness(0.8);
+  }
+}
