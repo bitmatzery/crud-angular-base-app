@@ -1,0 +1,23 @@
+.theme-toggle-button {
+  color: inherit;
+}
+
+.theme-menu {
+  min-width: 200px;
+}
+
+.check-icon {
+  margin-left: auto;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.active {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+:host-context(.dark-theme) .active,
+:host-context(.auto-theme) .active {
+  background: rgba(255, 255, 255, 0.04);
+}

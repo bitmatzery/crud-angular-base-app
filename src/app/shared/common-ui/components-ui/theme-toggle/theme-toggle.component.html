@@ -1,0 +1,28 @@
+<button
+  mat-icon-button
+  [matTooltip]="getTooltip()"
+  [matMenuTriggerFor]="themeMenu"
+  class="theme-toggle-button"
+>
+  <mat-icon>{{ getIcon() }}</mat-icon>
+</button>
+
+<mat-menu #themeMenu="matMenu" class="theme-menu">
+  <button mat-menu-item (click)="setTheme('light')" [class.active]="currentTheme === 'light'">
+    <mat-icon>light_mode</mat-icon>
+    <span>Светлая</span>
+    <mat-icon *ngIf="currentTheme === 'light'" class="check-icon">check</mat-icon>
+  </button>
+
+  <button mat-menu-item (click)="setTheme('dark')" [class.active]="currentTheme === 'dark'">
+    <mat-icon>dark_mode</mat-icon>
+    <span>Темная</span>
+    <mat-icon *ngIf="currentTheme === 'dark'" class="check-icon">check</mat-icon>
+  </button>
+
+  <button mat-menu-item (click)="setTheme('auto')" [class.active]="currentTheme === 'auto'">
+    <mat-icon>brightness_auto</mat-icon>
+    <span>Авто ({{ isSystemDark() ? 'Темная' : 'Светлая' }})</span>
+    <mat-icon *ngIf="currentTheme === 'auto'" class="check-icon">check</mat-icon>
+  </button>
+</mat-menu>

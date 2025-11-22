@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 import {Theme, ThemeService} from '../../../../core/theme/theme.service';
 
 @Component({
@@ -11,118 +11,47 @@ import {Theme, ThemeService} from '../../../../core/theme/theme.service';
   standalone: true,
   imports: [
     CommonModule,
-    MatButtonModule,
     MatIconModule,
-    MatMenuModule,
-    MatTooltipModule
+    MatButtonModule,
+    MatTooltipModule,
+    MatMenuModule
   ],
-  template: `
-    <button
-      mat-icon-button
-      [matMenuTriggerFor]="themeMenu"
-      matTooltip="Сменить тему"
-      aria-label="Theme toggle"
-      class="theme-toggle-btn"
-      [class]="(appliedTheme$ | async) || 'light'"
-    >
-      <mat-icon>{{ getThemeIcon(currentTheme$ | async) }}</mat-icon>
-    </button>
-
-    <mat-menu #themeMenu="matMenu" class="theme-menu">
-      <button
-        mat-menu-item
-        (click)="setTheme('light')"
-        class="theme-option"
-        [class.active]="(currentTheme$ | async) === 'light'"
-      >
-        <mat-icon>light_mode</mat-icon>
-        <span>Светлая</span>
-        <mat-icon *ngIf="(currentTheme$ | async) === 'light'" class="check-icon">check</mat-icon>
-      </button>
-      <button
-        mat-menu-item
-        (click)="setTheme('dark')"
-        class="theme-option"
-        [class.active]="(currentTheme$ | async) === 'dark'"
-      >
-        <mat-icon>dark_mode</mat-icon>
-        <span>Темная</span>
-        <mat-icon *ngIf="(currentTheme$ | async) === 'dark'" class="check-icon">check</mat-icon>
-      </button>
-      <button
-        mat-menu-item
-        (click)="setTheme('auto')"
-        class="theme-option"
-        [class.active]="(currentTheme$ | async) === 'auto'"
-      >
-        <mat-icon>brightness_auto</mat-icon>
-        <span>Авто</span>
-        <mat-icon *ngIf="(currentTheme$ | async) === 'auto'" class="check-icon">check</mat-icon>
-      </button>
-    </mat-menu>
-  `,
-  styles: [`
-    .theme-toggle-btn {
-      transition: all 0.3s ease;
-      color: white;
-
-      &:hover {
-        transform: scale(1.1);
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      &.dark {
-        color: #f3f4f6;
-      }
-
-      &.light {
-        color: #374151;
-      }
-    }
-
-    .theme-option {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-
-      &.active {
-        background: rgba(99, 102, 241, 0.1);
-
-        .check-icon {
-          color: #6366f1;
-        }
-      }
-    }
-
-    .theme-menu {
-      min-width: 140px;
-    }
-
-    .check-icon {
-      margin-left: auto;
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
-  `]
+  templateUrl: './theme-toggle.component.html',
+  styleUrls: ['./theme-toggle.component.scss'],
 })
-export class ThemeToggleComponent {
+export class ThemeToggleComponent implements OnInit {
   private themeService = inject(ThemeService);
+  currentTheme: Theme = 'light';
 
-  currentTheme$ = this.themeService.currentTheme$;
-  appliedTheme$ = this.themeService.appliedTheme$;
+  ngOnInit() {
+    this.themeService.currentTheme$.subscribe(theme => {
+      this.currentTheme = theme;
+    });
+  }
 
-  setTheme(theme: Theme) {
+  setTheme(theme: Theme): void {
     this.themeService.setTheme(theme);
   }
 
-  getThemeIcon(theme: Theme | null): string {
-    switch (theme) {
-      case 'light': return 'light_mode';
-      case 'dark': return 'dark_mode';
-      case 'auto': return 'brightness_auto';
-      default: return 'palette';
+  getIcon(): string {
+    const resolvedTheme = this.themeService.getResolvedTheme();
+
+    if (this.currentTheme === 'auto') {
+      return resolvedTheme === 'dark' ? 'dark_mode' : 'light_mode';
     }
+
+    return this.currentTheme === 'dark' ? 'dark_mode' : 'light_mode';
+  }
+
+  getTooltip(): string {
+    switch (this.currentTheme) {
+      case 'dark': return 'Темная тема';
+      case 'auto': return `Авто тема (системная: ${this.isSystemDark() ? 'темная' : 'светлая'})`;
+      default: return 'Светлая тема';
+    }
+  }
+
+  isSystemDark(): boolean {
+    return this.themeService.isSystemDark();
   }
 }
