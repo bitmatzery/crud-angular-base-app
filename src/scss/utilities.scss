@@ -1,0 +1,38 @@
+// Утилитарные классы для тематических цветов
+.bg-app { background-color: var(--app-background); }
+.text-app { color: var(--app-text); }
+.bg-surface { background-color: var(--app-surface); }
+.border-app { border-color: var(--app-border); }
+
+// Карточки
+.card-app {
+  background-color: var(--app-card-bg);
+  border: 1px solid var(--app-border);
+  border-radius: var(--border-radius);
+  color: var(--app-text);
+}
+
+// Ховер эффекты
+.hover-app:hover {
+  background-color: var(--app-hover);
+}
+
+// Тени
+.shadow-app-sm { box-shadow: var(--shadow-sm); }
+.shadow-app-md { box-shadow: var(--shadow-md); }
+.shadow-app-lg { box-shadow: var(--shadow-lg); }
+
+// Элементы формы
+.input-app {
+  background-color: var(--app-input-bg);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+}
+
+// Кнопки
+.btn-app {
+  background-color: var(--app-button-bg);
+  color: var(--app-button-text);
+  border: none;
+  border-radius: var(--border-radius);
+}

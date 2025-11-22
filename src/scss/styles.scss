@@ -1,62 +1,6 @@
 @use "../scss/app-theme";
+@use "../scss/nullstyle";
 @use "../scss/normalize";
-
-// Современный импорт для Angular Material 15+
-@use "@angular/material" as mat;
-
-// Создание темы с новым синтаксисом
-@include mat.core();
-
-// Используем встроенные функции Material
-$theme: mat.define-theme((
-  color: (
-    theme-type: light,
-    primary: mat.$azure-palette,
-    tertiary: mat.$blue-palette,
-  )
-));
-
-// Применяем тему ко всем компонентам
-@include mat.all-component-themes($theme);
-
-// CSS переменные для кастомных свойств
-:root {
-  --header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --footer-gradient: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-  --header-height: 70px;
-  --footer-padding: 60px 0 40px;
-  --border-radius: 12px;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
-  --transition: all 0.3s ease;
-}
-
-// Темная тема
-.dark-theme {
-  --header-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  --footer-gradient: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-}
-
-// Авто тема (системные настройки)
-.auto-theme {
-  @media (prefers-color-scheme: dark) {
-    --header-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    --footer-gradient: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-  }
-}
-
-// Базовые стили
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
-}
 
 body {
   font-family: "Roboto Condensed", sans-serif;
@@ -82,33 +26,6 @@ body {
 
 .mb-4 {
   margin-bottom: 24px;
-}
-
-// Кастомные стили для компонентов
-.add-user-fab-button {
-  position: fixed !important;
-  bottom: 5em !important;
-  right: 10em !important;
-  z-index: 100;
-  border-radius: var(--border-radius) !important;
-  box-shadow: var(--shadow-lg) !important;
-  transition: var(--transition) !important;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg) !important;
-  }
-}
-
-mat-progress-bar {
-  margin-top: 2px;
-  border-radius: 4px;
-}
-
-.ql-editor:focus {
-  border: 1px solid #80bdff !important;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
-  border-radius: var(--border-radius);
 }
 
 // Анимации

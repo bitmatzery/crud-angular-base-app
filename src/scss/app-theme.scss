@@ -1,7 +1,167 @@
 @use "@angular/material" as mat;
 @use 'sass:map';
+@use  "../scss/utilities";
 
-@mixin theme($theme) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
+// Создание темы с новым синтаксисом
+@include mat.core();
+
+// Светлая тема
+$mat-light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  )
+));
+
+// Темная тема
+$mat-dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  )
+));
+
+// Применяем светлую тему по умолчанию
+@include mat.all-component-themes($mat-light-theme);
+
+// CSS переменные для светлой темы
+:root, .light-theme {
+  // Основные цвета приложения
+  --app-background: #ffffff;
+  --app-text: #212121;
+  --app-surface: #f8f9fa;
+  --app-border: #e0e0e0;
+
+  // Дополнительные цвета
+  --app-card-bg: #ffffff;
+  --app-hover: rgba(0, 0, 0, 0.04);
+  --app-shadow: rgba(0, 0, 0, 0.1);
+
+  // Цвета для конкретных элементов
+  --app-header-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%); // Красивый фиолетово-синий градиент
+  --app-footer-bg: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); // Красивый синий градиент
+  --app-sidebar-bg: #f5f5f5;
+  --app-input-bg: #ffffff;
+  --app-button-bg: #1976d2;
+  --app-button-text: #ffffff;
+
+  // Размеры и отступы
+  --header-height: 70px;
+  --footer-padding: 60px 0 40px;
+  --border-radius: 12px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --transition: all 0.3s ease;
 }
+
+// Темная тема
+.dark-theme {
+  @include mat.all-component-colors($mat-dark-theme);
+
+  // CSS переменные для темной темы
+  --app-background: #121212;
+  --app-text: #ffffff;
+  --app-surface: #1e1e1e;
+  --app-border: #333333;
+
+  --app-card-bg: #1e1e1e;
+  --app-hover: rgba(255, 255, 255, 0.04);
+  --app-shadow: rgba(0, 0, 0, 0.3);
+
+  // Для темной темы оставляем темные градиенты
+  --app-header-bg: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --app-footer-bg: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  --app-sidebar-bg: #1a1a1a;
+  --app-input-bg: #2d2d2d;
+  --app-button-bg: #bb86fc;
+  --app-button-text: #000000;
+}
+
+// Авто тема - использует системные настройки
+.auto-theme {
+  // По умолчанию светлая тема с красивыми градиентами
+  @include mat.all-component-themes($mat-light-theme);
+
+  --app-header-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --app-footer-bg: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+
+  // Если система предпочитает темную тему
+  @media (prefers-color-scheme: dark) {
+    @include mat.all-component-colors($mat-dark-theme);
+
+    --app-background: #121212;
+    --app-text: #ffffff;
+    --app-surface: #1e1e1e;
+    --app-border: #333333;
+
+    --app-card-bg: #1e1e1e;
+    --app-hover: rgba(255, 255, 255, 0.04);
+    --app-shadow: rgba(0, 0, 0, 0.3);
+
+    // Темные градиенты для системной темной темы
+    --app-header-bg: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --app-footer-bg: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+    --app-sidebar-bg: #1a1a1a;
+    --app-input-bg: #2d2d2d;
+    --app-button-bg: #bb86fc;
+    --app-button-text: #000000;
+  }
+}
+
+// Базовые стили для всего приложения
+body {
+  background-color: var(--app-background);
+  color: var(--app-text);
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+// Стили для основных контейнеров
+.app-container {
+  background-color: var(--app-background);
+  color: var(--app-text);
+  min-height: 100vh;
+}
+
+.main-content {
+  background-color: var(--app-background);
+  color: var(--app-text);
+  min-height: calc(100vh - var(--header-height));
+}
+
+// Стили для тулбаров - ВАЖНО: оставляем белый текст для контраста с градиентами
+.mat-toolbar,
+.mat-mdc-toolbar {
+  background: var(--app-header-bg) !important;
+  color: white !important; // Белый текст для хорошей читаемости на градиентах
+}
+
+// Специфические стили для хедера
+.header-navbar {
+  background: var(--app-header-bg) !important;
+  color: white !important;
+
+  .nav-button {
+    color: white !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    &.active {
+      background: rgba(255, 255, 255, 0.25) !important;
+    }
+  }
+}
+
+// Стили для футера
+.app-footer {
+  background: var(--app-footer-bg) !important;
+  color: white !important;
+}
+
