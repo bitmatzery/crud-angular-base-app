@@ -1,5 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HeaderNavbarComponent } from './header-navbar.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {HeaderNavbarComponent} from './header-navbar.component';
 
 describe('HeaderNavbarComponent', () => {
   let component: HeaderNavbarComponent;

@@ -1,25 +1,3 @@
-:host {
-  // base
-  --content-width: 1320px;
-  --content-max-width: 1400px;
-  --container-offset: 10px;
-  --container-width: calc(var(--content-width) + (var(--container-offset) * 2));
-  --container-max-width: calc(var(--content-max-width) + (var(--container-offset) * 2));
-}
-
-.big-container {
-  margin: 0 auto;
-  min-height: 100%;
-  padding: 0 var(--container-offset);
-  max-width: var(--container-max-width);
-}
-
-.container {
-  margin: 0 auto;
-  padding: 0 var(--container-offset);
-  max-width: var(--container-width);
-}
-
 .items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

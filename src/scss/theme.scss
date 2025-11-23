@@ -1,6 +1,6 @@
 @use "@angular/material" as mat;
-@use 'sass:map';
-@use  "../scss/utilities";
+@use "sass:map";
+@use "utilities";
 
 // Создание темы с новым синтаксисом
 @include mat.core();
@@ -111,57 +111,10 @@ $mat-dark-theme: mat.define-theme((
   }
 }
 
-// Базовые стили для всего приложения
-body {
-  background-color: var(--app-background);
-  color: var(--app-text);
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  min-height: 100vh;
-}
-
-// Стили для основных контейнеров
-.app-container {
-  background-color: var(--app-background);
-  color: var(--app-text);
-  min-height: 100vh;
-}
-
-.main-content {
-  background-color: var(--app-background);
-  color: var(--app-text);
-  min-height: calc(100vh - var(--header-height));
-}
-
 // Стили для тулбаров - ВАЖНО: оставляем белый текст для контраста с градиентами
 .mat-toolbar,
 .mat-mdc-toolbar {
-  background: var(--app-header-bg) !important;
-  color: white !important; // Белый текст для хорошей читаемости на градиентах
-}
-
-// Специфические стили для хедера
-.header-navbar {
-  background: var(--app-header-bg) !important;
-  color: white !important;
-
-  .nav-button {
-    color: white !important;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.2) !important;
-    }
-
-    &.active {
-      background: rgba(255, 255, 255, 0.25) !important;
-    }
-  }
-}
-
-// Стили для футера
-.app-footer {
-  background: var(--app-footer-bg) !important;
-  color: white !important;
+  background: var(--app-header-bg);
+  color: white;
 }
 

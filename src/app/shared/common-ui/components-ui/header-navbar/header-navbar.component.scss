@@ -1,6 +1,13 @@
 @use "@angular/material" as mat;
 @use 'sass:map';
 
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 160px;
+}
+
 .header-navbar {
   position: sticky;
   top: 0;
@@ -8,20 +15,8 @@
   box-shadow: var(--shadow-md);
   padding: 0;
   background: var(--app-header-bg) !important;
-  min-height: var(--header-height);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
-  .navbar-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 16px 24px;
-    height: 100%;
-    gap: 24px;
-  }
 
   .logo-section {
     flex-shrink: 0;
@@ -31,7 +26,7 @@
       align-items: center;
       text-decoration: none;
       color: inherit;
-      gap: 12px;
+      gap: 22px;
       transition: var(--transition);
       padding: 8px 0;
 
@@ -69,10 +64,10 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
 
       .nav-button {
-        color: white;
+        color: white !important;
         border-radius: 20px;
         padding: 10px 24px;
-        min-width: auto;
+        width: auto;
         transition: var(--transition);
         font-weight: 500;
         font-size: 14px;
@@ -80,13 +75,13 @@
         margin: 0 2px;
 
         &:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.2) !important;
           transform: translateY(-1px);
           box-shadow: var(--shadow-sm);
         }
 
         &.active {
-          background: rgba(255, 255, 255, 0.25);
+          background: rgba(255, 255, 255, 0.25) !important;
           box-shadow: var(--shadow-sm);
         }
 
@@ -253,13 +248,13 @@
 
     .timestamp {
       color: var(--mat-theme-secondary-text);
-      min-width: 180px;
+      width: 180px;
       font-family: monospace;
     }
 
     .user {
       font-weight: 500;
-      min-width: 120px;
+      width: 120px;
 
       &.guest {
         color: var(--mat-theme-error);
@@ -268,7 +263,7 @@
 
     .role {
       color: var(--mat-theme-secondary-text);
-      min-width: 80px;
+      width: 80px;
     }
 
     .url {
