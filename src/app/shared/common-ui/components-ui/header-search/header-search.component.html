@@ -46,7 +46,7 @@
       </div>
       <div class="product-info">
         <div class="product-title">{{ product.title }}</div>
-        <div class="product-price">{{ product.price | currency:'RUB':'symbol' }}</div>
+        <div class="product-price">${{ product.price }}</div>
         <div class="product-category" *ngIf="product.category">
           {{ product.category.name }}
         </div>
