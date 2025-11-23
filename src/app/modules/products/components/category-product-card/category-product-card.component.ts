@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Category } from '../../models/product.interface';
+import { ICategory } from '../../models/product.interface';
 import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/safe-image/safe-image.component';
 
 @Component({
@@ -12,7 +12,7 @@ import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/s
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryProductCardComponent { // Правильное имя класса
-  @Input({ required: true }) category!: Category;
+  @Input({ required: true }) category!: ICategory;
   @Input() isSelected: boolean = false;
 
   @Output() categoryItems = new EventEmitter<string>();

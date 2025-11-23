@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, distinctUntilChanged } from 'rxjs/operators';
 import { ProductState, initialProductState } from './products-store.state';
-import { Product, Category, ProductFilters, PaginationInfo } from '../models/product.interface';
+import { IProduct, ICategory, ProductFilters, PaginationInfo } from '../models/product.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -106,14 +106,14 @@ export class ProductsStore {
   }
 
   // Products actions
-  setProducts(products: Product[]): void {
+  setProducts(products: IProduct[]): void {
     this.updateState({
       products,
       filteredProducts: products // По умолчанию показываем все загруженные продукты
     });
   }
 
-  addProducts(products: Product[]): void {
+  addProducts(products: IProduct[]): void {
     const currentProducts = this.state.value.products;
     const newProducts = [...currentProducts, ...products];
     this.updateState({
@@ -122,7 +122,7 @@ export class ProductsStore {
     });
   }
 
-  setFilteredProducts(products: Product[]): void {
+  setFilteredProducts(products: IProduct[]): void {
     this.updateState({ filteredProducts: products });
   }
 
@@ -133,7 +133,7 @@ export class ProductsStore {
     });
   }
 
-  addProduct(product: Product): void {
+  addProduct(product: IProduct): void {
     const products = [...this.state.value.products, product];
     this.updateState({
       products,
@@ -141,7 +141,7 @@ export class ProductsStore {
     });
   }
 
-  updateProduct(updatedProduct: Product): void {
+  updateProduct(updatedProduct: IProduct): void {
     const products = this.state.value.products.map(product =>
       product.id === updatedProduct.id ? updatedProduct : product
     );
@@ -165,16 +165,16 @@ export class ProductsStore {
     });
   }
 
-  setCurrentProduct(product: Product | null): void {
+  setCurrentProduct(product: IProduct | null): void {
     this.updateState({ currentProduct: product });
   }
 
   // Categories actions
-  setCategories(categories: Category[]): void {
+  setCategories(categories: ICategory[]): void {
     this.updateState({ categories });
   }
 
-  selectCategory(category: Category | null): void {
+  selectCategory(category: ICategory | null): void {
     this.updateState({
       selectedCategory: category
     });

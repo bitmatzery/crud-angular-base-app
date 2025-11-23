@@ -4,7 +4,7 @@ import { catchError, finalize, tap, switchMap, debounceTime, distinctUntilChange
 import { ProductsStore } from '../../store/products.store';
 import { ProductsApiService } from './products-api.service';
 import { DataInitializationService } from './data-initialization.service';
-import { Category, Product } from '../../models/product.interface';
+import { ICategory, IProduct } from '../../models/product.interface';
 
 interface FilterState {
   searchTerm: string;
@@ -22,7 +22,7 @@ export class ProductsService {
   private dataInit = inject(DataInitializationService);
 
   // Храним все загруженные продукты для клиентского поиска
-  private allProducts: Product[] = [];
+  private allProducts: IProduct[] = [];
 
   // BehaviorSubject для управления фильтрами
   private filterState = new BehaviorSubject<FilterState>({
@@ -79,14 +79,14 @@ export class ProductsService {
         retry(2),
         catchError(error => {
           console.error('Failed to load products:', error);
-          return of([] as Product[]);
+          return of([] as IProduct[]);
         })
       ),
       categories: this.api.getCategories(50).pipe(
         retry(2),
         catchError(error => {
           console.error('Failed to load categories:', error);
-          return of([] as Category[]);
+          return of([] as ICategory[]);
         })
       )
     }).pipe(
@@ -129,7 +129,7 @@ export class ProductsService {
   /**
    * Клиентский поиск по всем загруженным продуктам
    */
-  private searchProductsLocally(searchTerm: string): Product[] {
+  private searchProductsLocally(searchTerm: string): IProduct[] {
     if (!searchTerm || searchTerm.trim().length < 2) {
       return this.allProducts;
     }
@@ -175,7 +175,7 @@ export class ProductsService {
   /**
    * Загружает продукты с учетом фильтров
    */
-  private loadProductsWithFilters(state: FilterState): Observable<Product[] | null> {
+  private loadProductsWithFilters(state: FilterState): Observable<IProduct[] | null> {
     if (this.isLoading || (!this.hasMore && state.offset > 0)) {
       return of(null);
     }
@@ -184,7 +184,7 @@ export class ProductsService {
     this.store.setLoadingProducts(true);
     this.store.setError(null);
 
-    let apiCall: Observable<Product[]>;
+    let apiCall: Observable<IProduct[]>;
 
     // КЛИЕНТСКИЙ ПОИСК - используем локальную фильтрацию
     if (state.searchTerm && state.searchTerm.length >= 2) {

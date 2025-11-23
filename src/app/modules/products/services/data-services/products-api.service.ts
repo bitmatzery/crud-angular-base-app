@@ -2,10 +2,11 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { ApiService } from '../../../../core/http/api.service';
-import { Category, CategoryDTO, Product, ProductDTO } from '../../models/product.interface';
+import { ICategory, ICategoryUpdateDTO, IProduct, IProductUpdateDTO } from '../../models/product.interface';
+
 
 export interface ProductsResponse {
-  products: Product[];
+  products: IProduct[];
   total: number;
   hasMore: boolean;
 }
@@ -17,22 +18,22 @@ export class ProductsApiService {
   private apiService = inject(ApiService);
 
   // Products API Service
-  public getProducts(limit: number = 30, offset: number = 0): Observable<Product[]> {
+  public getProducts(limit: number = 30, offset: number = 0): Observable<IProduct[]> {
     const params = new HttpParams()
       .set('limit', limit.toString())
       .set('offset', offset.toString());
 
-    return this.apiService.get<Product[]>('/products', params);
+    return this.apiService.get<IProduct[]>('/products', params);
   }
 
   // Получение продуктов по категории с пагинацией
-  public getProductsByCategory(categoryId: number, limit: number = 30, offset: number = 0): Observable<Product[]> {
+  public getProductsByCategory(categoryId: number, limit: number = 30, offset: number = 0): Observable<IProduct[]> {
     const params = new HttpParams()
       .set('categoryId', categoryId.toString())
       .set('limit', limit.toString())
       .set('offset', offset.toString());
 
-    return this.apiService.get<Product[]>(`/categories/${categoryId}/products`, params);
+    return this.apiService.get<IProduct[]>(`/categories/${categoryId}/products`, params);
   }
 
   // Получение общего количества продуктов (для пагинации)
@@ -50,42 +51,42 @@ export class ProductsApiService {
     return this.apiService.get<{ count: number }>('/products/count', params);
   }
 
-  getProduct(id: number): Observable<Product> {
-    return this.apiService.get<Product>(`/products/${id}`);
+  getProduct(id: number): Observable<IProduct> {
+    return this.apiService.get<IProduct>(`/products/${id}`);
   }
 
-  createProduct(productData: ProductDTO): Observable<Product> {
-    return this.apiService.post<Product, ProductDTO>(`/products`, productData);
+  createProduct(productData: IProductUpdateDTO): Observable<IProduct> {
+    return this.apiService.post<IProduct, IProductUpdateDTO>(`/products`, productData);
   }
 
-  updateProduct(id: number, productData: ProductDTO): Observable<Product> {
-    return this.apiService.put<Product, ProductDTO>(`/products/${id}`, productData);
+  updateProduct(id: number, productData: IProductUpdateDTO): Observable<IProduct> {
+    return this.apiService.put<IProduct, IProductUpdateDTO>(`/products/${id}`, productData);
   }
 
-  deleteProduct(id: number): Observable<Product> {
-    return this.apiService.delete<Product>(`/products/${id}`);
+  deleteProduct(id: number): Observable<IProduct> {
+    return this.apiService.delete<IProduct>(`/products/${id}`);
   }
 
   // Categories API Service
-  public getCategories(limit: number = 50): Observable<Category[]> {
+  public getCategories(limit: number = 50): Observable<ICategory[]> {
     const params = new HttpParams()
       .set('limit', limit.toString());
-    return this.apiService.get<Category[]>('/categories', params);
+    return this.apiService.get<ICategory[]>('/categories', params);
   }
 
-  getCategory(id: number): Observable<Category> {
-    return this.apiService.get<Category>(`/categories/${id}`);
+  getCategory(id: number): Observable<ICategory> {
+    return this.apiService.get<ICategory>(`/categories/${id}`);
   }
 
-  createCategory(categoryData: CategoryDTO): Observable<Category> {
-    return this.apiService.post<Category, CategoryDTO>(`/categories`, categoryData);
+  createCategory(categoryData: ICategoryUpdateDTO): Observable<ICategory> {
+    return this.apiService.post<ICategory, ICategoryUpdateDTO>(`/categories`, categoryData);
   }
 
-  updateCategory(id: number, categoryData: CategoryDTO): Observable<Category> {
-    return this.apiService.put<Category, CategoryDTO>(`/categories/${id}`, categoryData);
+  updateCategory(id: number, categoryData: ICategoryUpdateDTO): Observable<ICategory> {
+    return this.apiService.put<ICategory, ICategoryUpdateDTO>(`/categories/${id}`, categoryData);
   }
 
-  deleteCategory(id: number): Observable<Category> {
-    return this.apiService.delete<Category>(`/categories/${id}`);
+  deleteCategory(id: number): Observable<ICategory> {
+    return this.apiService.delete<ICategory>(`/categories/${id}`);
   }
 }

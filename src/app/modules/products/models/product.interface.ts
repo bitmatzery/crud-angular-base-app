@@ -1,15 +1,16 @@
-export interface Product {
+export interface IProduct {
   id: number;
   title: string;
+  slug: string;
   price: number;
   description: string;
   images: string[];
   creationAt: string;
   updatedAt: string;
-  category: Category;
+  category: ICategory;
 }
 
-export interface ProductDTO {
+export interface IProductUpdateDTO {
   title: string;
   price: number;
   description: string;
@@ -17,15 +18,16 @@ export interface ProductDTO {
   images: string[];
 }
 
-export interface Category {
+export interface ICategory {
   id: number;
   name: string;
+  slug: string;
   image: string;
   creationAt: string;
   updatedAt: string;
 }
 
-export interface CategoryDTO {
+export interface ICategoryUpdateDTO {
   name: string;
   image: string;
 }

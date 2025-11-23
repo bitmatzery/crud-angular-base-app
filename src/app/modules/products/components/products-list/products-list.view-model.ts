@@ -1,8 +1,8 @@
-import {Product} from '../../models/product.interface';
+import {IProduct} from '../../models/product.interface';
 
 
 export type ProductListVM = {
-  products: Product[]  | null
+  products: IProduct[]  | null
 }
 
 // export type ProductListVM = DeepReadonly<ProductDTO[]>

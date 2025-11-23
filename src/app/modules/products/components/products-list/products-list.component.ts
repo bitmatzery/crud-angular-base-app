@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ProductCardComponent } from '../product-card/product-card.component';
-import { Category, Product } from '../../models/product.interface';
-import { SearchFiltrationItemsComponent } from '../../../../shared/common-ui/components-ui/search-filtration-items/search-filtration-items.component';
-import { CategoryProductCardComponent } from '../category-product-card/category-product-card.component'; // Правильный импорт
-import { DisplayType } from '../../models/display-type.enum';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ProductCardComponent} from '../product-card/product-card.component';
+import {ICategory, IProduct} from '../../models/product.interface';
+import {
+  SearchFiltrationItemsComponent
+} from '../../../../shared/common-ui/components-ui/search-filtration-items/search-filtration-items.component';
+import {CategoryProductCardComponent} from '../category-product-card/category-product-card.component'; // Правильный импорт
+import {DisplayType} from '../../models/display-type.enum';
 
 @Component({
   selector: 'product-list-ui',
@@ -17,25 +19,25 @@ import { DisplayType } from '../../models/display-type.enum';
   ],
   templateUrl: './products-list.component.html',
   styleUrls: ['./products-list.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated,
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsListComponent {
-  @Input({ required: true }) items!: (Product | Category)[];
+  @Input({required: true}) items!: (IProduct | ICategory)[];
   @Input() displayType: DisplayType = DisplayType.PRODUCTS;
-  @Input() selectedCategory: Category | null = null;
+  @Input() selectedCategory: ICategory | null = null;
 
   @Output() filterItems = new EventEmitter<string>();
   @Output() categoryItems = new EventEmitter<string>();
 
   protected readonly DisplayType = DisplayType;
 
-  protected isProduct(item: any): item is Product {
-    return (item as Product).title !== undefined;
+  protected isProduct(item: any): item is IProduct {
+    return (item as IProduct).title !== undefined;
   }
 
-  protected isCategory(item: any): item is Category {
-    return (item as Category).name !== undefined;
+  protected isCategory(item: any): item is ICategory {
+    return (item as ICategory).name !== undefined;
   }
 
   OnFilteredItems(event: any) {
@@ -50,7 +52,7 @@ export class ProductsListComponent {
     this.categoryItems.emit(categoryId);
   }
 
-  isCategorySelected(category: Category): boolean {
+  isCategorySelected(category: ICategory): boolean {
     return this.selectedCategory?.id === category.id;
   }
 }

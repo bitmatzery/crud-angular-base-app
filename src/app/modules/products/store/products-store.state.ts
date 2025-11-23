@@ -1,14 +1,14 @@
-import { Product, Category, ProductFilters, PaginationInfo } from '../models/product.interface';
+import { IProduct, ICategory, ProductFilters, PaginationInfo } from '../models/product.interface';
 
 export interface ProductState {
   // Products
-  products: Product[];
-  filteredProducts: Product[];
-  currentProduct: Product | null;
+  products: IProduct[];
+  filteredProducts: IProduct[];
+  currentProduct: IProduct | null;
 
   // Categories
-  categories: Category[];
-  selectedCategory: Category | null;
+  categories: ICategory[];
+  selectedCategory: ICategory | null;
 
   // Loading states
   loading: boolean;

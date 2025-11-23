@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { forkJoin, of, Observable, throwError } from 'rxjs';
 import { catchError, switchMap, tap, timeout } from 'rxjs/operators';
 import { ProductsApiService } from './products-api.service';
-import { Category, Product, ProductDTO, CategoryDTO } from '../../models/product.interface';
+import { ICategory, IProduct, IProductUpdateDTO, ICategoryUpdateDTO } from '../../models/product.interface';
 
 // Интерфейсы для данных из бэкапа
 interface BackupCategory {
@@ -105,10 +105,10 @@ export class DataInitializationService {
   }> {
     return forkJoin({
       currentCategories: this.api.getCategories(100).pipe(
-        catchError(() => of([] as Category[]))
+        catchError(() => of([] as ICategory[]))
       ),
       currentProducts: this.api.getProducts(100, 0).pipe(
-        catchError(() => of([] as Product[]))
+        catchError(() => of([] as IProduct[]))
       )
     }).pipe(
       switchMap(({ currentCategories, currentProducts }) => {
@@ -151,7 +151,7 @@ export class DataInitializationService {
   /**
    * Находит отсутствующие категории
    */
-  private findMissingCategories(backupCategories: BackupCategory[], currentCategories: Category[]): string[] {
+  private findMissingCategories(backupCategories: BackupCategory[], currentCategories: ICategory[]): string[] {
     const missing: string[] = [];
 
     backupCategories.forEach(backupCat => {
@@ -170,7 +170,7 @@ export class DataInitializationService {
   /**
    * Находит отсутствующие продукты
    */
-  private findMissingProducts(backupProducts: BackupProduct[], currentProducts: Product[]): string[] {
+  private findMissingProducts(backupProducts: BackupProduct[], currentProducts: IProduct[]): string[] {
     const missing: string[] = [];
 
     backupProducts.forEach(backupProd => {
@@ -224,7 +224,7 @@ export class DataInitializationService {
 
     // Сначала получаем существующие категории для удаления
     return this.api.getCategories(100).pipe(
-      catchError(() => of([] as Category[])),
+      catchError(() => of([] as ICategory[])),
       switchMap(existingCategories => {
         // Удаляем существующие категории
         const deleteRequests = existingCategories.map(category =>
@@ -250,7 +250,7 @@ export class DataInitializationService {
     console.log('Creating new categories from backup...');
 
     const categoryRequests = backupCategories.map(backupCategory => {
-      const categoryData: CategoryDTO = {
+      const categoryData: ICategoryUpdateDTO = {
         name: backupCategory.name,
         image: backupCategory.image || this.PLACEHOLDER_IMAGE
       };
@@ -268,7 +268,7 @@ export class DataInitializationService {
 
     return forkJoin(categoryRequests).pipe(
       switchMap(createdCategories => {
-        const successfulCategories = createdCategories.filter(Boolean) as Category[];
+        const successfulCategories = createdCategories.filter(Boolean) as ICategory[];
         console.log(`Successfully created ${successfulCategories.length} categories`);
 
         // Создаем маппинг старых ID категорий на новые
@@ -297,7 +297,7 @@ export class DataInitializationService {
 
     // Сначала получаем существующие продукты для удаления
     return this.api.getProducts(200, 0).pipe(
-      catchError(() => of([] as Product[])),
+      catchError(() => of([] as IProduct[])),
       switchMap(existingProducts => {
         // Удаляем существующие продукты
         const deleteRequests = existingProducts.map(product =>
@@ -336,7 +336,7 @@ export class DataInitializationService {
       // Преобразуем images из строки в массив
       const imagesArray = this.parseImages(backupProduct.images);
 
-      const productData: ProductDTO = {
+      const productData: IProductUpdateDTO = {
         title: backupProduct.title,
         price: backupProduct.price,
         description: backupProduct.description,

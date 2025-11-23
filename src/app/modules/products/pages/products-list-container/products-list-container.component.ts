@@ -1,25 +1,25 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   inject,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
-  ViewEncapsulation,
-  ElementRef,
   ViewChild,
-  AfterViewInit,
-  OnDestroy
+  ViewEncapsulation
 } from '@angular/core';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, first, map, Observable, of, switchMap, Subscription } from 'rxjs';
-import { DisplayType } from '../../models/display-type.enum';
-import { Category, Product } from '../../models/product.interface';
-import { ProductsListComponent } from '../../components/products-list/products-list.component';
-import { ProductsStore } from '../../store/products.store';
-import { ProductsService } from '../../services/data-services/products.service';
+import {AsyncPipe, CommonModule} from '@angular/common';
+import {ActivatedRoute, Router} from '@angular/router';
+import {BehaviorSubject, combineLatest, first, map, Observable, Subscription} from 'rxjs';
+import {DisplayType} from '../../models/display-type.enum';
+import {ICategory, IProduct} from '../../models/product.interface';
+import {ProductsListComponent} from '../../components/products-list/products-list.component';
+import {ProductsStore} from '../../store/products.store';
+import {ProductsService} from '../../services/data-services/products.service';
 
 @Component({
   selector: 'product-list-container',
@@ -49,7 +49,7 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
   public searchFilterValue$ = this.searchFilterSubject.asObservable();
 
   // Observable для данных в зависимости от displayType
-  public items$!: Observable<Product[] | Category[]>;
+  public items$!: Observable<IProduct[] | ICategory[]>;
 
   // Observable для выбранной категории
   public selectedCategory$ = this.store.selectedCategory$;
@@ -59,7 +59,7 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
   public loadingProducts$ = this.store.loadingProducts$;
 
   // Combined data
-  public filteredItems$!: Observable<Product[] | Category[]>;
+  public filteredItems$!: Observable<IProduct[] | ICategory[]>;
 
   public searchResultsCount$ = combineLatest([
     this.searchFilterValue$,
@@ -105,7 +105,7 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
       const searchParam = params['search'] || '';
       const categoryParam = params['category'] || '';
 
-      console.log('Initial query params:', { searchParam, categoryParam });
+      console.log('Initial query params:', {searchParam, categoryParam});
 
       // Устанавливаем поисковый фильтр
       this.searchFilterSubject.next(searchParam);
@@ -246,11 +246,11 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
   }
 
   // Вспомогательные методы для шаблона
-  trackByProductId(index: number, product: Product): number {
+  trackByProductId(index: number, product: IProduct): number {
     return product.id;
   }
 
-  trackByCategoryId(index: number, category: Category): number {
+  trackByCategoryId(index: number, category: ICategory): number {
     return category.id;
   }
 }

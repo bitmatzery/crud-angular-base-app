@@ -7,7 +7,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {Router} from '@angular/router';
 import {Observable, of, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {Product} from '../../../../modules/products/models/product.interface';
+import {IProduct} from '../../../../modules/products/models/product.interface';
 import {ProductsStore} from '../../../../modules/products/store/products.store';
 import {ProductsApiService} from '../../../../modules/products/services/data-services/products-api.service';
 import {MatIconButton} from '@angular/material/button';
@@ -29,7 +29,7 @@ import {MatIconButton} from '@angular/material/button';
 })
 export class HeaderSearchComponent implements OnInit, OnDestroy {
   @Output() search = new EventEmitter<string>();
-  @Output() productSelected = new EventEmitter<Product>();
+  @Output() productSelected = new EventEmitter<IProduct>();
 
   private productsStore = inject(ProductsStore);
   private productsApiService = inject(ProductsApiService);
@@ -38,7 +38,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
 
   searchControl = new FormControl('');
   showResults = false;
-  searchResults: Product[] = [];
+  searchResults: IProduct[] = [];
   hasSearched = false;
 
   ngOnInit() {
@@ -71,7 +71,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  private performSearch(term: string): Observable<Product[]> {
+  private performSearch(term: string): Observable<IProduct[]> {
     if (term.length <= 2) {
       this.searchResults = [];
       return of([]);
@@ -81,7 +81,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     return this.performLocalSearch(term);
   }
 
-  private performLocalSearch(term: string): Observable<Product[]> {
+  private performLocalSearch(term: string): Observable<IProduct[]> {
     const allProducts = this.productsStore.getCurrentState().products;
     const termLower = term.toLowerCase().trim();
 
@@ -96,7 +96,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     return of(this.searchResults);
   }
 
-  getProductImage(product: Product): string {
+  getProductImage(product: IProduct): string {
     if (product.images && product.images.length > 0) {
       if (Array.isArray(product.images)) {
         return product.images[0];
@@ -125,7 +125,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.search.emit('');
   }
 
-  selectProduct(product: Product): void {
+  selectProduct(product: IProduct): void {
     this.productSelected.emit(product);
     this.showResults = false;
     this.searchControl.setValue('');
@@ -160,7 +160,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.showResults = false;
   }
 
-  trackByProductId(index: number, product: Product): number {
+  trackByProductId(index: number, product: IProduct): number {
     return product.id;
   }
 

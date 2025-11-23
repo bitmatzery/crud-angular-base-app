@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../models/product.interface';
+import { IProduct } from '../../models/product.interface';
 import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/safe-image/safe-image.component';
 
 @Component({
@@ -12,7 +12,7 @@ import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/s
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCardComponent {
-  @Input({required: true}) product!: Product;
+  @Input({required: true}) product!: IProduct;
 
   getImageOptions() {
     return {
