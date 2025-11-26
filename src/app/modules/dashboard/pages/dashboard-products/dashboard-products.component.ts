@@ -10,6 +10,8 @@ import { ProductsApiService } from 'app/modules/products/services/data-services/
 import { IProduct } from 'app/modules/products/models/product.interface';
 import { AddProductModalComponent } from '../../components/add-product/add-product-modal.component';
 import { UpdateProductModalComponent } from '../../components/update-product.component/update-product-modal.component';
+import {MatTooltip} from '@angular/material/tooltip';
+
 
 
 @Component({
@@ -22,7 +24,8 @@ import { UpdateProductModalComponent } from '../../components/update-product.com
     MatIconModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTooltip
   ],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './dashboard-products.component.html',
