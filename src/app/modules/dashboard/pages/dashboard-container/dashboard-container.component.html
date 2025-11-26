@@ -1,0 +1,105 @@
+<section class="dashboard-main">
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1 class="dashboard-title">Management Dashboard</h1>
+      <p class="dashboard-subtitle">Choose a module to manage</p>
+    </div>
+
+    <div class="modules-grid">
+      <!-- Products Management Card -->
+      <div class="module-card" (click)="navigateToProducts()">
+        <div class="module-card__content">
+          <div class="module-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 7L12 3L4 7V17L12 21L20 17V7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 21V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 7L12 11L20 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 11V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 15L16 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 11L16 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="module-title">Products</h3>
+          <p class="module-description">
+            Manage your product catalog, inventory, and pricing
+          </p>
+          <div class="module-stats">
+            <span class="stat-item">
+              <strong>250+</strong> Products
+            </span>
+            <span class="stat-item">
+              <strong>15</strong> Categories
+            </span>
+          </div>
+          <div class="module-action">
+            <span class="action-text">Manage Products</span>
+            <svg class="action-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="module-card__background"></div>
+      </div>
+
+      <!-- Users Management Card -->
+      <div class="module-card" (click)="navigateToUsers()">
+        <div class="module-card__content">
+          <div class="module-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="module-title">Users</h3>
+          <p class="module-description">
+            Manage user accounts, roles, and permissions
+          </p>
+          <div class="module-stats">
+            <span class="stat-item">
+              <strong>1.2K</strong> Users
+            </span>
+            <span class="stat-item">
+              <strong>3</strong> Roles
+            </span>
+          </div>
+          <div class="module-action">
+            <span class="action-text">Manage Users</span>
+            <svg class="action-arrow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="module-card__background"></div>
+      </div>
+    </div>
+
+    <!-- Quick Stats Footer -->
+    <div class="dashboard-footer">
+      <div class="quick-stats">
+        <div class="stat-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-info">
+            <span class="stat-value">247</span>
+            <span class="stat-label">Active Products</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <span class="stat-value">1,247</span>
+            <span class="stat-label">Total Users</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔄</div>
+          <div class="stat-info">
+            <span class="stat-value">89%</span>
+            <span class="stat-label">System Uptime</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
