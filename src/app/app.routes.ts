@@ -27,4 +27,19 @@ export const appRoutes: Routes = [
     loadComponent: () => import('@store/users').then(c => c.UsersListContainerComponent),
     canActivate: [canActivateAuth, adminGuard],
   },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('@store/dashboard').then(c => c.DashboardContainerComponent),
+    canActivate: [canActivateAuth, adminGuard],
+  },
+  {
+    path: 'dashboard/products',
+    loadComponent: () => import('@store/dashboard/products').then(c => c.DashboardProductsComponent),
+    canActivate: [canActivateAuth, adminGuard],
+  },
+  {
+    path: 'dashboard/users', 
+    loadComponent: () => import('@store/users').then(c => c.UsersListContainerComponent),
+    canActivate: [canActivateAuth, adminGuard],
+  },
 ];
