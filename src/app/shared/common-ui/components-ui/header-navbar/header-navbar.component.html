@@ -31,6 +31,18 @@
           <mat-icon>people</mat-icon>
           <span>Пользователи</span>
         </button>
+
+        <!-- Кнопка "Dashboard" видна только админам -->
+        <button
+          *ngIf="(userRole$ | async) === 'admin'"
+          mat-button
+          routerLink="/dashboard"
+          routerLinkActive="active"
+          class="nav-button"
+        >
+          <mat-icon>dashboard</mat-icon> 
+          <span>Dashboard</span> 
+        </button>
       </nav>
     </div>
 
@@ -106,7 +118,6 @@
     </div>
   </div>
 </mat-toolbar>
-
 
 <!-- Логи доступа (можно скрыть или убрать) -->
 <div class="access-logs" *ngIf="showLogs">
