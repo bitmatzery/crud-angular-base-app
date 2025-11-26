@@ -1,0 +1,110 @@
+<div class="modal-container">
+  <div class="modal-header">
+    <h2 mat-dialog-title>Update Product</h2>
+    <button mat-icon-button (click)="onCancel()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="modal-content">
+    <form [formGroup]="form" class="product-form">
+      <!-- Title -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter product title">
+        <mat-error *ngIf="form.get('title')?.hasError('required')">
+          Title is required
+        </mat-error>
+        <mat-error *ngIf="form.get('title')?.hasError('minlength')">
+          Title must be at least 2 characters
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Price -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Price</mat-label>
+        <input matInput type="number" formControlName="price" placeholder="Enter price" min="1">
+        <span matPrefix>$&nbsp;</span>
+        <mat-error *ngIf="form.get('price')?.hasError('required')">
+          Price is required
+        </mat-error>
+        <mat-error *ngIf="form.get('price')?.hasError('min')">
+          Price must be at least $1
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" placeholder="Enter product description" rows="4"></textarea>
+        <mat-error *ngIf="form.get('description')?.hasError('required')">
+          Description is required
+        </mat-error>
+        <mat-error *ngIf="form.get('description')?.hasError('minlength')">
+          Description must be at least 10 characters
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Category -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="categoryId" placeholder="Select category">
+          <mat-option value="">Select a Category</mat-option>
+          <mat-option *ngFor="let category of categories" [value]="category.id">
+            {{ category.name }} (ID: {{ category.id }})
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('categoryId')?.hasError('required')">
+          Category is required
+        </mat-error>
+        <mat-error *ngIf="form.get('categoryId')?.hasError('invalidCategoryId')">
+          Please select a valid category
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Image URL Input -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Add Image URL</mat-label>
+        <input matInput type="text" (blur)="addImageUrl($event)" placeholder="Enter image URL">
+        <mat-hint>Press Enter or blur to add image URL</mat-hint>
+      </mat-form-field>
+
+      <!-- Image Previews -->
+      <div class="images-section">
+        <h4>Product Images ({{ images.length }})</h4>
+        <div *ngIf="images.length === 0" class="no-images">
+          <mat-icon>image</mat-icon>
+          <span>No images added yet</span>
+        </div>
+        
+        <div *ngFor="let imgCtrl of images.controls; let i = index" class="image-preview">
+          <img [src]="imgCtrl.value" alt="Preview" class="preview-image">
+          <div class="image-info">
+            <span class="image-url">{{ imgCtrl.value }}</span>
+            <button mat-button color="warn" (click)="removeImage(i)" class="remove-btn">
+              Remove
+            </button>
+          </div>
+        </div>
+        
+        <mat-error *ngIf="form.get('images')?.hasError('required') && form.get('images')?.touched">
+          At least one image is required
+        </mat-error>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="modal-actions">
+    <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onSubmit()" 
+      [disabled]="form.invalid || loading"
+      class="submit-btn"
+    >
+      <mat-spinner diameter="20" *ngIf="loading" class="button-spinner"></mat-spinner>
+      <span>{{ loading ? 'Updating...' : 'Update Product' }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>
