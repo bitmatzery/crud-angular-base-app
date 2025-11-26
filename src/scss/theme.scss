@@ -118,3 +118,21 @@ $mat-dark-theme: mat.define-theme((
   color: white;
 }
 
+// Стили для snackbar уведомлений
+.success-snackbar {
+  background: #4caf50;
+  color: white;
+  
+  .mat-simple-snackbar-action {
+    color: #e8f5e9;
+  }
+}
+
+.error-snackbar {
+  background: #f44336;
+  color: white;
+  
+  .mat-simple-snackbar-action {
+    color: #ffebee;
+  }
+}
