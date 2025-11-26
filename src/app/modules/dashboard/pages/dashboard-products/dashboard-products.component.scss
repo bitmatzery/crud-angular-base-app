@@ -1,0 +1,167 @@
+.dashboard-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  .dashboard-title {
+    margin: 0;
+    color: #3f51b5;
+    font-weight: 500;
+  }
+  
+  .add-product-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.products-table {
+  width: 100%;
+  
+  .product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  .product-title {
+    font-weight: 500;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .product-category {
+    color: rgba(0, 0, 0, 0.6);
+  }
+  
+  .product-price {
+    font-weight: 500;
+    color: #2e7d32;
+  }
+  
+  .actions-cell {
+    width: 120px;
+    
+    .actions-container {
+      display: flex;
+      gap: 8px;
+    }
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  
+  .empty-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: rgba(0, 0, 0, 0.3);
+  }
+  
+  h3 {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  p {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+// Стили для темной темы
+.dark-theme {
+  .dashboard-title {
+    color: #bb86fc;
+  }
+  
+  .table-container {
+    background: #1e1e1e;
+  }
+  
+  .products-table {
+    .product-category {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .product-price {
+      color: #4caf50;
+    }
+  }
+  
+  .loading-state {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .empty-state {
+    .empty-icon {
+      color: rgba(255, 255, 255, 0.3);
+    }
+    
+    h3 {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    p {
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .products-table {
+    .mat-header-row,
+    .mat-row {
+      padding: 8px 0;
+    }
+    
+    .product-image {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
