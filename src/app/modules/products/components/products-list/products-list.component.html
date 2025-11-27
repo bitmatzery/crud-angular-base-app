@@ -2,11 +2,11 @@
   <div class="container-app">
     <h1>{{ displayType === DisplayType.PRODUCTS ? 'Все Товары' : 'Категории' }}</h1>
 
-    <search-filtration-items-ui
-      *ngIf="displayType === DisplayType.PRODUCTS"
-      (filterItems)="OnFilteredItems($event)"
-    >
-    </search-filtration-items-ui>
+<!--    <search-filtration-items-ui-->
+<!--      *ngIf="displayType === DisplayType.PRODUCTS"-->
+<!--      (filterItems)="OnFilteredItems($event)"-->
+<!--    >-->
+<!--    </search-filtration-items-ui>-->
 
     <div class="items">
       <ng-container *ngFor="let item of items">

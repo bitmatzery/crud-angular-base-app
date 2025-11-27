@@ -15,7 +15,7 @@ import {DisplayType} from '../../models/display-type.enum';
     CommonModule,
     ProductCardComponent,
     SearchFiltrationItemsComponent,
-    CategoryProductCardComponent // Теперь компонент правильно импортирован
+    CategoryProductCardComponent
   ],
   templateUrl: './products-list.component.html',
   styleUrls: ['./products-list.component.scss'],
