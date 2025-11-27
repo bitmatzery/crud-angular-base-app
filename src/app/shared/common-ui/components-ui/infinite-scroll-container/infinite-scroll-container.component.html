@@ -1,0 +1,21 @@
+<div
+  #scrollContainer
+  class="scroll-container"
+  [class.scrollable]="isScrollable"
+  [class.categories-container]="!isScrollable"
+  [style.max-height]="maxHeight"
+  (scroll)="onScroll()">
+
+  <ng-content></ng-content>
+
+  <!-- Индикатор загрузки -->
+  <div *ngIf="isLoading" class="loading-more">
+    <div class="spinner"></div>
+    <span>{{ loadingText }}</span>
+  </div>
+
+  <!-- Сообщение когда все загружено -->
+  <div *ngIf="!hasMore && showNoMoreText && !isLoading" class="no-more-items">
+    {{ noMoreText }}
+  </div>
+</div>

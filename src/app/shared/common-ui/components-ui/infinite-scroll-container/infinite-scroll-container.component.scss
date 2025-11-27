@@ -1,0 +1,81 @@
+scroll-container {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-container.scrollable {
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.scroll-container.categories-container {
+  max-height: none;
+  overflow-y: visible;
+}
+
+// Кастомный скроллбар
+.scroll-container.scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-container.scrollable::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.scroll-container.scrollable::-webkit-scrollbar-thumb {
+  background: #ced4da;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.scroll-container.scrollable::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
+}
+
+.loading-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  color: #6c757d;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.loading-more .spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 12px;
+}
+
+.loading-more span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.no-more-items {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+  font-style: italic;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .scroll-container.scrollable {
+    max-height: 50vh;
+  }
+}
