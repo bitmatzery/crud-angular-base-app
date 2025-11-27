@@ -7,7 +7,7 @@
       placeholder="Введите название"
       type="text"
       [(ngModel)]="filterName"
-      (keyup.enter)="OnFilteredItems()"
+      (keyup.enter)="onFilteredItems()"
     />
     <button
       *ngIf="filterName"
@@ -36,7 +36,7 @@
     matTooltip="search"
     matTooltipPosition="before"
     color="primary"
-    (click)="OnFilteredItems()"
+    (click)="onFilteredItems()"
   >
     <mat-icon>search</mat-icon>
     <span>Поиск</span>
