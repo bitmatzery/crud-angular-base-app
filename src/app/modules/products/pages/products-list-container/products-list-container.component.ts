@@ -1,39 +1,45 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   inject,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
-  ViewChild,
-  ViewEncapsulation
+  SimpleChanges
 } from '@angular/core';
-import {AsyncPipe, CommonModule} from '@angular/common';
-import {ActivatedRoute, Router} from '@angular/router';
-import {BehaviorSubject, combineLatest, first, map, Observable, Subscription} from 'rxjs';
-import {DisplayType} from '../../models/display-type.enum';
-import {ICategory, IProduct} from '../../models/product.interface';
-import {ProductsListComponent} from '../../components/products-list/products-list.component';
-import {ProductsStore} from '../../store/products.store';
-import {ProductsService} from '../../services/data-services/products.service';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject, combineLatest, first, map, Observable, Subscription, takeUntil } from 'rxjs';
+import { DisplayType } from '../../models/display-type.enum';
+import { ICategory, IProduct } from '../../models/product.interface';
+import { ProductsListComponent } from '../../components/products-list/products-list.component';
+import { ProductsStore } from '../../store/products.store';
+import { Subject } from 'rxjs';
+import { ProductsService } from '../../services/data-services/products.service';
+import {
+  SearchFiltrationItemsComponent
+} from '../../../../shared/common-ui/components-ui/search-filtration-items/search-filtration-items.component';
+import { InfiniteScrollContainerComponent } from '../../../../shared/common-ui/components-ui/infinite-scroll-container/infinite-scroll-container.component';
 
 @Component({
   selector: 'product-list-container',
-  imports: [CommonModule, ProductsListComponent, AsyncPipe],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ProductsListComponent,
+    AsyncPipe,
+    SearchFiltrationItemsComponent,
+    InfiniteScrollContainerComponent
+  ],
   templateUrl: './products-list-container.component.html',
   styleUrls: ['./products-list-container.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProductsListContainerComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+export class ProductsListContainerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() displayType: DisplayType = DisplayType.PRODUCTS;
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  @Input() itemsLimit: number = 10; // Передаваемый параметр количества продуктов
 
-  // Делаем DisplayType доступным в шаблоне
   protected readonly DisplayType = DisplayType;
 
   private readonly router = inject(Router);
@@ -41,43 +47,87 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
   private readonly store = inject(ProductsStore);
   private readonly productsService = inject(ProductsService);
 
-  // Subjects для управления состоянием
   private searchFilterSubject = new BehaviorSubject<string>('');
-  private destroy$ = new Subscription();
+  private destroy$ = new Subject<void>();
 
-  // Публичные свойства для шаблона
   public searchFilterValue$ = this.searchFilterSubject.asObservable();
-
-  // Observable для данных в зависимости от displayType
   public items$!: Observable<IProduct[] | ICategory[]>;
-
-  // Observable для выбранной категории
   public selectedCategory$ = this.store.selectedCategory$;
-
-  // Loading states
   public loading$ = this.store.loading$;
   public loadingProducts$ = this.store.loadingProducts$;
-
-  // Combined data
   public filteredItems$!: Observable<IProduct[] | ICategory[]>;
 
+  // Получаем текущий поисковый запрос из сервиса
+  public currentSearchTerm$ = this.productsService.currentSearchTerm$;
+
   public searchResultsCount$ = combineLatest([
-    this.searchFilterValue$,
+    this.currentSearchTerm$,
     this.store.products$
   ]).pipe(
     map(([searchTerm, products]) => {
       if (!searchTerm || searchTerm.length < 2) return null;
-      return products.length;
+      return this.productsService.getSearchResultsCount(searchTerm);
     })
   );
 
-  // Для виртуального скролла
-  private scrollListener!: any;
+  public searchInfo$ = combineLatest([
+    this.currentSearchTerm$,
+    this.store.products$
+  ]).pipe(
+    map(([searchTerm, products]) => {
+      if (!searchTerm || searchTerm.length < 2) return null;
+
+      const allProductsLoaded = this.productsService.areAllProductsLoaded();
+      const loadedCount = this.productsService.getLoadedProductsCount();
+      const searchResultsCount = this.productsService.getSearchResultsCount(searchTerm);
+
+      return {
+        allProductsLoaded,
+        loadedCount,
+        searchResultsCount,
+        searchMode: allProductsLoaded ? 'local' : 'api'
+      };
+    })
+  );
+
+  private subscriptions: Subscription = new Subscription();
+
+  // Статическое состояние для отслеживания инициализации
+  private static appInitialized = false;
 
   ngOnInit() {
-    console.log('ProductsListContainerComponent initialized with displayType:', this.displayType);
+    console.log('ProductsListContainerComponent initialized with displayType:', this.displayType, 'limit:', this.itemsLimit);
+
+    // Устанавливаем лимит в сервисе
+    this.productsService.setItemsLimit(this.itemsLimit);
+
     this.updateItems();
     this.initializeFromQueryParams();
+
+    // Подписываемся на изменения поискового запроса из сервиса
+    this.subscriptions.add(
+      this.productsService.currentSearchTerm$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(searchTerm => {
+          this.searchFilterSubject.next(searchTerm);
+        })
+    );
+
+    // Проверяем, нужно ли инициализировать приложение
+    const currentProducts = this.store.getCurrentState().products;
+    const allProductsLoaded = this.productsService.areAllProductsLoaded();
+
+    if ((currentProducts.length === 0 || !allProductsLoaded) && !ProductsListContainerComponent.appInitialized) {
+      console.log('Initializing app - products in store:', currentProducts.length, 'allProductsLoaded:', allProductsLoaded);
+      this.initializeApp();
+      ProductsListContainerComponent.appInitialized = true;
+    } else {
+      console.log('Using existing state - products in store:', currentProducts.length, 'allProductsLoaded:', allProductsLoaded);
+      // Восстанавливаем состояние в сервисе из стора
+      if (currentProducts.length > 0) {
+        this.productsService.setProducts(currentProducts);
+      }
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -85,19 +135,28 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
       console.log('DisplayType changed to:', this.displayType);
       this.updateItems();
     }
-  }
 
-  ngAfterViewInit() {
-    if (this.displayType === DisplayType.PRODUCTS) {
-      setTimeout(() => this.setupVirtualScroll(), 100);
+    if (changes['itemsLimit'] && this.itemsLimit) {
+      console.log('Items limit changed to:', this.itemsLimit);
+      this.productsService.setItemsLimit(this.itemsLimit);
     }
   }
 
   ngOnDestroy() {
-    if (this.scrollListener) {
-      this.scrollContainer?.nativeElement?.removeEventListener('scroll', this.scrollListener);
-    }
-    this.destroy$.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.subscriptions.unsubscribe();
+  }
+
+  private initializeApp(): void {
+    this.productsService.initializeApp().subscribe({
+      next: (success) => {
+        console.log('App initialization result:', success);
+      },
+      error: (error) => {
+        console.error('App initialization error:', error);
+      }
+    });
   }
 
   private initializeFromQueryParams(): void {
@@ -105,42 +164,46 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
       const searchParam = params['search'] || '';
       const categoryParam = params['category'] || '';
 
-      console.log('Initial query params:', {searchParam, categoryParam});
+      console.log('Initial query params:', { searchParam, categoryParam });
 
-      // Устанавливаем поисковый фильтр
-      this.searchFilterSubject.next(searchParam);
+      // Сохраняем поисковый запрос в сервисе
+      if (searchParam) {
+        this.productsService.setCurrentSearchTerm(searchParam);
+        this.searchFilterSubject.next(searchParam);
+      }
 
-      // Устанавливаем категорию если есть
       if (categoryParam) {
         const categoryId = Number(categoryParam);
         this.productsService.selectCategoryById(categoryId);
       }
 
-      // Если есть поисковый запрос, выполняем поиск
       if (searchParam) {
         this.productsService.searchProducts(searchParam);
       }
     });
 
     // Синхронизация изменений категории с URL
-    this.destroy$.add(
-      this.store.selectedCategory$.subscribe(category => {
-        this.updateUrl();
-      })
+    this.subscriptions.add(
+      this.store.selectedCategory$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(category => {
+          this.updateUrl();
+        })
     );
 
     // Синхронизация поиска с URL
-    this.destroy$.add(
-      this.searchFilterSubject.subscribe(search => {
-        this.updateUrl();
-      })
+    this.subscriptions.add(
+      this.searchFilterSubject
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(search => {
+          this.updateUrl();
+        })
     );
   }
 
   private updateItems(): void {
     console.log('Updating items for displayType:', this.displayType);
 
-    // Обновляем items$ в зависимости от displayType
     this.items$ = this.displayType === DisplayType.PRODUCTS
       ? this.store.products$
       : this.store.categories$;
@@ -150,45 +213,23 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
     console.log('Items observable updated for:', this.displayType);
   }
 
-  private setupVirtualScroll(): void {
-    const container = this.scrollContainer?.nativeElement;
-    if (!container) {
-      console.warn('Scroll container not found');
-      return;
-    }
-
-    this.scrollListener = () => {
-      const scrollTop = container.scrollTop;
-      const scrollHeight = container.scrollHeight;
-      const clientHeight = container.clientHeight;
-
-      // Загружаем больше продуктов когда пользователь прокрутил до конца (за 100px до конца)
-      if (scrollTop + clientHeight >= scrollHeight - 100) {
-        this.loadMoreProducts();
-      }
-    };
-
-    container.addEventListener('scroll', this.scrollListener);
-    console.log('Virtual scroll setup completed');
-  }
-
-  private loadMoreProducts(): void {
+  onLoadMore(): void {
     if (this.displayType !== DisplayType.PRODUCTS) return;
 
     console.log('Loading more products...');
     this.productsService.loadMoreProducts();
   }
 
-  // Обработчики событий из дочерних компонентов
   onFilteredItems(searchTerm: string): void {
     console.log('Search term received:', searchTerm);
+
+    // Сохраняем поисковый запрос в сервисе
+    this.productsService.setCurrentSearchTerm(searchTerm);
     this.searchFilterSubject.next(searchTerm);
 
-    // Вызываем поиск через API
     if (this.displayType === DisplayType.PRODUCTS && searchTerm) {
       this.productsService.searchProducts(searchTerm);
     } else if (this.displayType === DisplayType.PRODUCTS && !searchTerm) {
-      // Если поиск очищен, сбрасываем фильтры
       this.productsService.clearAllFilters();
     }
   }
@@ -199,10 +240,8 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
     const currentCategory = this.store.getCurrentState().selectedCategory;
 
     if (currentCategory && currentCategory.id.toString() === categoryId) {
-      // Клик на уже выбранную категорию - сбрасываем фильтр
       this.productsService.selectCategoryById(null);
     } else {
-      // Выбираем новую категорию
       this.productsService.selectCategoryById(Number(categoryId));
     }
   }
@@ -225,8 +264,6 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
       queryParams.category = null;
     }
 
-    console.log('Updating URL with params:', queryParams);
-
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
@@ -234,18 +271,15 @@ export class ProductsListContainerComponent implements OnInit, OnChanges, AfterV
     });
   }
 
-  // Метод для сброса всех фильтров
   clearAllFilters(): void {
     this.searchFilterSubject.next('');
     this.productsService.clearAllFilters();
   }
 
-  // Геттер для значения поиска (для использования в шаблоне)
   get searchFilterValue(): string {
     return this.searchFilterSubject.value;
   }
 
-  // Вспомогательные методы для шаблона
   trackByProductId(index: number, product: IProduct): number {
     return product.id;
   }

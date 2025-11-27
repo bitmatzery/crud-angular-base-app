@@ -1,48 +1,60 @@
 <ng-container *ngIf="(filteredItems$ | async) as items; else loading">
-  <div class="container-header" *ngIf="displayType === DisplayType.PRODUCTS">
-    <div class="filters-info">
-      <span *ngIf="(selectedCategory$ | async) as category" class="category-badge">
-        Категория: {{ category.name }}
-        <button (click)="clearAllFilters()" class="clear-btn">×</button>
-      </span>
-      <span *ngIf="searchFilterValue" class="search-badge">
-        Поиск: "{{ searchFilterValue }}"
-        <span *ngIf="searchResultsCount$ | async as count" class="results-count">
-          (найдено: {{ count }})
+  <div class="container">
+    <!-- Компонент поиска - передаем текущее значение поиска через Input -->
+    <search-filtration-items-ui
+      *ngIf="displayType === DisplayType.PRODUCTS"
+      [searchTerm]="(currentSearchTerm$ | async) || ''"
+      (filterItems)="onFilteredItems($event)">
+    </search-filtration-items-ui>
+
+    <div class="container-products" *ngIf="displayType === DisplayType.PRODUCTS">
+      <div class="filters-info">
+        <span *ngIf="(selectedCategory$ | async) as category" class="category-badge">
+          Категория: {{ category.name }}
+          <button (click)="clearAllFilters()" class="clear-btn">×</button>
         </span>
-        <button (click)="clearAllFilters()" class="clear-btn">×</button>
-      </span>
-      <span *ngIf="searchFilterValue" class="search-note">
-        🔍 Поиск выполняется локально по загруженным данным
-      </span>
+        <span *ngIf="(currentSearchTerm$ | async) as searchTerm" class="search-badge">
+          Поиск: "{{ searchTerm }}"
+          <span *ngIf="searchResultsCount$ | async as count" class="results-count">
+            (найдено: {{ count }})
+          </span>
+          <button (click)="clearAllFilters()" class="clear-btn">×</button>
+        </span>
+
+        <!-- Информация о режиме поиска -->
+        <span *ngIf="(searchInfo$ | async) as searchInfo" class="search-note">
+          <ng-container *ngIf="searchInfo">
+            🔍 Поиск выполняется {{ searchInfo.allProductsLoaded ? 'локально по ' + searchInfo.loadedCount + ' загруженным товарам' : 'по всем товарам на сервере' }}
+          </ng-container>
+        </span>
+      </div>
     </div>
-  </div>
 
-  <!-- Контейнер для виртуального скролла -->
-  <div
-    #scrollContainer
-    class="scroll-container"
-    [class.scrollable]="displayType === DisplayType.PRODUCTS"
-    [class.categories-container]="displayType === DisplayType.CATEGORIES">
+    <!-- Используем компонент бесконечного скролла -->
+    <infinite-scroll-container-ui
+      [isLoading]="(loadingProducts$ | async) || false"
+      [hasMore]="true"
+      [isScrollable]="displayType === DisplayType.PRODUCTS"
+      [maxHeight]="displayType === DisplayType.PRODUCTS ? '90vh' : 'none'"
+      [loadingText]="'Загрузка товаров...'"
+      [noMoreText]="'Все товары загружены'"
+      (loadMore)="onLoadMore()">
 
-    <product-list-ui
-      [items]="items"
-      [displayType]="displayType"
-      [selectedCategory]="selectedCategory$ | async"
-      (filterItems)="onFilteredItems($event)"
-      (categoryItems)="onCategorySelect($event)">
-    </product-list-ui>
+      <product-list-ui
+        [items]="items"
+        [displayType]="displayType"
+        [selectedCategory]="selectedCategory$ | async"
+        (filterItems)="onFilteredItems($event)"
+        (categoryItems)="onCategorySelect($event)">
+      </product-list-ui>
 
-    <!-- Индикатор загрузки для пагинации -->
-    <div *ngIf="displayType === DisplayType.PRODUCTS && (loadingProducts$ | async)" class="loading-more">
-      <div class="spinner"></div>
-      <span>Загрузка товаров...</span>
-    </div>
+    </infinite-scroll-container-ui>
   </div>
 </ng-container>
 
 <ng-template #loading>
   <div class="loading-container">
+    <div class="spinner"></div>
     <div>Загрузка...</div>
   </div>
 </ng-template>
