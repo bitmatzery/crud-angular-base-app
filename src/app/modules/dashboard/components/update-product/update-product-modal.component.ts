@@ -46,7 +46,7 @@ export class UpdateProductModalComponent implements OnInit {
 
   constructor() {
     this.product = this.data.product;
-    
+
     this.form = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(2)]],
       price: [null, [Validators.required, Validators.min(1)]],
@@ -92,7 +92,7 @@ export class UpdateProductModalComponent implements OnInit {
 
   categoryIdValidator(control: any): { [key: string]: boolean } | null {
     const value = Number(control.value);
-    if (isNaN(value) || value < 1 || value > 100) {
+    if (isNaN(value) || value < 1 || value > 1000) {
       return { invalidCategoryId: true };
     }
     return null;
