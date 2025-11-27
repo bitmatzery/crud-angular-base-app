@@ -1,9 +1,8 @@
-// products.store.ts
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
-import { ProductState, initialProductState } from './products-store.state';
-import { IProduct, ICategory, ProductFilters, PaginationInfo } from '../models/product.interface';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, combineLatest} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
+import {initialProductState, ProductState} from './products-store.state';
+import {ICategory, IProduct, PaginationInfo, ProductFilters} from '../models/product.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -93,7 +92,7 @@ export class ProductsStore {
   // Private state updates
   private updateState(partialState: Partial<ProductState>): void {
     const currentState = this.state.value;
-    const newState = { ...currentState, ...partialState };
+    const newState = {...currentState, ...partialState};
 
     // Проверяем, действительно ли состояние изменилось
     const hasChanged = JSON.stringify(currentState) !== JSON.stringify(newState);
@@ -123,7 +122,7 @@ export class ProductsStore {
   }
 
   setFilteredProducts(products: IProduct[]): void {
-    this.updateState({ filteredProducts: products });
+    this.updateState({filteredProducts: products});
   }
 
   clearProducts(): void {
@@ -166,12 +165,12 @@ export class ProductsStore {
   }
 
   setCurrentProduct(product: IProduct | null): void {
-    this.updateState({ currentProduct: product });
+    this.updateState({currentProduct: product});
   }
 
   // Categories actions
   setCategories(categories: ICategory[]): void {
-    this.updateState({ categories });
+    this.updateState({categories});
   }
 
   selectCategory(category: ICategory | null): void {
@@ -183,12 +182,12 @@ export class ProductsStore {
   // Filtering actions
   updateFilters(filters: Partial<ProductFilters>): void {
     this.updateState({
-      filters: { ...this.state.value.filters, ...filters }
+      filters: {...this.state.value.filters, ...filters}
     });
   }
 
   clearFilters(): void {
-    const filters = { limit: 20, offset: 1 };
+    const filters = {limit: 10, offset: 0};
     this.updateState({
       filters,
       selectedCategory: null
@@ -197,15 +196,15 @@ export class ProductsStore {
 
   // Loading states
   setLoading(loading: boolean): void {
-    this.updateState({ loading });
+    this.updateState({loading});
   }
 
   setLoadingProducts(loading: boolean): void {
-    this.updateState({ loadingProducts: loading });
+    this.updateState({loadingProducts: loading});
   }
 
   setLoadingCategories(loading: boolean): void {
-    this.updateState({ loadingCategories: loading });
+    this.updateState({loadingCategories: loading});
   }
 
   // Error handling
@@ -217,13 +216,13 @@ export class ProductsStore {
     }
 
     console.log('Store: Setting error:', error);
-    this.updateState({ error });
+    this.updateState({error});
   }
 
   // Pagination
   updatePagination(pagination: Partial<PaginationInfo>): void {
     this.updateState({
-      pagination: { ...this.state.value.pagination, ...pagination }
+      pagination: {...this.state.value.pagination, ...pagination}
     });
   }
 
