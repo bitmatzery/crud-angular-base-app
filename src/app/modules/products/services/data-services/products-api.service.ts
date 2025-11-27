@@ -4,13 +4,6 @@ import { HttpParams } from '@angular/common/http';
 import { ApiService } from '../../../../core/http/api.service';
 import { ICategory, ICategoryUpdateDTO, IProduct, IProductUpdateDTO } from '../../models/product.interface';
 
-
-export interface ProductsResponse {
-  products: IProduct[];
-  total: number;
-  hasMore: boolean;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +11,7 @@ export class ProductsApiService {
   private apiService = inject(ApiService);
 
   // Products API Service
-  public getProducts(limit: number = 30, offset: number = 0): Observable<IProduct[]> {
+  public getProducts(limit: number = 10, offset: number = 0): Observable<IProduct[]> {
     const params = new HttpParams()
       .set('limit', limit.toString())
       .set('offset', offset.toString());
@@ -27,28 +20,13 @@ export class ProductsApiService {
   }
 
   // Получение продуктов по категории с пагинацией
-  public getProductsByCategory(categoryId: number, limit: number = 30, offset: number = 0): Observable<IProduct[]> {
+  public getProductsByCategory(categoryId: number, limit: number = 10, offset: number = 0): Observable<IProduct[]> {
     const params = new HttpParams()
       .set('categoryId', categoryId.toString())
       .set('limit', limit.toString())
       .set('offset', offset.toString());
 
     return this.apiService.get<IProduct[]>(`/categories/${categoryId}/products`, params);
-  }
-
-  // Получение общего количества продуктов (для пагинации)
-  public getProductsCount(categoryId?: number, searchTerm?: string): Observable<{ count: number }> {
-    let params = new HttpParams();
-
-    if (categoryId) {
-      params = params.set('categoryId', categoryId.toString());
-    }
-
-    if (searchTerm) {
-      params = params.set('search', searchTerm);
-    }
-
-    return this.apiService.get<{ count: number }>('/products/count', params);
   }
 
   getProduct(id: number): Observable<IProduct> {
@@ -68,7 +46,7 @@ export class ProductsApiService {
   }
 
   // Categories API Service
-  public getCategories(limit: number = 50): Observable<ICategory[]> {
+  public getCategories(limit: number = 5): Observable<ICategory[]> {
     const params = new HttpParams()
       .set('limit', limit.toString());
     return this.apiService.get<ICategory[]>('/categories', params);
