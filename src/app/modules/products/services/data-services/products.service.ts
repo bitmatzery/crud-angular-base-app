@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { forkJoin, of, Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { catchError, finalize, tap, switchMap, debounceTime, distinctUntilChanged, retry } from 'rxjs/operators';
+import { catchError, finalize, tap, switchMap, debounceTime, distinctUntilChanged, retry, map } from 'rxjs/operators';
 import { ProductsStore } from '../../store/products.store';
 import { ProductsApiService } from './products-api.service';
 import { DataInitializationService } from './data-initialization.service';
@@ -11,6 +11,7 @@ interface FilterState {
   categoryId: number | null;
   limit: number;
   offset: number;
+  searchMode: 'api' | 'local';
 }
 
 @Injectable({
@@ -28,22 +29,54 @@ export class ProductsService {
   private filterState = new BehaviorSubject<FilterState>({
     searchTerm: '',
     categoryId: null,
-    limit: 30,
-    offset: 0
+    limit: 10,
+    offset: 0,
+    searchMode: 'api'
   });
+
+  // Для хранения текущего поискового запроса
+  private currentSearchTermSubject = new BehaviorSubject<string>('');
+  public currentSearchTerm$ = this.currentSearchTermSubject.asObservable();
 
   private isLoading = false;
   private hasMore = true;
   private errorCount = 0;
   private readonly maxErrorCount = 3;
 
+  // Флаг для отслеживания полной загрузки всех продуктов через пагинацию
+  private allProductsLoadedViaPagination = false;
+
+  // Статическое состояние для сохранения между роутами
+  private static serviceState = {
+    allProducts: [] as IProduct[],
+    allProductsLoadedViaPagination: false,
+    initialized: false,
+    currentSearchTerm: '' // Сохраняем поисковый запрос отдельно
+  };
+
   constructor() {
-    this.setupFilterListener();
+    // Восстанавливаем состояние из статической переменной
+    this.allProducts = ProductsService.serviceState.allProducts;
+    this.allProductsLoadedViaPagination = ProductsService.serviceState.allProductsLoadedViaPagination;
+    this.currentSearchTermSubject.next(ProductsService.serviceState.currentSearchTerm);
+
+    if (!ProductsService.serviceState.initialized) {
+      this.setupFilterListener();
+      ProductsService.serviceState.initialized = true;
+    }
   }
 
   // Initialization
   initializeApp(): Observable<boolean> {
     console.log('Service: Starting application initialization');
+
+    // Если все продукты уже загружены через пагинацию, просто возвращаем true
+    if (this.allProductsLoadedViaPagination && this.allProducts.length > 0) {
+      console.log('All products already loaded via pagination, skipping initialization');
+      this.store.setProducts(this.allProducts);
+      return of(true);
+    }
+
     this.store.setLoading(true);
     this.store.setError(null);
 
@@ -75,14 +108,14 @@ export class ProductsService {
    */
   private loadInitialData(): Observable<boolean> {
     return forkJoin({
-      products: this.api.getProducts(30, 0).pipe(
+      products: this.api.getProducts(10, 0).pipe(
         retry(2),
         catchError(error => {
           console.error('Failed to load products:', error);
           return of([] as IProduct[]);
         })
       ),
-      categories: this.api.getCategories(50).pipe(
+      categories: this.api.getCategories(5).pipe(
         retry(2),
         catchError(error => {
           console.error('Failed to load categories:', error);
@@ -98,6 +131,7 @@ export class ProductsService {
 
         // Сохраняем все продукты для клиентского поиска
         this.allProducts = products;
+        ProductsService.serviceState.allProducts = products;
 
         if (products.length === 0 || categories.length === 0) {
           console.warn('Service: No data loaded, application may not function properly');
@@ -107,7 +141,8 @@ export class ProductsService {
         this.store.setProducts(products);
         this.store.setCategories(categories);
         this.store.setError(null);
-        this.hasMore = products.length === 30;
+
+        this.hasMore = products.length === 10;
         this.errorCount = 0;
       }),
       switchMap(() => of(true)),
@@ -143,6 +178,46 @@ export class ProductsService {
     );
   }
 
+  /**
+   * Поиск через API с использованием getProducts и большого лимита
+   */
+  private searchProductsViaApi(searchTerm: string): Observable<IProduct[]> {
+    console.log('Searching via API with large limit');
+
+    // Загружаем все продукты с сервера с большим лимитом
+    return this.api.getProducts(1000, 0).pipe(
+      tap(allProductsFromApi => {
+        console.log('Loaded all products from API for search:', allProductsFromApi.length);
+
+        // Сохраняем все продукты в кэш
+        this.allProducts = allProductsFromApi;
+        ProductsService.serviceState.allProducts = allProductsFromApi;
+
+        // Устанавливаем продукты в стор для использования в других операциях
+        this.store.setProducts(allProductsFromApi);
+      }),
+      map(allProductsFromApi => {
+        // Фильтруем продукты по поисковому запросу
+        if (!searchTerm || searchTerm.trim().length < 2) {
+          return allProductsFromApi;
+        }
+
+        const term = searchTerm.toLowerCase().trim();
+        return allProductsFromApi.filter(product =>
+          product.title.toLowerCase().includes(term) ||
+          product.description.toLowerCase().includes(term) ||
+          product.price.toString().includes(term) ||
+          product.category?.name.toLowerCase().includes(term)
+        );
+      }),
+      retry(1),
+      catchError(error => {
+        console.error('Search API error:', error);
+        throw error;
+      })
+    );
+  }
+
   // Настройка слушателя фильтров
   private setupFilterListener(): void {
     this.filterState.pipe(
@@ -150,7 +225,8 @@ export class ProductsService {
       distinctUntilChanged((prev, curr) =>
         prev.searchTerm === curr.searchTerm &&
         prev.categoryId === curr.categoryId &&
-        prev.offset === curr.offset
+        prev.offset === curr.offset &&
+        prev.searchMode === curr.searchMode
       ),
       switchMap(state => {
         if (this.isLoading) {
@@ -184,43 +260,49 @@ export class ProductsService {
     this.store.setLoadingProducts(true);
     this.store.setError(null);
 
-    let apiCall: Observable<IProduct[]>;
+    let productsObservable: Observable<IProduct[]>;
 
-    // КЛИЕНТСКИЙ ПОИСК - используем локальную фильтрацию
+    // ПОИСК: используем локальный поиск или API поиск
     if (state.searchTerm && state.searchTerm.length >= 2) {
-      console.log('Performing local search for:', state.searchTerm);
-      const filteredProducts = this.searchProductsLocally(state.searchTerm);
+      console.log('Performing search for:', state.searchTerm, 'Mode:', state.searchMode);
 
-      // Применяем пагинацию к отфильтрованным результатам
-      const startIndex = state.offset;
-      const endIndex = startIndex + state.limit;
-      const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+      // Всегда используем API поиск, если не все продукты загружены через пагинацию
+      // или если поисковой запрос изменился
+      const shouldUseApiSearch = !this.allProductsLoadedViaPagination ||
+        state.searchMode === 'api' ||
+        this.shouldUseApiForSearch(state.searchTerm);
 
-      this.hasMore = endIndex < filteredProducts.length;
+      if (!shouldUseApiSearch) {
+        // Локальный поиск по всем загруженным продуктам
+        console.log('Using local search - all products loaded via pagination');
+        const filteredProducts = this.searchProductsLocally(state.searchTerm);
+        const startIndex = state.offset;
+        const endIndex = startIndex + state.limit;
+        const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
 
-      return of(paginatedProducts).pipe(
-        tap(products => {
-          if (state.offset === 0) {
-            this.store.setProducts(products);
-          } else {
-            this.store.addProducts(products);
-          }
-          this.store.setError(null);
-          this.errorCount = 0;
-        }),
-        catchError(error => {
-          this.handleLoadError(error);
-          return of([]);
-        }),
-        finalize(() => {
-          this.isLoading = false;
-          this.store.setLoadingProducts(false);
-        })
-      );
+        this.hasMore = endIndex < filteredProducts.length;
+
+        productsObservable = of(paginatedProducts);
+      } else {
+        // Поиск через API с загрузкой всех продуктов
+        console.log('Using API search - not all products loaded or search term changed');
+        productsObservable = this.searchProductsViaApi(state.searchTerm).pipe(
+          map(filteredProducts => {
+            // Применяем пагинацию к результатам поиска
+            const startIndex = state.offset;
+            const endIndex = startIndex + state.limit;
+            this.hasMore = endIndex < filteredProducts.length;
+            return filteredProducts.slice(startIndex, endIndex);
+          })
+        );
+      }
     }
     // Фильтрация по категории через API
     else if (state.categoryId) {
-      apiCall = this.api.getProductsByCategory(state.categoryId, state.limit, state.offset).pipe(
+      productsObservable = this.api.getProductsByCategory(state.categoryId, state.limit, state.offset).pipe(
+        tap(products => {
+          this.hasMore = products.length === state.limit;
+        }),
         retry(1),
         catchError(error => {
           console.error('Category filter API error:', error);
@@ -230,7 +312,17 @@ export class ProductsService {
     }
     // Обычная загрузка продуктов
     else {
-      apiCall = this.api.getProducts(state.limit, state.offset).pipe(
+      productsObservable = this.api.getProducts(state.limit, state.offset).pipe(
+        tap(products => {
+          this.hasMore = products.length === state.limit;
+
+          // Если загрузили меньше чем лимит, значит все продукты загружены через пагинацию
+          if (products.length < state.limit) {
+            this.allProductsLoadedViaPagination = true;
+            ProductsService.serviceState.allProductsLoadedViaPagination = true;
+            console.log('All products loaded via pagination. Total:', this.allProducts.length);
+          }
+        }),
         retry(1),
         catchError(error => {
           console.error('Products API error:', error);
@@ -239,19 +331,25 @@ export class ProductsService {
       );
     }
 
-    return apiCall.pipe(
+    return productsObservable.pipe(
       tap(products => {
         if (state.offset === 0) {
           this.store.setProducts(products);
-          // Обновляем кэш всех продуктов при первой загрузке
-          if (!state.searchTerm && !state.categoryId) {
-            this.allProducts = products;
-          }
         } else {
           this.store.addProducts(products);
         }
 
-        this.hasMore = products.length === state.limit;
+        // Обновляем кэш всех продуктов при обычной загрузке (не поиск)
+        if (!state.searchTerm && !state.categoryId) {
+          if (state.offset === 0) {
+            this.allProducts = products;
+            ProductsService.serviceState.allProducts = products;
+          } else {
+            this.allProducts = [...this.allProducts, ...products];
+            ProductsService.serviceState.allProducts = this.allProducts;
+          }
+        }
+
         this.store.setError(null);
         this.errorCount = 0;
 
@@ -260,7 +358,11 @@ export class ProductsService {
           categoryId: state.categoryId,
           offset: state.offset,
           loaded: products.length,
-          hasMore: this.hasMore
+          hasMore: this.hasMore,
+          allProductsLoadedViaPagination: this.allProductsLoadedViaPagination,
+          searchMode: state.searchMode,
+          totalInStore: this.store.getCurrentState().products.length,
+          totalInCache: this.allProducts.length
         });
       }),
       catchError(error => {
@@ -272,6 +374,25 @@ export class ProductsService {
         this.store.setLoadingProducts(false);
       })
     );
+  }
+
+  /**
+   * Определяет, нужно ли использовать API для поиска
+   */
+  private shouldUseApiForSearch(searchTerm: string): boolean {
+    // Если не все продукты загружены через пагинацию, используем API
+    if (!this.allProductsLoadedViaPagination) {
+      return true;
+    }
+
+    // Если поисковый запрос ранее не выполнялся или изменился, используем API
+    const previousSearchTerm = ProductsService.serviceState.currentSearchTerm ;
+    if (previousSearchTerm !== searchTerm) {
+      ProductsService.serviceState.currentSearchTerm  = searchTerm;
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -295,11 +416,21 @@ export class ProductsService {
       return;
     }
 
+    // Сохраняем поисковый запрос
+    this.currentSearchTermSubject.next(searchTerm);
+    ProductsService.serviceState.currentSearchTerm = searchTerm;
+
+    // Определяем режим поиска на основе логики shouldUseApiForSearch
+    const searchMode = this.shouldUseApiForSearch(searchTerm) ? 'api' : 'local';
+
+    console.log('Setting search mode:', searchMode, 'All products loaded via pagination:', this.allProductsLoadedViaPagination);
+
     this.filterState.next({
       ...this.filterState.value,
       searchTerm,
       categoryId: null,
-      offset: 0
+      offset: 0,
+      searchMode
     });
 
     this.store.selectCategory(null);
@@ -311,11 +442,16 @@ export class ProductsService {
       return;
     }
 
+    // Сбрасываем поисковый запрос при выборе категории
+    this.currentSearchTermSubject.next('');
+    ProductsService.serviceState.currentSearchTerm = '';
+
     this.filterState.next({
       ...this.filterState.value,
       categoryId,
       searchTerm: '',
-      offset: 0
+      offset: 0,
+      searchMode: 'api'
     });
 
     if (!categoryId) {
@@ -343,22 +479,31 @@ export class ProductsService {
     const currentState = this.filterState.value;
 
     if (this.isLoading || !this.hasMore) {
+      console.log('Skipping load more - isLoading:', this.isLoading, 'hasMore:', this.hasMore);
       return;
     }
 
+    const newOffset = currentState.offset + currentState.limit;
+    console.log('Loading more products. Current offset:', currentState.offset, 'New offset:', newOffset);
+
     this.filterState.next({
       ...currentState,
-      offset: currentState.offset + currentState.limit
+      offset: newOffset
     });
   }
 
   // Сброс всех фильтров
   clearAllFilters(): void {
+    // Сбрасываем поисковый запрос
+    this.currentSearchTermSubject.next('');
+    ProductsService.serviceState.currentSearchTerm = '';
+
     this.filterState.next({
       searchTerm: '',
       categoryId: null,
-      limit: 30,
-      offset: 0
+      limit: 10,
+      offset: 0,
+      searchMode: 'api'
     });
 
     this.store.selectCategory(null);
@@ -374,6 +519,13 @@ export class ProductsService {
     this.store.setCategories([]);
     this.store.selectCategory(null);
     this.allProducts = [];
+    this.allProductsLoadedViaPagination = false;
+
+    // Сбрасываем поисковый запрос
+    this.currentSearchTermSubject.next('');
+    ProductsService.serviceState.allProducts = [];
+    ProductsService.serviceState.allProductsLoadedViaPagination = false;
+    ProductsService.serviceState.currentSearchTerm = '';
 
     return this.initializeApp();
   }
@@ -394,5 +546,55 @@ export class ProductsService {
       return this.allProducts.length;
     }
     return this.searchProductsLocally(searchTerm).length;
+  }
+
+  // Все ли продукты загружены через пагинацию
+  areAllProductsLoaded(): boolean {
+    return this.allProductsLoadedViaPagination;
+  }
+
+  // Получить количество загруженных продуктов
+  getLoadedProductsCount(): number {
+    return this.allProducts.length;
+  }
+
+  // Получить все загруженные продукты
+  getAllProducts(): IProduct[] {
+    return this.allProducts;
+  }
+
+  // Установить продукты (для восстановления состояния)
+  setProducts(products: IProduct[]): void {
+    this.allProducts = products;
+    ProductsService.serviceState.allProducts = products;
+    this.store.setProducts(products);
+    this.allProductsLoadedViaPagination = products.length > 0;
+    ProductsService.serviceState.allProductsLoadedViaPagination = this.allProductsLoadedViaPagination;
+  }
+
+  // Получить текущий поисковый запрос
+  getCurrentSearchTerm(): string {
+    return this.currentSearchTermSubject.value;
+  }
+
+  // Установить поисковый запрос (для восстановления состояния)
+  setCurrentSearchTerm(searchTerm: string): void {
+    this.currentSearchTermSubject.next(searchTerm);
+    ProductsService.serviceState.currentSearchTerm = searchTerm;
+  }
+
+  // Метод для установки лимита
+  setItemsLimit(limit: number): void {
+    const currentState = this.filterState.value;
+    this.filterState.next({
+      ...currentState,
+      limit: limit
+    });
+    console.log('Items limit set to:', limit);
+  }
+
+  // Получение текущего лимита
+  getCurrentLimit(): number {
+    return this.filterState.value.limit;
   }
 }
