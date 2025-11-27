@@ -33,11 +33,11 @@ export const initialProductState: ProductState = {
   loadingProducts: false,
   loadingCategories: false,
   filters: {
-    limit: 20,
+    limit: 10,
     offset: 0
   },
   pagination: {
-    limit: 18,
+    limit: 10,
     offset: 0,
     total: 0,
     hasMore: false
