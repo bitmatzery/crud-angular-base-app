@@ -198,6 +198,29 @@
   }
 }
 
+.search-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #6b7280;
+
+  .loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e5e7eb;
+    border-top: 2px solid #6366f1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -269,6 +292,14 @@
       .no-results-text {
         color: #d1d5db;
       }
+    }
+  }
+  .search-loading {
+    color: #9ca3af;
+
+    .loading-spinner {
+      border-color: #4b5563;
+      border-top-color: #8b5cf6;
     }
   }
 }

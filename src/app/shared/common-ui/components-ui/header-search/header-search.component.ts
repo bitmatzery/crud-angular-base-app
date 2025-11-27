@@ -6,12 +6,11 @@ import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {Router} from '@angular/router';
 import {Observable, of, Subject} from 'rxjs';
-import {debounceTime, distinctUntilChanged, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {IProduct} from '../../../../modules/products/models/product.interface';
-import {ProductsStore} from '../../../../modules/products/store/products.store';
 import {ProductsApiService} from '../../../../modules/products/services/data-services/products-api.service';
 import {MatIconButton} from '@angular/material/button';
-
+import {ProductsService} from '../../../../modules/products/services/data-services/products.service';
 
 @Component({
   selector: 'header-search-ui',
@@ -31,8 +30,8 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   @Output() search = new EventEmitter<string>();
   @Output() productSelected = new EventEmitter<IProduct>();
 
-  private productsStore = inject(ProductsStore);
   private productsApiService = inject(ProductsApiService);
+  private productsService = inject(ProductsService);
   private router = inject(Router);
   private destroy$ = new Subject<void>();
 
@@ -40,8 +39,14 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   showResults = false;
   searchResults: IProduct[] = [];
   hasSearched = false;
+  isLoading = false;
 
   ngOnInit() {
+    const currentSearchTerm = this.productsService.getCurrentSearchTerm();
+    if (currentSearchTerm) {
+      this.searchControl.setValue(currentSearchTerm, {emitEvent: false});
+    }
+
     // Подписываемся на изменения поля поиска с debounce
     this.searchControl.valueChanges
       .pipe(
@@ -64,25 +69,42 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     if (term.length > 2) {
       this.showResults = true;
       this.hasSearched = true;
+      this.isLoading = true;
     } else {
       this.showResults = false;
       this.searchResults = [];
       this.hasSearched = false;
+      this.isLoading = false;
     }
   }
 
   private performSearch(term: string): Observable<IProduct[]> {
     if (term.length <= 2) {
       this.searchResults = [];
+      this.isLoading = false;
       return of([]);
     }
 
-    // Используем локальный поиск по данным из store
-    return this.performLocalSearch(term);
+    // Используем единую логику поиска через ProductsService
+    return this.performUnifiedSearch(term);
+  }
+
+  private performUnifiedSearch(term: string): Observable<IProduct[]> {
+    const allProductsLoaded = this.productsService.areAllProductsLoaded();
+
+    if (allProductsLoaded) {
+      // Если все продукты загружены через пагинацию, ищем локально
+      console.log('HeaderSearch: Using local search');
+      return this.performLocalSearch(term);
+    } else {
+      // Если не все продукты загружены, используем API поиск
+      console.log('HeaderSearch: Using API search');
+      return this.performApiSearch(term);
+    }
   }
 
   private performLocalSearch(term: string): Observable<IProduct[]> {
-    const allProducts = this.productsStore.getCurrentState().products;
+    const allProducts = this.productsService.getAllProducts();
     const termLower = term.toLowerCase().trim();
 
     const filteredProducts = allProducts.filter(product =>
@@ -92,8 +114,40 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
       product.category?.name.toLowerCase().includes(termLower)
     );
 
-    this.searchResults = filteredProducts.slice(0, 10); // Ограничиваем количество
+    this.searchResults = filteredProducts.slice(0, 10);
+    this.isLoading = false;
     return of(this.searchResults);
+  }
+
+  private performApiSearch(term: string): Observable<IProduct[]> {
+    // Используем API для поиска с большим лимитом
+    return this.productsApiService.getProducts(1000, 0).pipe(
+      map(allProducts => {
+        const termLower = term.toLowerCase().trim();
+
+        const filteredProducts = allProducts.filter(product =>
+          product.title.toLowerCase().includes(termLower) ||
+          product.description?.toLowerCase().includes(termLower) ||
+          product.price.toString().includes(term) ||
+          product.category?.name.toLowerCase().includes(termLower)
+        );
+
+        this.searchResults = filteredProducts.slice(0, 10);
+        this.isLoading = false;
+
+        // Сохраняем загруженные продукты в сервисе для будущих поисков
+        this.productsService.setProducts(allProducts);
+
+        return this.searchResults;
+      }),
+      tap({
+        error: (error) => {
+          console.error('HeaderSearch API error:', error);
+          this.isLoading = false;
+          this.searchResults = [];
+        }
+      })
+    );
   }
 
   getProductImage(product: IProduct): string {
@@ -101,7 +155,6 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
       if (Array.isArray(product.images)) {
         return product.images[0];
       }
-      // Если images - это строка, пытаемся разобрать её как JSON или использовать как есть
       try {
         const parsedImages = JSON.parse(product.images);
         return Array.isArray(parsedImages) ? parsedImages[0] : product.images;
@@ -122,6 +175,7 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
     this.showResults = false;
     this.searchResults = [];
     this.hasSearched = false;
+    this.isLoading = false;
     this.search.emit('');
   }
 
@@ -150,7 +204,6 @@ export class HeaderSearchComponent implements OnInit, OnDestroy {
   }
 
   onBlur(): void {
-    // Небольшая задержка чтобы клик по результату успел сработать
     setTimeout(() => {
       this.showResults = false;
     }, 200);
