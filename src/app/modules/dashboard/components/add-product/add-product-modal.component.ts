@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -10,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProductsApiService } from 'app/modules/products/services/data-services/products-api.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { BehaviorSubject, catchError, finalize, tap } from 'rxjs';
 
 @Component({
   selector: 'add-product-modal',
@@ -25,7 +33,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatIconModule,
     MatSnackBarModule,
     MatProgressSpinnerModule
-],
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './add-product-modal.component.html',
@@ -36,10 +44,15 @@ export class AddProductModalComponent implements OnInit {
   private productsService = inject(ProductsApiService);
   private dialogRef = inject(MatDialogRef<AddProductModalComponent>);
   private snackBar = inject(MatSnackBar);
+  private cdr = inject(ChangeDetectorRef);
 
   form: FormGroup;
-  categories: any[] = [];
-  loading = false;
+
+  private categoriesSubject = new BehaviorSubject<any[]>([]);
+  categories$ = this.categoriesSubject.asObservable();
+
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  loading$ = this.loadingSubject.asObservable();
 
   constructor() {
     this.form = this.fb.group({
@@ -52,15 +65,21 @@ export class AddProductModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.productsService.getCategories().subscribe({
-      next: (res) => {
-        this.categories = res;
-      },
-      error: (err) => {
-        console.error('Failed to load categories', err);
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.productsService.getCategories().pipe(
+      tap(categories => {
+        this.categoriesSubject.next(categories);
+        this.cdr.markForCheck();
+      }),
+      catchError(error => {
+        console.error('Failed to load categories', error);
         this.snackBar.open('Failed to load categories', 'Close', { duration: 3000 });
-      }
-    });
+        return [];
+      })
+    ).subscribe();
   }
 
   get images(): FormArray {
@@ -69,7 +88,7 @@ export class AddProductModalComponent implements OnInit {
 
   categoryIdValidator(control: any): { [key: string]: boolean } | null {
     const value = Number(control.value);
-    if (isNaN(value) || value < 1 || value > 100) {
+    if (isNaN(value) || value < 1 || value > 1000) {
       return { invalidCategoryId: true };
     }
     return null;
@@ -81,11 +100,13 @@ export class AddProductModalComponent implements OnInit {
       this.images.push(this.fb.control(url));
       event.target.value = '';
       this.form.get('images')?.markAsTouched();
+      this.cdr.markForCheck();
     }
   }
 
   removeImage(index: number): void {
     this.images.removeAt(index);
+    this.cdr.markForCheck();
   }
 
   onSubmit(): void {
@@ -95,20 +116,23 @@ export class AddProductModalComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
+    this.loadingSubject.next(true);
     const formData = this.form.value;
 
-    this.productsService.createProduct(formData).subscribe({
-      next: () => {
-        this.loading = false;
+    this.productsService.createProduct(formData).pipe(
+      tap(() => {
         this.dialogRef.close('success');
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error('Failed to create product', err);
+      }),
+      catchError(error => {
+        console.error('Failed to create product', error);
         this.snackBar.open('Failed to create product', 'Close', { duration: 3000 });
-      }
-    });
+        throw error;
+      }),
+      finalize(() => {
+        this.loadingSubject.next(false);
+        this.cdr.markForCheck();
+      })
+    ).subscribe();
   }
 
   onCancel(): void {

@@ -50,7 +50,10 @@
         <mat-label>Category</mat-label>
         <mat-select formControlName="categoryId" placeholder="Select category">
           <mat-option value="">Select a Category</mat-option>
-          <mat-option *ngFor="let category of categories" [value]="category.id">
+          <mat-option
+            *ngFor="let category of categories$ | async"
+            [value]="category.id"
+          >
             {{ category.name }} (ID: {{ category.id }})
           </mat-option>
         </mat-select>
@@ -76,7 +79,7 @@
           <mat-icon>image</mat-icon>
           <span>No images added yet</span>
         </div>
-        
+
         <div *ngFor="let imgCtrl of images.controls; let i = index" class="image-preview">
           <img [src]="imgCtrl.value" alt="Preview" class="preview-image">
           <div class="image-info">
@@ -86,7 +89,7 @@
             </button>
           </div>
         </div>
-        
+
         <mat-error *ngIf="form.get('images')?.hasError('required') && form.get('images')?.touched">
           At least one image is required
         </mat-error>
@@ -95,16 +98,22 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end" class="modal-actions">
-    <button mat-button (click)="onCancel()" [disabled]="loading">Cancel</button>
-    <button 
-      mat-raised-button 
-      color="primary" 
-      (click)="onSubmit()" 
-      [disabled]="form.invalid || loading"
+    <button mat-button (click)="onCancel()" [disabled]="loading$ | async">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="form.invalid || (loading$ | async)"
       class="submit-btn"
     >
-      <mat-spinner diameter="20" *ngIf="loading" class="button-spinner"></mat-spinner>
-      <span>{{ loading ? 'Creating...' : 'Create Product' }}</span>
+      <!-- Используем async pipe для состояния загрузки -->
+      <ng-container *ngIf="loading$ | async; else notLoading">
+        <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+        <span>Creating...</span>
+      </ng-container>
+      <ng-template #notLoading>
+        <span>Create Product</span>
+      </ng-template>
     </button>
   </mat-dialog-actions>
 </div>
