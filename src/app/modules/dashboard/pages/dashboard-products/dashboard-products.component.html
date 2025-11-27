@@ -13,98 +13,125 @@
     </button>
   </div>
 
-  <!-- Таблица продуктов -->
   <div class="table-container">
-    <table mat-table [dataSource]="products" class="products-table">
-
-      <!-- Колонка с изображением -->
-      <ng-container matColumnDef="image">
-        <th mat-header-cell *matHeaderCellDef>Image</th>
-        <td mat-cell *matCellDef="let product">
-          <img
-            [src]="product.images[0]"
-            alt="Product Image"
-            class="product-image"
-            (error)="product.images[0] = 'assets/images/placeholder.jpg'"
-          >
-        </td>
-      </ng-container>
-
-      <!-- Колонка с названием -->
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef>Title</th>
-        <td mat-cell *matCellDef="let product" class="product-title">
-          {{ product.title }}
-        </td>
-      </ng-container>
-
-      <!-- Колонка с категорией -->
-      <ng-container matColumnDef="category">
-        <th mat-header-cell *matHeaderCellDef>Category</th>
-        <td mat-cell *matCellDef="let product" class="product-category">
-          {{ product.category?.name }}
-        </td>
-      </ng-container>
-
-      <!-- Колонка с ценой -->
-      <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef>Price</th>
-        <td mat-cell *matCellDef="let product" class="product-price">
-          ${{ product.price }}
-        </td>
-      </ng-container>
-
-      <!-- Колонка с действиями -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let product" class="actions-cell">
-          <div class="actions-container">
-            <button
-              mat-icon-button
-              color="primary"
-              (click)="openUpdateProductModal(product)"
-              matTooltip="Edit product"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              color="warn"
-              (click)="deleteProduct(product.id)"
-              matTooltip="Delete product"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </td>
-      </ng-container>
-
-      <!-- Заголовок таблицы -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-
-      <!-- Строки данных -->
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-
-    <!-- Состояние загрузки -->
-    <div *ngIf="loading" class="loading-state">
+    <!-- Начальная загрузка -->
+    <div *ngIf="(initialLoading$ | async)" class="initial-loading">
       <mat-spinner diameter="40"></mat-spinner>
       <span>Loading products...</span>
     </div>
 
-    <!-- Состояние пустого списка -->
-    <div *ngIf="!loading && products.length === 0" class="empty-state">
-      <mat-icon class="empty-icon">inventory_2</mat-icon>
-      <h3>No products found</h3>
-      <p>Get started by adding your first product</p>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="openAddProductModal()"
-      >
-        <mat-icon>add</mat-icon>
-        Add First Product
-      </button>
-    </div>
+    <!-- Контент когда загрузка завершена -->
+    <ng-container *ngIf="!(initialLoading$ | async)">
+
+      <!-- Бесконечный скролл контейнер -->
+      <infinite-scroll-container-ui
+        [isLoading]="(loadingMore$ | async) || false"
+        [hasMore]="(hasMore$ | async) || false"
+        [isScrollable]="true"
+        [maxHeight]="'70vh'"
+        [loadingText]="'Loading more products...'"
+        [noMoreText]="'All products loaded'"
+        (loadMore)="onLoadMore()">
+
+        <!-- Таблица продуктов -->
+        <ng-container *ngIf="(products$ | async) as products">
+          <table
+            *ngIf="products && products.length > 0"
+            mat-table
+            [dataSource]="products"
+            class="products-table"
+          >
+            <!-- Колонка с изображением -->
+            <ng-container matColumnDef="image">
+              <th mat-header-cell *matHeaderCellDef>Image</th>
+              <td mat-cell *matCellDef="let product">
+                <img
+                  [src]="product.images?.[0] || 'assets/images/placeholder.jpg'"
+                  [alt]="product.title"
+                  class="product-image"
+                  (error)="product.images = ['assets/images/placeholder.jpg']"
+                >
+              </td>
+            </ng-container>
+
+            <!-- Колонка с названием -->
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>Title</th>
+              <td mat-cell *matCellDef="let product" class="product-title">
+                {{ product.title }}
+              </td>
+            </ng-container>
+
+            <!-- Колонка с категорией -->
+            <ng-container matColumnDef="category">
+              <th mat-header-cell *matHeaderCellDef>Category</th>
+              <td mat-cell *matCellDef="let product" class="product-category">
+                {{ product.category?.name || 'No category' }}
+              </td>
+            </ng-container>
+
+            <!-- Колонка с ценой -->
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef>Price</th>
+              <td mat-cell *matCellDef="let product" class="product-price">
+                ${{ product.price }}
+              </td>
+            </ng-container>
+
+            <!-- Колонка с действиями -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let product" class="actions-cell">
+                <div class="actions-container">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="openUpdateProductModal(product)"
+                    matTooltip="Edit product"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="deleteProduct(product.id)"
+                    matTooltip="Delete product"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Заголовок таблицы -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <!-- Строки данных -->
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </ng-container>
+
+      </infinite-scroll-container-ui>
+
+      <!-- Состояние пустого списка -->
+      <ng-container *ngIf="(products$ | async) as products">
+        <div
+          *ngIf="!(initialLoading$ | async) && (!products || products.length === 0)"
+          class="empty-state"
+        >
+          <mat-icon class="empty-icon">inventory_2</mat-icon>
+          <h3>No products found</h3>
+          <p>Get started by adding your first product</p>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="openAddProductModal()"
+          >
+            <mat-icon>add</mat-icon>
+            Add First Product
+          </button>
+        </div>
+      </ng-container>
+
+    </ng-container>
   </div>
 </div>
