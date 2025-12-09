@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ViewEncapsulation} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {HeaderComponent} from './shared/common-ui/layout-ui/header/header.component';
 import {FooterComponent} from './shared/common-ui/layout-ui/footer/footer.component';
@@ -6,6 +6,7 @@ import {FooterComponent} from './shared/common-ui/layout-ui/footer/footer.compon
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

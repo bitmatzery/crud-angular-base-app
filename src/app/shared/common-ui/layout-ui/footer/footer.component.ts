@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -20,6 +20,7 @@ import { LogoComponent } from '../../components-ui/logo/logo.component';
     RouterLink,
     LogoComponent
   ],
+  encapsulation: ViewEncapsulation.None,
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
 })

@@ -1,8 +1,18 @@
+.home-container {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--app-background);
+  color: var(--app-text);
+}
+
 .home__title {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  color: var(--app-text);
 }
 
 .initialization-message {
@@ -10,6 +20,11 @@
     background: #d1ecf1;
     border-color: #bee5eb;
     color: #0c5460;
+  }
+
+  &.error {
+    background-color: rgba(244, 67, 54, 0.1);
+    border-color: #f44336;
   }
 }
 

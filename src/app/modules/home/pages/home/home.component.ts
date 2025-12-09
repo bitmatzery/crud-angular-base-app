@@ -11,7 +11,7 @@ import {DisplayType} from '../../../products/models/display-type.enum';
   imports: [CommonModule, ProductsListContainerComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated,
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit, OnDestroy {
