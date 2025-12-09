@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -9,14 +9,15 @@ export type Theme = 'light' | 'dark' | 'auto';
 })
 export class ThemeService {
   cookieService = inject(CookieService);
+  private renderer: Renderer2;
   private currentTheme = new BehaviorSubject<Theme>('light');
   public currentTheme$ = this.currentTheme.asObservable();
   private mediaQuery: MediaQueryList;
+  private darkModeListener?: (event: MediaQueryListEvent) => void;
 
-  constructor() {
-    // Слушаем изменения системной темы
+  constructor(rendererFactory: RendererFactory2) {
+    this.renderer = rendererFactory.createRenderer(null, null);
     this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    this.mediaQuery.addEventListener('change', this.handleSystemThemeChange.bind(this));
 
     this.loadInitialTheme();
   }
@@ -32,26 +33,67 @@ export class ThemeService {
     }
   }
 
-  private handleSystemThemeChange(event: MediaQueryListEvent): void {
-    if (this.currentTheme.value === 'auto') {
-      this.applyThemeToBody('auto');
+  setTheme(theme: Theme): void {
+    this.currentTheme.next(theme);
+    this.applyThemeToAppRoot(theme);
+    this.cookieService.set('theme', theme, {
+      path: '/',
+      sameSite: 'Strict',
+      secure: window.location.protocol === 'https:'
+    });
+  }
+
+  private applyThemeToAppRoot(theme: Theme): void {
+    // Находим app-root элемент
+    const appRoot = document.querySelector('app-root');
+    if (!appRoot) return;
+
+    // Удаляем все тематические классы
+    this.renderer.removeClass(appRoot, 'light-theme');
+    this.renderer.removeClass(appRoot, 'dark-theme');
+    this.renderer.removeClass(appRoot, 'auto-theme'); // Для отслеживания системной темы
+
+    // Удаляем слушатель, если он был
+    this.removeSystemThemeListener();
+
+    if (theme === 'auto') {
+      this.renderer.addClass(appRoot, 'auto-theme');
+
+      // Применяем текущую системную тему
+      this.applySystemTheme();
+
+      // Устанавливаем слушатель для изменений системной темы
+      this.setupSystemThemeListener();
+    } else {
+      this.renderer.addClass(appRoot, theme + '-theme');
     }
   }
 
-  setTheme(theme: Theme): void {
-    this.currentTheme.next(theme);
-    this.applyThemeToBody(theme);
-    this.cookieService.set('theme', theme);
+  private applySystemTheme(): void {
+    const appRoot = document.querySelector('app-root');
+    if (!appRoot) return;
+
+    if (this.mediaQuery.matches) {
+      this.renderer.addClass(appRoot, 'system-dark');
+    } else {
+      this.renderer.removeClass(appRoot, 'system-dark');
+    }
   }
 
-  private applyThemeToBody(theme: Theme): void {
-    // Удаляем все тематические классы
-    document.body.classList.remove('light-theme', 'dark-theme', 'auto-theme');
+  private setupSystemThemeListener(): void {
+    this.darkModeListener = (event: MediaQueryListEvent) => {
+      if (this.currentTheme.value === 'auto') {
+        this.applySystemTheme();
+      }
+    };
 
-    if (theme === 'auto') {
-      document.body.classList.add('auto-theme');
-    } else {
-      document.body.classList.add(theme + '-theme');
+    this.mediaQuery.addEventListener('change', this.darkModeListener);
+  }
+
+  private removeSystemThemeListener(): void {
+    if (this.darkModeListener) {
+      this.mediaQuery.removeEventListener('change', this.darkModeListener);
+      this.darkModeListener = undefined;
     }
   }
 
@@ -67,7 +109,6 @@ export class ThemeService {
     return this.currentTheme.value;
   }
 
-  // Метод для получения актуальной темы (для автотемы возвращает системную)
   getResolvedTheme(): 'light' | 'dark' {
     const current = this.currentTheme.value;
 
@@ -78,8 +119,11 @@ export class ThemeService {
     return current;
   }
 
-  // Проверка, использует ли система темную тему
   isSystemDark(): boolean {
     return this.mediaQuery.matches;
+  }
+
+  ngOnDestroy(): void {
+    this.removeSystemThemeListener();
   }
 }
