@@ -1,6 +1,7 @@
 @use "@angular/material" as mat;
 @use "sass:map";
 @use "utilities";
+@use "media";
 
 // Создание темы с новым синтаксисом
 @include mat.core();
@@ -26,8 +27,8 @@ $mat-dark-theme: mat.define-theme((
 // Применяем светлую тему по умолчанию
 @include mat.all-component-themes($mat-light-theme);
 
-// CSS переменные для светлой темы
-:root, .light-theme {
+// Базовые CSS переменные
+:root {
   // Основные цвета приложения
   --app-background: #ffffff;
   --app-text: #212121;
@@ -38,14 +39,34 @@ $mat-dark-theme: mat.define-theme((
   --app-card-bg: #ffffff;
   --app-hover: rgba(0, 0, 0, 0.04);
   --app-shadow: rgba(0, 0, 0, 0.1);
+  --app-success: #2e7d32;
 
   // Цвета для конкретных элементов
-  --app-header-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%); // Красивый фиолетово-синий градиент
-  --app-footer-bg: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); // Красивый синий градиент
+  --app-header-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --app-footer-bg: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
   --app-sidebar-bg: #f5f5f5;
   --app-input-bg: #ffffff;
   --app-button-bg: #1976d2;
   --app-button-text: #ffffff;
+
+  // Градиенты для дашборда
+  --dashboard-gradient-light: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --dashboard-gradient-dark: linear-gradient(135deg, #1e1b4b 0%, #3730a3 100%);
+
+  // Переменные для компонентов дашборда
+  --dashboard-card-bg-light: rgba(255, 255, 255, 0.95);
+  --dashboard-card-bg-dark: rgba(30, 30, 30, 0.95);
+  --dashboard-card-text-light: #1f2937;
+  --dashboard-card-text-dark: #f9fafb;
+  --dashboard-card-secondary-light: #6b7280;
+  --dashboard-card-secondary-dark: #d1d5db;
+  --dashboard-stat-card-bg-light: rgba(255, 255, 255, 0.9);
+  --dashboard-stat-card-bg-dark: rgba(30, 30, 30, 0.9);
+
+  // Акцентные цвета (общие для всех тем)
+  --accent-primary: #4f46e5;
+  --accent-secondary: #7c3aed;
+  --accent-gradient: linear-gradient(135deg, #667eea, #764ba2);
 
   // Размеры и отступы
   --header-height: 70px;
@@ -57,6 +78,17 @@ $mat-dark-theme: mat.define-theme((
   --transition: all 0.3s ease;
 }
 
+// Светлая тема
+.light-theme {
+  @include mat.all-component-themes($mat-light-theme);
+
+  // Для дашборда
+  --dashboard-card-bg: var(--dashboard-card-bg-light);
+  --dashboard-card-text: var(--dashboard-card-text-light);
+  --dashboard-card-secondary: var(--dashboard-card-secondary-light);
+  --dashboard-stat-card-bg: var(--dashboard-stat-card-bg-light);
+}
+
 // Темная тема
 .dark-theme {
   @include mat.all-component-colors($mat-dark-theme);
@@ -66,29 +98,34 @@ $mat-dark-theme: mat.define-theme((
   --app-text: #ffffff;
   --app-surface: #1e1e1e;
   --app-border: #333333;
-
   --app-card-bg: #1e1e1e;
   --app-hover: rgba(255, 255, 255, 0.04);
   --app-shadow: rgba(0, 0, 0, 0.3);
-
-  // Для темной темы оставляем темные градиенты
+  --app-success: #4caf50;
   --app-header-bg: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   --app-footer-bg: linear-gradient(135deg, #111827 0%, #1f2937 100%);
   --app-sidebar-bg: #1a1a1a;
   --app-input-bg: #2d2d2d;
   --app-button-bg: #bb86fc;
   --app-button-text: #000000;
+
+  // Для дашборда
+  --dashboard-card-bg: var(--dashboard-card-bg-dark);
+  --dashboard-card-text: var(--dashboard-card-text-dark);
+  --dashboard-card-secondary: var(--dashboard-card-secondary-dark);
+  --dashboard-stat-card-bg: var(--dashboard-stat-card-bg-dark);
 }
 
-// Авто тема - использует системные настройки
+// Авто тема
 .auto-theme {
-  // По умолчанию светлая тема с красивыми градиентами
   @include mat.all-component-themes($mat-light-theme);
 
-  --app-header-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --app-footer-bg: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+  // По умолчанию светлая тема
+  --dashboard-card-bg: var(--dashboard-card-bg-light);
+  --dashboard-card-text: var(--dashboard-card-text-light);
+  --dashboard-card-secondary: var(--dashboard-card-secondary-light);
+  --dashboard-stat-card-bg: var(--dashboard-stat-card-bg-light);
 
-  // Если система предпочитает темную тему
   @media (prefers-color-scheme: dark) {
     @include mat.all-component-colors($mat-dark-theme);
 
@@ -96,22 +133,26 @@ $mat-dark-theme: mat.define-theme((
     --app-text: #ffffff;
     --app-surface: #1e1e1e;
     --app-border: #333333;
-
     --app-card-bg: #1e1e1e;
     --app-hover: rgba(255, 255, 255, 0.04);
     --app-shadow: rgba(0, 0, 0, 0.3);
-
-    // Темные градиенты для системной темной темы
+    --app-success: #4caf50;
     --app-header-bg: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     --app-footer-bg: linear-gradient(135deg, #111827 0%, #1f2937 100%);
     --app-sidebar-bg: #1a1a1a;
     --app-input-bg: #2d2d2d;
     --app-button-bg: #bb86fc;
     --app-button-text: #000000;
+
+    // Для дашборда
+    --dashboard-card-bg: var(--dashboard-card-bg-dark);
+    --dashboard-card-text: var(--dashboard-card-text-dark);
+    --dashboard-card-secondary: var(--dashboard-card-secondary-dark);
+    --dashboard-stat-card-bg: var(--dashboard-stat-card-bg-dark);
   }
 }
 
-// Стили для тулбаров - ВАЖНО: оставляем белый текст для контраста с градиентами
+// Стили для тулбаров
 .mat-toolbar,
 .mat-mdc-toolbar {
   background: var(--app-header-bg);
@@ -122,7 +163,7 @@ $mat-dark-theme: mat.define-theme((
 .success-snackbar {
   background: #4caf50;
   color: white;
-  
+
   .mat-simple-snackbar-action {
     color: #e8f5e9;
   }
@@ -131,7 +172,7 @@ $mat-dark-theme: mat.define-theme((
 .error-snackbar {
   background: #f44336;
   color: white;
-  
+
   .mat-simple-snackbar-action {
     color: #ffebee;
   }

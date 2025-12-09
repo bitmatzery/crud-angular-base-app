@@ -3,8 +3,15 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: var(--app-background);
-  color: var(--app-text);
+
+  // Если это дашборд, меняем цвет текста для контраста
+  :host-context(app-root.dashboard-route) & {
+    color: white;
+
+    .home__title {
+      color: white;
+    }
+  }
 }
 
 .home__title {
@@ -13,6 +20,25 @@
   align-items: center;
   padding: 20px;
   color: var(--app-text);
+}
+
+// Если на дашборде, сообщения должны быть с прозрачным фоном
+:host-context(app-root.dashboard-route) {
+  .initialization-message {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    &.error {
+      background: rgba(244, 67, 54, 0.2);
+      border-color: #f44336;
+    }
+
+    &.recovering {
+      background: rgba(33, 150, 243, 0.2);
+      border-color: #2196f3;
+    }
+  }
 }
 
 .initialization-message {
@@ -25,6 +51,7 @@
   &.error {
     background-color: rgba(244, 67, 54, 0.1);
     border-color: #f44336;
+    color: #212121;
   }
 }
 
@@ -45,6 +72,17 @@
 
   &:hover {
     background: #c82333;
+  }
+
+  // Для дашборда
+  :host-context(app-root.dashboard-route) & {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
   }
 }
 

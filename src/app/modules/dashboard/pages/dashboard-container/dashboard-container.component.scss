@@ -1,48 +1,41 @@
 .dashboard-main {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  
   @media (max-width: 768px) {
     padding: 20px 16px;
   }
 }
 
 .dashboard-container {
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .dashboard-header {
   text-align: center;
   margin-bottom: 60px;
-  
+
   .dashboard-title {
     font-size: 3rem;
     font-weight: 700;
     color: white;
     margin: 0 0 16px 0;
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    
+
     @media (max-width: 768px) {
       font-size: 2.25rem;
     }
-    
+
     @media (max-width: 480px) {
       font-size: 1.875rem;
     }
   }
-  
+
   .dashboard-subtitle {
     font-size: 1.25rem;
     color: rgba(255, 255, 255, 0.9);
     margin: 0;
     font-weight: 300;
-    
+
     @media (max-width: 768px) {
       font-size: 1.125rem;
     }
@@ -54,7 +47,7 @@
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 40px;
   margin-bottom: 60px;
-  
+
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
     gap: 30px;
@@ -62,7 +55,7 @@
     margin-left: auto;
     margin-right: auto;
   }
-  
+
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -71,12 +64,12 @@
 
 .module-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--dashboard-card-bg);
   border-radius: 24px;
   padding: 40px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
+  box-shadow:
     0 10px 40px rgba(0, 0, 0, 0.1),
     0 0 0 1px rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
@@ -84,28 +77,28 @@
   min-height: 400px;
   display: flex;
   flex-direction: column;
-  
+
   &:hover {
     transform: translateY(-12px) scale(1.02);
-    box-shadow: 
+    box-shadow:
       0 20px 60px rgba(0, 0, 0, 0.2),
       0 0 0 1px rgba(255, 255, 255, 0.3);
-    
+
     .module-card__background {
       opacity: 1;
       transform: scale(1.1);
     }
-    
+
     .module-icon {
       transform: scale(1.1) rotate(5deg);
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: var(--accent-gradient);
     }
-    
+
     .action-arrow {
       transform: translateX(4px);
     }
   }
-  
+
   &__content {
     position: relative;
     z-index: 2;
@@ -113,7 +106,7 @@
     display: flex;
     flex-direction: column;
   }
-  
+
   &__background {
     position: absolute;
     top: 0;
@@ -130,7 +123,7 @@
 .module-icon {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  background: var(--accent-gradient);
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -138,7 +131,7 @@
   margin-bottom: 24px;
   transition: all 0.4s ease;
   box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
-  
+
   svg {
     width: 40px;
     height: 40px;
@@ -149,9 +142,9 @@
 .module-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--dashboard-card-text);
   margin: 0 0 16px 0;
-  
+
   @media (max-width: 480px) {
     font-size: 1.75rem;
   }
@@ -159,7 +152,7 @@
 
 .module-description {
   font-size: 1.125rem;
-  color: #6b7280;
+  color: var(--dashboard-card-secondary);
   line-height: 1.6;
   margin: 0 0 32px 0;
   flex: 1;
@@ -169,19 +162,19 @@
   display: flex;
   gap: 24px;
   margin-bottom: 32px;
-  
+
   .stat-item {
     display: flex;
     flex-direction: column;
-    
+
     strong {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #4f46e5;
+      color: var(--accent-primary);
     }
-    
+
     &:last-child strong {
-      color: #7c3aed;
+      color: var(--accent-secondary);
     }
   }
 }
@@ -190,37 +183,39 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #4f46e5;
+  color: var(--accent-primary);
   font-weight: 600;
   font-size: 1.125rem;
   transition: color 0.3s ease;
-  
+
   .action-arrow {
     width: 20px;
     height: 20px;
     transition: transform 0.3s ease;
   }
-  
+
   .module-card:hover & {
-    color: #7c3aed;
+    color: var(--accent-secondary);
   }
 }
 
 .dashboard-footer {
+  margin-top: auto;
+
   .quick-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     max-width: 600px;
     margin: 0 auto;
-    
+
     @media (max-width: 480px) {
       grid-template-columns: 1fr;
     }
   }
-  
+
   .stat-card {
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--dashboard-stat-card-bg);
     border-radius: 16px;
     padding: 20px;
     display: flex;
@@ -229,11 +224,11 @@
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
-    
+
     &:hover {
       transform: translateY(-4px);
     }
-    
+
     .stat-icon {
       font-size: 2rem;
       width: 60px;
@@ -241,62 +236,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: var(--accent-gradient);
       border-radius: 12px;
       color: white;
     }
-    
+
     .stat-info {
       display: flex;
       flex-direction: column;
-      
+
       .stat-value {
         font-size: 1.5rem;
         font-weight: 700;
-        color: #1f2937;
+        color: var(--dashboard-card-text);
       }
-      
+
       .stat-label {
         font-size: 0.875rem;
-        color: #6b7280;
+        color: var(--dashboard-card-secondary);
       }
-    }
-  }
-}
-
-// Темная тема поддержка
-.dark-theme {
-  .dashboard-main {
-    background: linear-gradient(135deg, #1e1b4b 0%, #3730a3 100%);
-  }
-  
-  .module-card {
-    background: rgba(30, 30, 30, 0.95);
-    
-    &:hover {
-      box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(255, 255, 255, 0.1);
-    }
-  }
-  
-  .module-title {
-    color: #f9fafb;
-  }
-  
-  .module-description {
-    color: #d1d5db;
-  }
-  
-  .dashboard-footer .stat-card {
-    background: rgba(30, 30, 30, 0.9);
-    
-    .stat-info .stat-value {
-      color: #f9fafb;
-    }
-    
-    .stat-info .stat-label {
-      color: #d1d5db;
     }
   }
 }
@@ -315,11 +273,11 @@
 
 .module-card {
   animation: fadeInUp 0.6s ease-out;
-  
+
   &:nth-child(1) {
     animation-delay: 0.1s;
   }
-  
+
   &:nth-child(2) {
     animation-delay: 0.2s;
   }
@@ -344,24 +302,24 @@
   .dashboard-header .dashboard-title {
     font-size: 1.5rem;
   }
-  
+
   .dashboard-header .dashboard-subtitle {
     font-size: 1rem;
   }
-  
+
   .module-card {
     padding: 24px;
     min-height: 350px;
   }
-  
+
   .module-title {
     font-size: 1.5rem;
   }
-  
+
   .module-description {
     font-size: 1rem;
   }
-  
+
   .module-stats {
     flex-direction: column;
     gap: 16px;

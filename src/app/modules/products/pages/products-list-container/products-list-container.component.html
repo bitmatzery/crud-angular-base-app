@@ -1,5 +1,5 @@
 <ng-container *ngIf="(filteredItems$ | async) as items; else loading">
-  <div class="container">
+  <div class="container-app">
     <!-- Компонент поиска - передаем текущее значение поиска через Input -->
     <search-filtration-items-ui
       *ngIf="displayType === DisplayType.PRODUCTS"

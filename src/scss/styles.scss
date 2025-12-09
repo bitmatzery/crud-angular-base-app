@@ -2,6 +2,7 @@
 @use "nullstyle";
 @use "normalize";
 @use "global";
+@use "media";
 
 body {
   font-family: "Roboto Condensed", sans-serif;
@@ -23,6 +24,27 @@ app-root {
   background-color: var(--app-background);
   color: var(--app-text);
   transition: background-color 0.3s ease, color 0.3s ease;
+
+  // Для дашборда используем градиент
+  &.dashboard-route {
+    background: var(--dashboard-gradient-light) !important;
+
+    &.light-theme {
+      background: var(--dashboard-gradient-light) !important;
+    }
+
+    &.dark-theme {
+      background: var(--dashboard-gradient-dark) !important;
+    }
+
+    &.auto-theme {
+      background: var(--dashboard-gradient-light) !important;
+
+      @media (prefers-color-scheme: dark) {
+        background: var(--dashboard-gradient-dark) !important;
+      }
+    }
+  }
 }
 
 main {
@@ -32,9 +54,8 @@ main {
 }
 
 footer {
-  flex: 0 0 auto
+  flex: 0 0 auto;
 }
-
 
 .text-center {
   text-align: center;
