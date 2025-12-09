@@ -38,10 +38,10 @@ scroll-container {
   align-items: center;
   justify-content: center;
   padding: 30px 20px;
-  color: #6c757d;
-  background: #f8f9fa;
   border-radius: 8px;
   margin-top: 20px;
+  background: var(--app-background);
+  color: var(--app-text-color);
 }
 
 .loading-more .spinner {

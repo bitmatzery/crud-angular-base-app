@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IProduct } from '../../models/product.interface';
-import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/safe-image/safe-image.component';
+import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {IProduct} from '../../models/product.interface';
+import {SafeImageComponent} from '../../../../shared/common-ui/components-ui/safe-image/safe-image.component';
 
 @Component({
   selector: 'product-card-ui',
@@ -9,6 +9,7 @@ import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/s
   imports: [CommonModule, SafeImageComponent],
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCardComponent {

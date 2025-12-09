@@ -1,10 +1,6 @@
-html,
-body {
-  min-height: 100%;
-}
-
 a {
   color: inherit;
+  text-decoration: none;
 }
 
 h1,
@@ -43,6 +39,3 @@ img {
   max-width: var(--container-width);
   padding: 0 var(--container-offset);
 }
-
-
-

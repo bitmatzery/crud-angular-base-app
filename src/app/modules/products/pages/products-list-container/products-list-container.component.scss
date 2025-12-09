@@ -86,39 +86,14 @@
   }
 }
 
-.loading-more {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 30px 20px;
-  color: #6c757d;
-  background: #f8f9fa;
-  border-radius: 8px;
-  margin-top: 20px;
-
-  .spinner {
-    width: 24px;
-    height: 24px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #007bff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-right: 12px;
-  }
-
-  span {
-    font-size: 14px;
-    font-weight: 500;
-  }
-}
-
 .loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 200px;
   font-size: 18px;
-  color: #6c757d;
+  background: var(--app-background);
+  color: var(--app-text-color);
 
   .spinner {
     width: 40px;

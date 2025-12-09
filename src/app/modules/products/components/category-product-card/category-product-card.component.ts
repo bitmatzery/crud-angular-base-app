@@ -9,6 +9,7 @@ import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/s
   imports: [CommonModule, SafeImageComponent],
   templateUrl: './category-product-card.component.html',
   styleUrls: ['./category-product-card.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryProductCardComponent { // Правильное имя класса
