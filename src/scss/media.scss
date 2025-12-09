@@ -1,0 +1,148 @@
+// Брейкпоинты (аналоги Bootstrap 5 с добавлением промежуточных)
+$breakpoints: (
+  'xs': 0,          // Extra small devices (portrait phones)
+  'sm': 576px,      // Small devices (landscape phones)
+  'md': 768px,      // Medium devices (tablets)
+  'lg': 992px,      // Large devices (desktops)
+  'xl': 1200px,     // Extra large devices (large desktops)
+  'xxl': 1400px,    // XXL devices (extra large desktops)
+  'xxxl': 1522px,   // XXXL devices (наши кастомные размеры)
+  'wide': 1600px,   // Wide screens
+  'ultra': 1920px   // Ultra wide screens
+);
+
+// Миксины для медиазапросов "min-width"
+@mixin media-min($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @media (min-width: $breakpoint) {
+      @content;
+    }
+  }
+}
+
+// Миксины для медиазапросов "max-width"
+@mixin media-max($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (max-width: #{map-get($breakpoints, $breakpoint) - 0.02px}) {
+      @content;
+    }
+  } @else {
+    @media (max-width: #{$breakpoint - 0.02px}) {
+      @content;
+    }
+  }
+}
+
+// Миксины для диапазона
+@mixin media-between($min, $max) {
+  $min-width: if(map-has-key($breakpoints, $min), map-get($breakpoints, $min), $min);
+  $max-width: if(map-has-key($breakpoints, $max), map-get($breakpoints, $max), $max);
+
+  @media (min-width: $min-width) and (max-width: #{$max-width - 0.02px}) {
+    @content;
+  }
+}
+
+// Миксины для ориентации
+@mixin media-landscape {
+  @media (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin media-portrait {
+  @media (orientation: portrait) {
+    @content;
+  }
+}
+
+// Миксины для специальных функций
+@mixin media-high-dpi {
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    @content;
+  }
+}
+
+@mixin media-reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+// Удаляем неподдерживаемые медиафункции и заменяем на корректные
+@mixin media-high-contrast {
+  // Вместо prefers-contrast используем контрастность через фильтры
+  @media (prefers-contrast: more), (prefers-contrast: custom) {
+    @content;
+  }
+}
+
+// Удаляем media-reduced-data, так как эта функция не поддерживается
+
+// Миксины для темных/светлых тем
+@mixin media-dark-theme {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+}
+
+@mixin media-light-theme {
+  @media (prefers-color-scheme: light) {
+    @content;
+  }
+}
+
+// Утилитарные миксины для common breakpoints
+@mixin mobile {
+  @include media-max('md') {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @include media-between('md', 'lg') {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @include media-min('lg') {
+    @content;
+  }
+}
+
+@mixin wide-desktop {
+  @include media-min('xl') {
+    @content;
+  }
+}
+
+// Миксины для высоты
+@mixin media-min-height($height) {
+  @media (min-height: $height) {
+    @content;
+  }
+}
+
+@mixin media-max-height($height) {
+  @media (max-height: #{$height - 0.02px}) {
+    @content;
+  }
+}
+
+// Миксин для диапазона по высоте и ширине
+@mixin media-aspect-ratio($width, $height) {
+  @media (aspect-ratio: #{$width}/#{$height}) {
+    @content;
+  }
+}
+
+@mixin media-min-aspect-ratio($width, $height) {
+  @media (min-aspect-ratio: #{$width}/#{$height}) {
+    @content;
+  }
+}
