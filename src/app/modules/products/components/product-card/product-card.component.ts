@@ -1,12 +1,21 @@
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {IProduct} from '../../models/product.interface';
 import {SafeImageComponent} from '../../../../shared/common-ui/components-ui/safe-image/safe-image.component';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
   selector: 'product-card-ui',
   standalone: true,
-  imports: [CommonModule, SafeImageComponent],
+  imports: [
+    CommonModule,
+    SafeImageComponent,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule
+  ],
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -14,6 +23,12 @@ import {SafeImageComponent} from '../../../../shared/common-ui/components-ui/saf
 })
 export class ProductCardComponent {
   @Input({required: true}) product!: IProduct;
+  @Input() quantityInCart: number = 0;
+
+  @Output() addToCart = new EventEmitter<void>();
+  @Output() increaseQuantity = new EventEmitter<void>();
+  @Output() decreaseQuantity = new EventEmitter<void>();
+  @Output() removeFromCart = new EventEmitter<void>();
 
   getImageOptions() {
     return {
@@ -22,6 +37,7 @@ export class ProductCardComponent {
       aspectRatio: '16/9'
     };
   }
+
   // Логи
   onImageLoaded(event: string): void {
     // Логи console.log('Product image loaded:', event);

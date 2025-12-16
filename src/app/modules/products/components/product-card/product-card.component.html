@@ -1,16 +1,73 @@
 <div class="product-card">
-  <safe-image-ui
-    className="product-card__image"
-    [src]="product.images"
-    [alt]="product.title"
-    [options]="getImageOptions()"
-    (imageLoaded)="onImageLoaded($event)"
-    (imageError)="onImageError($event)">
-  </safe-image-ui>
+  <!-- Изображение товара -->
+  <div class="product-card__image">
+    <safe-image-ui
+      className="product-card__image"
+      [src]="product.images"
+      [alt]="product.title"
+      [options]="getImageOptions()"
+      (imageLoaded)="onImageLoaded($event)"
+      (imageError)="onImageError($event)">
+    </safe-image-ui>
+  </div>
 
+  <!-- Контент карточки -->
   <div class="product-card__content">
-    <h3 class="product-card__price">${{ product.price }}</h3>
+    <!-- Название товара -->
     <h2 class="product-card__title">{{ product.title }}</h2>
-    <p class="product-card__description">{{ product.description | slice:0:100 }}...</p>
+
+    <!-- Категория товара -->
+    <div *ngIf="product.category" class="product-card__category">
+      {{ product.category.name }}
+    </div>
+
+    <!-- Цена -->
+    <div class="product-card__price">${{ product.price }}</div>
+
+    <!-- Описание -->
+    <p class="product-card__description">
+      {{ product.description | slice:0:100 }}
+      <ng-container *ngIf="product.description && product.description.length > 100">…</ng-container>
+    </p>
+
+    <!-- Кнопки действий -->
+    <div class="product-card__actions">
+      <ng-container *ngIf="quantityInCart === 0; else quantityControls">
+        <!-- Кнопка добавления в корзину -->
+        <button
+          (click)="addToCart.emit()"
+          class="add-to-cart-btn"
+          matTooltip="Добавить в корзину"
+          aria-label="Добавить в корзину">
+          <mat-icon>shopping_cart</mat-icon>
+          <span>В корзину</span>
+        </button>
+      </ng-container>
+
+      <ng-template #quantityControls>
+        <!-- Управление количеством -->
+        <div class="quantity-controls">
+          <button
+            (click)="decreaseQuantity.emit()"
+            class="quantity-btn"
+            matTooltip="Уменьшить количество"
+            aria-label="Уменьшить количество">
+            <mat-icon>remove</mat-icon>
+          </button>
+
+          <div class="quantity-display">
+            {{ quantityInCart }}
+          </div>
+
+          <button
+            (click)="increaseQuantity.emit()"
+            class="quantity-btn"
+            matTooltip="Увеличить количество"
+            aria-label="Увеличить количество">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </ng-template>
+    </div>
   </div>
 </div>
