@@ -1,0 +1,112 @@
+<div class="cart-list">
+  <!-- Список товаров -->
+  <div class="cart-items">
+    <div *ngFor="let item of cartItems; trackBy: trackByProductId" class="cart-item">
+      <mat-card class="cart-item-card">
+        <div class="cart-item-content">
+          <!-- Изображение товара -->
+          <div class="cart-item-image-container">
+            <img
+              [src]="item.image"
+              [alt]="item.title"
+              class="cart-item-image"
+              (error)="item.image = 'assets/images/svg/error.svg'"
+            />
+          </div>
+
+          <!-- Информация о товаре -->
+          <div class="cart-item-info">
+            <div class="cart-item-header">
+              <h3 class="cart-item-title">{{ item.title }}</h3>
+              <button
+                mat-icon-button
+                color="warn"
+                class="remove-item-btn"
+                (click)="onRemove(item.productId)"
+                matTooltip="Удалить из корзины"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+
+            <p class="cart-item-description" *ngIf="item.description">
+              {{ item.description | slice:0:100 }}{{ item.description.length > 100 ? '...' : '' }}
+            </p>
+
+            <div class="cart-item-category" *ngIf="item.category">
+              <mat-icon class="category-icon">category</mat-icon>
+              <span>{{ item.category }}</span>
+            </div>
+
+            <div class="cart-item-controls">
+              <!-- Управление количеством -->
+              <div class="quantity-control">
+                <span class="quantity-label">Количество:</span>
+                <div class="quantity-buttons">
+                  <button
+                    mat-icon-button
+                    class="quantity-btn decrease"
+                    (click)="onDecreaseQuantity(item.productId)"
+                    [disabled]="(quantityInputs[item.productId] || item.quantity) <= 1"
+                  >
+                    <mat-icon>remove</mat-icon>
+                  </button>
+
+                  <input
+                    type="number"
+                    min="1"
+                    [value]="quantityInputs[item.productId] || item.quantity"
+                    (change)="onQuantityChange(item.productId, $event)"
+                    class="quantity-input"
+                    aria-label="Количество"
+                  />
+
+                  <button
+                    mat-icon-button
+                    class="quantity-btn increase"
+                    (click)="onIncreaseQuantity(item.productId)"
+                  >
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Цена -->
+              <div class="cart-item-price">
+                <span class="price-per-item">{{ item.price | currency:'$ ':'symbol':'1.0-0' }}
+                  × {{ item.quantity }}</span>
+                <span class="price-total">
+                  {{ getItemTotal(item.price, item.quantity) | currency:'$ ':'symbol':'1.0-0' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Действия -->
+  <div class="cart-actions" *ngIf="cartItems.length > 0">
+    <div class="actions-row">
+      <button
+        mat-button
+        class="continue-shopping-btn"
+        (click)="onContinueShopping()"
+      >
+        <mat-icon>arrow_back</mat-icon>
+        Продолжить покупки
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="checkout-action-btn"
+        (click)="onProceedToCheckout()"
+      >
+        <mat-icon>shopping_bag</mat-icon>
+        Перейти к оформлению
+      </button>
+    </div>
+  </div>
+</div>
