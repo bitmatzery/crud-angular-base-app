@@ -1,769 +1,155 @@
-.navbar-container {
+.dashboard-container {
+  padding: 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.dashboard-title {
+  margin: 0;
+  color: var(--app-text);
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.add-product-btn {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 160px;
-  padding: 0 16px;
+  gap: 8px;
+}
 
-  // Плавное уменьшение gap при уменьшении экрана
-  @include media-between('lg', 'xl') {
-    gap: 80px;
-  }
+.table-container {
+  background: var(--app-card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
 
-  @include media-between('md', 'lg') {
-    gap: 40px;
-  }
+.initial-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
 
-  @include media-max('md') {
-    gap: 24px;
-    padding: 0 12px;
-  }
-
-  @include media-max('sm') {
-    gap: 16px;
-    padding: 0 8px;
-  }
-
-  // Особые брейкпоинты для проблемных зон
-  @include media-between(1462px, 1522px) {
-    gap: 60px;
-
-    .right-section {
-      gap: 12px;
-    }
+  span {
+    color: var(--dashboard-card-secondary);
+    font-size: 16px;
   }
 }
 
-.header-navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: var(--shadow-md);
-  padding: 0;
-  background: var(--app-header-bg) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  min-height: var(--header-height);
-
-  // Динамическая высота навигации
-  @include media-min('ultra') {
-    --header-height: 80px;
-  }
-
-  @include media-between('xl', 'ultra') {
-    --header-height: 70px;
-  }
-
-  @include media-between('lg', 'xl') {
-    --header-height: 68px;
-  }
-
-  @include media-between('md', 'lg') {
-    --header-height: 64px;
-  }
-
-  @include media-between('sm', 'md') {
-    --header-height: 60px;
-  }
-
-  @include media-max('sm') {
-    --header-height: 56px;
-  }
-
-  // Решение проблемы с элементами при определенных ширинах
-  @include media-between(1400px, 1600px) {
-    .navbar-container {
-      gap: 80px;
-    }
-
-    .right-section {
-      flex: 1;
-      justify-content: flex-end;
-      min-width: 0; // Позволяет сжиматься
-    }
-  }
-
-  .logo-section {
-    flex-shrink: 0;
-
-    .logo-link {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-      gap: 22px;
-      transition: var(--transition);
-      padding: 8px 0;
-
-      &:hover {
-        transform: translateY(-1px);
-      }
-
-      logo-ui {
-        height: 36px;
-        width: auto;
-
-        @include media-max('md') {
-          height: 32px;
-        }
-
-        @include media-max('sm') {
-          height: 28px;
-        }
-      }
-
-      .site-name {
-        font-size: 20px;
-        font-weight: 700;
-        color: white;
-        letter-spacing: -0.5px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
-        // Скрываем название на очень маленьких экранах
-        @include media-max(400px) {
-          display: none;
-        }
-
-        // На больших экранах увеличиваем
-        @include media-min('wide') {
-          font-size: 22px;
-        }
-      }
-    }
-  }
-
-  .center-section {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-
-    // Корректируем flex поведение при средних размерах
-    @include media-between('lg', 'xxxl') {
-      flex: 0.7;
-    }
-
-    @include media-between('xxxl', 'wide') {
-      flex: 0.8;
-    }
-
-    .nav-menu {
-      display: flex;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 24px;
-      padding: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-
-      // Адаптация меню для промежуточных размеров
-      @include media-between(1200px, 1522px) {
-        padding: 4px;
-        gap: 6px;
-      }
-
-      .nav-button {
-        color: white !important;
-        border-radius: 20px;
-        padding: 10px 24px;
-        width: auto;
-        transition: var(--transition);
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 1.2;
-        margin: 0 2px;
-        white-space: nowrap;
-
-        &:hover {
-          background: rgba(255, 255, 255, 0.2) !important;
-          transform: translateY(-1px);
-          box-shadow: var(--shadow-sm);
-        }
-
-        &.active {
-          background: rgba(255, 255, 255, 0.25) !important;
-          box-shadow: var(--shadow-sm);
-        }
-
-        mat-icon {
-          margin-right: 8px;
-          font-size: 18px;
-          width: 18px;
-          height: 18px;
-
-          // Скрываем текст кнопок на средних экранах
-          @include media-between('lg', 'xxxl') {
-            margin-right: 6px;
-          }
-        }
-
-        span {
-          // Скрываем текст кнопок на определенных размерах
-          @include media-between(1200px, 1522px) {
-            display: none;
-          }
-
-          @include media-max('md') {
-            display: none;
-          }
-        }
-
-        // Адаптивные отступы
-        @include media-between('lg', 'xxxl') {
-          padding: 8px 16px;
-          font-size: 13px;
-        }
-
-        @include media-max('md') {
-          padding: 8px;
-          min-width: 44px;
-        }
-      }
-    }
-
-    // Скрываем меню на маленьких экранах
-    @include media-max('lg') {
-      display: none !important;
-    }
-  }
-
-  .right-section {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-
-    // Ключевые исправления для проблемных брейкпоинтов
-    @include media-between(1462px, 1522px) {
-      gap: 8px;
-
-      .search-wrapper {
-        flex-shrink: 1;
-        min-width: 0;
-        margin-right: 4px;
-
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 160px !important;
-          }
-        }
-      }
-    }
-
-    @include media-between('lg', 1462px) {
-      gap: 12px;
-
-      .search-wrapper {
-        flex-shrink: 1;
-        min-width: 0;
-
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 180px !important;
-          }
-        }
-      }
-    }
-
-    @include media-max('lg') {
-      gap: 16px;
-    }
-
-    @include media-max('md') {
-      gap: 12px;
-    }
-
-    .search-wrapper {
-      margin-top: 8px;
-      margin-right: 12px;
-
-      // Адаптация поиска для разных экранов
-      @include media-min('wide') {
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 220px;
-          }
-        }
-      }
-
-      @include media-between('xl', 'wide') {
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 200px;
-          }
-        }
-      }
-
-      @include media-between('lg', 'xl') {
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 180px;
-          }
-        }
-      }
-
-      // Скрываем поиск на очень маленьких экранах
-      @include media-max(800px) {
-        display: none;
-      }
-    }
-
-    .theme-toggle {
-      color: white;
-      margin: 4px 0;
-
-      // Убираем отступы на средних экранах
-      @include media-between(1200px, 1522px) {
-        margin: 0;
-      }
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      // Всегда показываем переключатель темы
-      display: flex !important;
-    }
-
-    .auth-section {
-      .user-info {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        color: white;
-        padding: 8px 0;
-
-        .username-text {
-          font-size: 14px;
-          font-weight: 500;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          max-width: 150px;
-
-          // Скрываем имя пользователя на средних экранах
-          @include media-between(1000px, 1400px) {
-            max-width: 120px;
-          }
-
-          @include media-max('md') {
-            max-width: 120px;
-            font-size: 13px;
-          }
-
-          @include media-max('sm') {
-            display: none;
-          }
-        }
-
-        .logout-button {
-          color: white;
-          transition: var(--transition);
-          margin: 4px;
-
-          &:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.1);
-          }
-        }
-      }
-
-      .login-form {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 8px 0;
-
-        // Компактное отображение формы на средних экранах
-        @include media-between(1200px, 1522px) {
-          gap: 8px;
-        }
-
-        .form-fields {
-          display: flex;
-          gap: 12px;
-
-          @include media-between(1200px, 1522px) {
-            gap: 6px;
-          }
-
-          @include media-max('md') {
-            gap: 6px;
-          }
-        }
-
-        .login-form-field {
-          width: 150px;
-
-          // Адаптация ширины полей
-          @include media-between(1200px, 1522px) {
-            width: 120px;
-          }
-
-          @include media-max('md') {
-            width: 120px;
-          }
-
-          @include media-max('sm') {
-            width: 110px;
-          }
-
-          ::ng-deep .mat-mdc-form-field-outline {
-            color: rgba(255, 255, 255, 0.3);
-          }
-
-          ::ng-deep .mat-mdc-text-field-wrapper {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-          }
-
-          .form-input {
-            color: white;
-            font-size: 14px;
-
-            @include media-between(1200px, 1522px) {
-              font-size: 13px;
-            }
-
-            &::placeholder {
-              color: rgba(255, 255, 255, 0.6);
-            }
-          }
-
-          ::ng-deep .mat-mdc-form-field-label {
-            color: rgba(255, 255, 255, 0.7) !important;
-          }
-
-          ::ng-deep .mat-mdc-form-field-infix {
-            padding-top: 8px !important;
-            padding-bottom: 8px !important;
-          }
-        }
-
-        .login-button {
-          background: rgba(255, 255, 255, 0.2);
-          color: white;
-          border-radius: 20px;
-          padding: 0 24px;
-          height: 44px;
-          transition: var(--transition);
-          font-weight: 500;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          margin: 4px 0;
-
-          @include media-between(1200px, 1522px) {
-            height: 40px;
-            padding: 0 16px;
-          }
-
-          @include media-max('md') {
-            height: 36px;
-            padding: 0 16px;
-          }
-
-          &:hover:not([disabled]) {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
-          }
-
-          &[disabled] {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
-          }
-
-          mat-icon {
-            margin-right: 8px;
-            font-size: 18px;
-            width: 18px;
-            height: 18px;
-
-            // Скрываем текст кнопки на средних экранах
-            @include media-between(1200px, 1522px) {
-              margin-right: 0;
-              font-size: 16px;
-              width: 16px;
-              height: 16px;
-            }
-          }
-
-          span {
-            // Скрываем текст кнопки на определенных размерах
-            @include media-between(1200px, 1522px) {
-              display: none;
-            }
-
-            @include media-max('md') {
-              display: none;
-            }
-          }
-        }
-      }
-    }
-  }
+.products-table {
+  width: 100%;
+  background: var(--app-card-bg);
 }
 
-.access-logs {
-  padding: 16px;
-  background: var(--mat-theme-surface);
-  border-top: 1px solid var(--mat-theme-divider);
-  font-size: 12px;
-  animation: fadeIn 0.3s ease-out;
+.product-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.product-title {
+  font-weight: 500;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--app-text);
+}
+
+.product-category {
+  color: var(--dashboard-card-secondary);
+}
+
+.product-price {
+  font-weight: 600;
+  color: var(--app-success);
+}
+
+.actions-cell {
+  width: 120px;
+}
+
+.actions-container {
+  display: flex;
+  gap: 8px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: var(--app-border);
+    margin-bottom: 16px;
+  }
 
   h3 {
-    margin: 0 0 12px 0;
-    color: var(--mat-theme-secondary-text);
-    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: var(--app-text);
+    font-size: 24px;
   }
 
-  .log-entry {
-    display: flex;
-    gap: 12px;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--mat-theme-divider);
-    transition: var(--transition);
-
-    &:hover {
-      background: var(--mat-theme-hover);
-    }
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    .timestamp {
-      color: var(--mat-theme-secondary-text);
-      width: 180px;
-      font-family: monospace;
-
-      @include media-max('md') {
-        width: 140px;
-      }
-
-      @include media-max('sm') {
-        width: 120px;
-        font-size: 11px;
-      }
-    }
-
-    .user {
-      font-weight: 500;
-      width: 120px;
-
-      @include media-max('sm') {
-        width: 80px;
-        font-size: 11px;
-      }
-
-      &.guest {
-        color: var(--mat-theme-error);
-      }
-    }
-
-    .role {
-      color: var(--mat-theme-secondary-text);
-      width: 80px;
-
-      @include media-max('sm') {
-        width: 60px;
-        font-size: 11px;
-      }
-    }
-
-    .url {
-      color: var(--mat-theme-text);
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-
-      @include media-max('md') {
-        font-size: 11px;
-      }
-    }
+  p {
+    margin: 0 0 24px 0;
+    color: var(--dashboard-card-secondary);
+    font-size: 16px;
   }
 }
 
-// Специальные адаптивные случаи с использованием миксинов
-@include media-between('md', 'lg') {
-  @include media-landscape {
-    .header-navbar {
-      --header-height: 56px;
+// Стили для таблицы
+.mat-header-cell {
+  background-color: var(--app-surface);
+  font-weight: 600;
+  color: var(--app-text);
+}
 
-      .center-section {
-        flex: 0.8;
-      }
+.mat-row {
+  transition: background-color var(--transition);
 
-      .navbar-container {
-        gap: 20px;
-      }
-    }
+  &:hover {
+    background-color: var(--app-hover);
   }
 }
 
-@include media-max('md') {
-  @include media-landscape {
-    .header-navbar {
-      --header-height: 52px;
-
-      .navbar-container {
-        gap: 12px;
-      }
-
-      .auth-section .login-form .form-fields {
-        flex-direction: row;
-      }
-    }
+// Адаптивность
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
   }
-}
 
-@include media-min('lg') {
-  @include media-min-height(900px) {
-    .header-navbar {
-      --header-height: 76px;
-
-      .logo-section .logo-link logo-ui {
-        height: 40px;
-      }
-    }
+  .dashboard-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
   }
-}
 
-@include media-max(360px) {
-  .header-navbar {
-    --header-height: 52px;
-
-    .navbar-container {
-      gap: 8px;
-      padding: 0 4px;
-    }
-
-    .logo-section .logo-link logo-ui {
-      height: 24px;
-    }
-
-    .center-section .nav-menu {
-      padding: 3px;
-      gap: 4px;
-    }
-
-    .center-section .nav-menu .nav-button {
-      padding: 6px;
-      min-width: 40px;
-    }
-
-    .auth-section .login-form {
-      gap: 6px;
-    }
-
-    .auth-section .login-form .login-form-field {
-      width: 100px;
-    }
-
-    .auth-section .login-form .login-button {
-      padding: 0 12px;
-      height: 32px;
-    }
+  .dashboard-title {
+    font-size: 24px;
   }
-}
 
-@include media-min('ultra') {
-  .header-navbar {
-    padding: 0 32px;
-
-    .navbar-container {
-      gap: 200px;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
-
-    .center-section .nav-menu {
-      padding: 8px;
-      gap: 12px;
-    }
-
-    .center-section .nav-menu .nav-button {
-      padding: 12px 32px;
-      font-size: 16px;
-
-      mat-icon {
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-      }
-    }
+  .product-title {
+    max-width: 150px;
   }
-}
 
-@include media-high-dpi {
-  .header-navbar {
-    .center-section .nav-menu {
-      backdrop-filter: blur(20px);
-    }
-
-    .auth-section .login-form .login-form-field ::ng-deep .mat-mdc-text-field-wrapper {
-      backdrop-filter: blur(20px);
-    }
-  }
-}
-
-@include media-dark-theme {
-  :host-context(.auto-theme) {
-    .header-navbar {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    }
-  }
-}
-
-@include media-reduced-motion {
-  .header-navbar {
-    * {
-      transition: none !important;
-      animation: none !important;
-    }
-  }
-}
-
-@include media-high-contrast {
-  .header-navbar {
-    .center-section .nav-menu {
-      background: rgba(255, 255, 255, 0.2);
-      border: 2px solid white;
-    }
-
-    .nav-button {
-      border: 1px solid white;
-    }
-  }
-}
-
-@include media-reduced-data {
-  .header-navbar {
-    .center-section .nav-menu {
-      backdrop-filter: none;
-    }
-
-    .auth-section .login-form .login-form-field ::ng-deep .mat-mdc-text-field-wrapper {
-      backdrop-filter: none;
-    }
-  }
-}
-
-// Анимации
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-// Дополнительный медиазапрос для высоты (добавить в media.scss)
-@mixin media-min-height($height) {
-  @media (min-height: $height) {
-    @content;
+  .actions-container {
+    flex-direction: column;
+    gap: 4px;
   }
 }
