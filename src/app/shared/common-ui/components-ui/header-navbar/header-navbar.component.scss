@@ -1,51 +1,4 @@
-@use "@angular/material" as mat;
-@use 'sass:map';
 @use 'scss/media.scss' as media;
-
-.navbar-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 160px;
-  padding: 0 16px;
-
-  // Плавное уменьшение gap при уменьшении экрана
-  @include media.media-between('lg', 'xl') {
-    gap: 80px;
-  }
-
-  @include media.media-between('md', 'lg') {
-    gap: 40px;
-  }
-
-  @include media.media-max('md') {
-    gap: 24px;
-    padding: 0 12px;
-  }
-
-  @include media.media-max('sm') {
-    gap: 16px;
-    padding: 0 8px;
-  }
-
-  // Особые брейкпоинты для проблемных зон
-  @include media.media-between(1462px, 1522px) {
-    gap: 60px;
-
-    .right-section {
-      gap: 12px;
-    }
-  }
-
-  // Исправление: при больших размерах сохраняем все элементы
-  @include media.media-min('wide') {
-    gap: 120px;
-  }
-
-  @include media.media-min('ultra') {
-    gap: 150px;
-  }
-}
 
 .header-navbar {
   position: sticky;
@@ -91,109 +44,572 @@
     .right-section {
       flex: 1;
       justify-content: flex-end;
-      min-width: 0; // Позволяет сжиматься
+      min-width: 0;
+    }
+  }
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 160px;
+  padding: 0 16px;
+
+  @include media.media-between('lg', 'xl') {
+    gap: 80px;
+  }
+
+  @include media.media-between('md', 'lg') {
+    gap: 40px;
+  }
+
+  @include media.media-max('md') {
+    gap: 24px;
+    padding: 0 12px;
+  }
+
+  @include media.media-max('sm') {
+    gap: 16px;
+    padding: 0 8px;
+  }
+
+  // Особые брейкпоинты для проблемных зон
+  @include media.media-between(1462px, 1522px) {
+    gap: 60px;
+
+    .right-section {
+      gap: 12px;
     }
   }
 
-  .logo-section {
-    flex-shrink: 0;
+  // Исправление: при больших размерах сохраняем все элементы
+  @include media.media-min('wide') {
+    gap: 120px;
+  }
 
-    .logo-link {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-      gap: 22px;
+  @include media.media-min('ultra') {
+    gap: 150px;
+  }
+}
+
+.logo-section {
+  flex-shrink: 0;
+
+  .logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    gap: 22px;
+    transition: var(--transition);
+    padding: 8px 0;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    logo-ui {
+      height: 36px;
+      width: auto;
+
+      @include media.media-max('md') {
+        height: 32px;
+      }
+
+      @include media.media-max('sm') {
+        height: 28px;
+      }
+    }
+
+    .site-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+      @include media.media-max(400px) {
+        display: none;
+      }
+
+      @include media.media-min('wide') {
+        font-size: 22px;
+      }
+    }
+  }
+}
+
+.center-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+
+  @include media.media-between('lg', 'xxxl') {
+    flex: 0.7;
+  }
+
+  @include media.media-between('xxxl', 'wide') {
+    flex: 0.8;
+  }
+
+  .nav-menu {
+    display: flex;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    @include media.media-between(1200px, 1522px) {
+      padding: 4px;
+      gap: 6px;
+    }
+
+    .nav-button {
+      color: white !important;
+      border-radius: 20px;
+      padding: 10px 24px;
+      width: auto;
       transition: var(--transition);
-      padding: 8px 0;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 1.2;
+      margin: 0 2px;
+      white-space: nowrap;
 
       &:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
         transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
       }
 
-      logo-ui {
-        height: 36px;
-        width: auto;
+      &.active {
+        background: rgba(255, 255, 255, 0.25) !important;
+        box-shadow: var(--shadow-sm);
+      }
 
-        @include media.media-max('md') {
-          height: 32px;
-        }
+      mat-icon {
+        margin-right: 8px;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
 
-        @include media.media-max('sm') {
-          height: 28px;
+        @include media.media-between('lg', 'xxxl') {
+          margin-right: 6px;
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
         }
       }
 
-      .site-name {
-        font-size: 20px;
-        font-weight: 700;
-        color: white;
-        letter-spacing: -0.5px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
-        // Скрываем название на очень маленьких экранах
-        @include media.media-max(400px) {
+      span {
+        @include media.media-between('lg', 'xxxl') {
           display: none;
         }
 
-        // На больших экранах увеличиваем
-        @include media.media-min('wide') {
-          font-size: 22px;
+        @include media.media-max('lg') {
+          display: none;
+        }
+      }
+
+      @include media.media-between('lg', 'xxxl') {
+        padding: 8px 16px;
+        font-size: 13px;
+      }
+
+      @include media.media-max('lg') {
+        padding: 8px;
+        min-width: 44px;
+      }
+    }
+  }
+}
+
+.right-section {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  @include media.media-between(1462px, 1522px) {
+    gap: 8px;
+
+    .search-wrapper {
+      flex-shrink: 1;
+      min-width: 0;
+      margin-right: 4px;
+
+      ::ng-deep header-search-ui {
+        .search-form-field {
+          width: 160px !important;
         }
       }
     }
   }
 
-  .center-section {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+  @include media.media-between('lg', 1462px) {
+    gap: 12px;
 
-    // НЕ скрываем на lg, а делаем компактнее
-    @include media.media-between('lg', 'xxxl') {
-      flex: 0.7;
+    .search-wrapper {
+      flex-shrink: 1;
+      min-width: 0;
+
+      ::ng-deep header-search-ui {
+        .search-form-field {
+          width: 180px !important;
+        }
+      }
+    }
+  }
+
+  @include media.media-max('lg') {
+    gap: 16px;
+  }
+
+  @include media.media-max('md') {
+    gap: 12px;
+  }
+
+  .search-wrapper {
+    margin-top: 8px;
+    margin-right: 12px;
+    min-width: 0;
+
+    @include media.media-min('ultra') {
+      ::ng-deep header-search-ui {
+        .search-form-field {
+          width: 250px;
+        }
+      }
     }
 
-    @include media.media-between('xxxl', 'wide') {
-      flex: 0.8;
+    @include media.media-between('wide', 'ultra') {
+      ::ng-deep header-search-ui {
+        .search-form-field {
+          width: 220px;
+        }
+      }
     }
 
-    .nav-menu {
-      display: flex;
-      gap: 8px;
+    @include media.media-between('xl', 'wide') {
+      ::ng-deep header-search-ui {
+        .search-form-field {
+          width: 200px;
+        }
+      }
+    }
+
+    @include media.media-between('lg', 'xl') {
+      ::ng-deep header-search-ui {
+        .search-form-field {
+          width: 180px;
+        }
+      }
+    }
+
+    @include media.media-between(1480px, 1600px) {
+      ::ng-deep header-search-ui {
+        .search-form-field {
+          width: 160px;
+        }
+      }
+    }
+
+    @include media.media-between(1400px, 1480px) {
+      ::ng-deep header-search-ui {
+        .search-form-field {
+          width: 140px;
+        }
+      }
+    }
+
+    @include media.media-max(800px) {
+      display: none;
+    }
+  }
+
+  // Кнопка корзины (новая иконка)
+  .cart-button {
+    position: relative;
+    color: white;
+    transition: var(--transition);
+    margin: 0 4px;
+    flex-shrink: 0;
+
+    &:hover {
       background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 24px;
-      padding: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
 
-      // Адаптация меню для промежуточных размеров
-      @include media.media-between(1200px, 1522px) {
-        padding: 4px;
-        gap: 6px;
+    ::ng-deep .mat-badge-content {
+      background-color: #ff4081;
+      color: white;
+      font-weight: 600;
+    }
+
+    @include media.media-max(400px) {
+      ::ng-deep .mat-badge-content {
+        font-size: 8px;
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+      }
+    }
+
+    @include media.media-between(1200px, 1522px) {
+      margin: 0;
+    }
+  }
+
+  // Переключатель темы
+  .theme-toggle {
+    color: white;
+    margin: 4px 0;
+    flex-shrink: 0;
+
+    @include media.media-between(1200px, 1522px) {
+      margin: 0;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    & {
+      display: flex !important;
+    }
+  }
+
+  // Секция пользователя (бывшая auth-section)
+  .user-section {
+    flex-shrink: 0;
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: white;
+      padding: 8px 0;
+
+      .desktop-user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        @include media.media-max('md') {
+          display: none;
+        }
       }
 
-      .nav-button {
-        color: white !important;
-        border-radius: 20px;
-        padding: 10px 24px;
-        width: auto;
-        transition: var(--transition);
-        font-weight: 500;
+      .mobile-user {
+        display: none;
+
+        @include media.media-max('md') {
+          display: block;
+        }
+      }
+
+      .username-text {
         font-size: 14px;
-        line-height: 1.2;
-        margin: 0 2px;
+        font-weight: 500;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+
+        @include media.media-between(1770px, 1870px) {
+          max-width: 120px;
+        }
+
+        @include media.media-between(1600px, 1770px) {
+          max-width: 100px;
+        }
+
+        @include media.media-between(1400px, 1600px) {
+          max-width: 80px;
+        }
+
+        @include media.media-max('md') {
+          max-width: 120px;
+          font-size: 13px;
+        }
+
+        @include media.media-max('sm') {
+          display: none;
+        }
+      }
+
+      .user-button {
+        color: white;
+        transition: var(--transition);
+        margin: 4px;
+        flex-shrink: 0;
 
         &:hover {
-          background: rgba(255, 255, 255, 0.2) !important;
+          background: rgba(255, 255, 255, 0.1);
+          transform: scale(1.05);
+        }
+
+        .user-icon {
+          font-size: 32px;
+          width: 32px;
+          height: 32px;
+
+          @include media.media-max('md') {
+            font-size: 28px;
+            width: 28px;
+            height: 28px;
+          }
+        }
+      }
+
+      .logout-button {
+        color: white;
+        transition: var(--transition);
+        margin: 4px;
+        flex-shrink: 0;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: scale(1.1);
+        }
+
+        &.desktop-only {
+          @include media.media-max('md') {
+            display: none;
+          }
+        }
+      }
+    }
+
+    .login-form {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 0;
+
+      @include media.media-between(1200px, 1522px) {
+        gap: 8px;
+      }
+
+      @include media.media-between(1870px, 2000px) {
+        gap: 12px;
+      }
+
+      .form-fields {
+        display: flex;
+        gap: 12px;
+
+        @include media.media-between(1200px, 1522px) {
+          gap: 6px;
+        }
+
+        @include media.media-max('md') {
+          gap: 6px;
+        }
+      }
+
+      .login-form-field {
+        width: 150px;
+
+        @include media.media-min('ultra') {
+          width: 160px;
+        }
+
+        @include media.media-between('wide', 'ultra') {
+          width: 150px;
+        }
+
+        @include media.media-between('xl', 'wide') {
+          width: 140px;
+        }
+
+        @include media.media-between(1870px, 2000px) {
+          width: 130px;
+        }
+
+        @include media.media-between(1600px, 1870px) {
+          width: 120px;
+        }
+        @include media.media-between(1400px, 1600px) {
+          width: 110px;
+        }
+
+        @include media.media-max('md') {
+          width: 120px;
+        }
+
+        @include media.media-max('sm') {
+          width: 110px;
+        }
+
+        ::ng-deep .mat-mdc-form-field-outline {
+          color: rgba(255, 255, 255, 0.3);
+        }
+
+        ::ng-deep .mat-mdc-text-field-wrapper {
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          border-radius: 8px;
+        }
+
+        .form-input {
+          color: white;
+          font-size: 14px;
+
+          @include media.media-between(1200px, 1522px) {
+            font-size: 13px;
+          }
+
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+          }
+        }
+
+        ::ng-deep .mat-mdc-form-field-label {
+          color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        ::ng-deep .mat-mdc-form-field-infix {
+          padding-top: 8px !important;
+          padding-bottom: 8px !important;
+        }
+      }
+
+      .login-button {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 20px;
+        padding: 0 24px;
+        height: 44px;
+        transition: var(--transition);
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        margin: 4px 0;
+        flex-shrink: 0;
+
+        @include media.media-between(1200px, 1522px) {
+          height: 40px;
+          padding: 0 16px;
+        }
+
+        @include media.media-max('md') {
+          height: 36px;
+          padding: 0 16px;
+        }
+
+        &:hover:not([disabled]) {
+          background: rgba(255, 255, 255, 0.3);
           transform: translateY(-1px);
           box-shadow: var(--shadow-sm);
         }
 
-        &.active {
-          background: rgba(255, 255, 255, 0.25) !important;
-          box-shadow: var(--shadow-sm);
+        &[disabled] {
+          background: rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.5);
         }
 
         mat-icon {
@@ -202,9 +618,8 @@
           width: 18px;
           height: 18px;
 
-          // Уменьшаем иконки на средних экранах
-          @include media.media-between('lg', 'xxxl') {
-            margin-right: 6px;
+          @include media.media-between(1200px, 1522px) {
+            margin-right: 0;
             font-size: 16px;
             width: 16px;
             height: 16px;
@@ -212,367 +627,12 @@
         }
 
         span {
-          // На средних экранах скрываем текст кнопок, оставляем только иконки
-          @include media.media-between('lg', 'xxxl') {
-            display: none;
-          }
-
-          // На маленьких экранах всегда только иконки
-          @include media.media-max('lg') {
-            display: none;
-          }
-        }
-
-        // Адаптивные отступы
-        @include media.media-between('lg', 'xxxl') {
-          padding: 8px 16px;
-          font-size: 13px;
-        }
-
-        // На маленьких экранах - только иконки
-        @include media.media-max('lg') {
-          padding: 8px;
-          min-width: 44px;
-        }
-      }
-    }
-
-    // Убираем скрытие на маленьких экранах - кнопки остаются как иконки
-  }
-
-  .right-section {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-
-    // Ключевые исправления для проблемных брейкпоинтов
-    @include media.media-between(1462px, 1522px) {
-      gap: 8px;
-
-      .search-wrapper {
-        flex-shrink: 1;
-        min-width: 0;
-        margin-right: 4px;
-
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 160px !important;
-          }
-        }
-      }
-    }
-
-    @include media.media-between('lg', 1462px) {
-      gap: 12px;
-
-      .search-wrapper {
-        flex-shrink: 1;
-        min-width: 0;
-
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 180px !important;
-          }
-        }
-      }
-    }
-
-    @include media.media-max('lg') {
-      gap: 16px;
-    }
-
-    @include media.media-max('md') {
-      gap: 12px;
-    }
-
-    .search-wrapper {
-      margin-top: 8px;
-      margin-right: 12px;
-      min-width: 0;
-
-      // Вместо этого плавно уменьшаем ширину поиска
-      @include media.media-min('ultra') {
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 250px;
-          }
-        }
-      }
-
-      @include media.media-between('wide', 'ultra') {
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 220px;
-          }
-        }
-      }
-
-      @include media.media-between('xl', 'wide') {
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 200px;
-          }
-        }
-      }
-
-      @include media.media-between('lg', 'xl') {
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 180px;
-          }
-        }
-      }
-
-      @include media.media-between(1480px, 1600px) {
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 160px;
-          }
-        }
-      }
-
-      @include media.media-between(1400px, 1480px) {
-        ::ng-deep header-search-ui {
-          .search-form-field {
-            width: 140px;
-          }
-        }
-      }
-
-      // Поиск скрываем только на очень маленьких экранах
-      @include media.media-max(800px) {
-        display: none;
-      }
-    }
-
-    .theme-toggle {
-      color: white;
-      margin: 4px 0;
-      flex-shrink: 0;
-
-      // Убираем отступы на средних экранах
-      @include media.media-between(1200px, 1522px) {
-        margin: 0;
-      }
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      & {
-        display: flex !important;
-      }
-    }
-
-    .auth-section {
-      flex-shrink: 0;
-      .user-info {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        color: white;
-        padding: 8px 0;
-
-        .username-text {
-          font-size: 14px;
-          font-weight: 500;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          max-width: 150px;
-
-          // плавно уменьшаем максимальную ширину
-          @include media.media-between(1770px, 1870px) {
-            max-width: 120px;
-          }
-
-          @include media.media-between(1600px, 1770px) {
-            max-width: 100px;
-          }
-
-          @include media.media-between(1400px, 1600px) {
-            max-width: 80px;
-          }
-
-          @include media.media-max('md') {
-            max-width: 120px;
-            font-size: 13px;
-          }
-
-          @include media.media-max('sm') {
-            display: none;
-          }
-        }
-
-        .logout-button {
-          color: white;
-          transition: var(--transition);
-          margin: 4px;
-          flex-shrink: 0;
-
-          &:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.1);
-          }
-        }
-      }
-
-      .login-form {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 8px 0;
-
-        // Компактное отображение формы
-        @include media.media-between(1200px, 1522px) {
-          gap: 8px;
-        }
-
-        @include media.media-between(1870px, 2000px) {
-          gap: 12px;
-        }
-
-        .form-fields {
-          display: flex;
-          gap: 12px;
-
           @include media.media-between(1200px, 1522px) {
-            gap: 6px;
+            display: none;
           }
 
           @include media.media-max('md') {
-            gap: 6px;
-          }
-        }
-
-        .login-form-field {
-          width: 150px;
-
-          // Адаптация ширины полей для разных экранов
-          @include media.media-min('ultra') {
-            width: 160px;
-          }
-
-          @include media.media-between('wide', 'ultra') {
-            width: 150px;
-          }
-
-          @include media.media-between('xl', 'wide') {
-            width: 140px;
-          }
-
-          @include media.media-between(1870px, 2000px) {
-            width: 130px;
-          }
-
-          @include media.media-between(1600px, 1870px) {
-            width: 120px;
-          }
-
-          @include media.media-between(1400px, 1600px) {
-            width: 110px;
-          }
-
-          @include media.media-max('md') {
-            width: 120px;
-          }
-
-          @include media.media-max('sm') {
-            width: 110px;
-          }
-
-          ::ng-deep .mat-mdc-form-field-outline {
-            color: rgba(255, 255, 255, 0.3);
-          }
-
-          ::ng-deep .mat-mdc-text-field-wrapper {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-          }
-
-          .form-input {
-            color: white;
-            font-size: 14px;
-
-            @include media.media-between(1200px, 1522px) {
-              font-size: 13px;
-            }
-
-            &::placeholder {
-              color: rgba(255, 255, 255, 0.6);
-            }
-          }
-
-          ::ng-deep .mat-mdc-form-field-label {
-            color: rgba(255, 255, 255, 0.7) !important;
-          }
-
-          ::ng-deep .mat-mdc-form-field-infix {
-            padding-top: 8px !important;
-            padding-bottom: 8px !important;
-          }
-        }
-
-        .login-button {
-          background: rgba(255, 255, 255, 0.2);
-          color: white;
-          border-radius: 20px;
-          padding: 0 24px;
-          height: 44px;
-          transition: var(--transition);
-          font-weight: 500;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          margin: 4px 0;
-          flex-shrink: 0;
-
-          @include media.media-between(1200px, 1522px) {
-            height: 40px;
-            padding: 0 16px;
-          }
-
-          @include media.media-max('md') {
-            height: 36px;
-            padding: 0 16px;
-          }
-
-          &:hover:not([disabled]) {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
-          }
-
-          &[disabled] {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
-          }
-
-          mat-icon {
-            margin-right: 8px;
-            font-size: 18px;
-            width: 18px;
-            height: 18px;
-
-            // Скрываем текст кнопки на средних экранах
-            @include media.media-between(1200px, 1522px) {
-              margin-right: 0;
-              font-size: 16px;
-              width: 16px;
-              height: 16px;
-            }
-          }
-
-          span {
-            // Скрываем текст кнопки на определенных размерах
-            @include media.media-between(1200px, 1522px) {
-              display: none;
-            }
-
-            @include media.media-max('md') {
-              display: none;
-            }
+            display: none;
           }
         }
       }
@@ -580,6 +640,60 @@
   }
 }
 
+// Стили для меню пользователя (новые)
+.user-menu {
+  min-width: 250px;
+
+  .user-menu-header {
+    padding: 16px;
+
+    .user-greeting {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      mat-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        color: var(--primary-color);
+      }
+
+      .user-info-text {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .user-email {
+          font-weight: 500;
+          font-size: 0.9rem;
+          color: var(--app-text);
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .user-role {
+          font-size: 0.8rem;
+          color: var(--app-text);
+          opacity: 0.7;
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+
+  .cart-menu-count {
+    margin-left: auto;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+}
+
+// Стили для логов доступа
 .access-logs {
   padding: 16px;
   background: var(--mat-theme-surface);
@@ -675,7 +789,7 @@
   }
 }
 
-// Специальные адаптивные случаи с использованием миксинов
+// Специальные адаптивные случаи
 @include media.media-between('md', 'lg') {
   @include media.media-landscape {
     .header-navbar {
@@ -701,7 +815,7 @@
         gap: 12px;
       }
 
-      .auth-section .login-form .form-fields {
+      .user-section .login-form .form-fields {
         flex-direction: row;
       }
     }
@@ -743,17 +857,21 @@
       min-width: 40px;
     }
 
-    .auth-section .login-form {
+    .user-section .login-form {
       gap: 6px;
     }
 
-    .auth-section .login-form .login-form-field {
+    .user-section .login-form .login-form-field {
       width: 100px;
     }
 
-    .auth-section .login-form .login-button {
+    .user-section .login-form .login-button {
       padding: 0 12px;
       height: 32px;
+    }
+
+    .cart-button {
+      margin: 0 2px;
     }
   }
 }
@@ -792,7 +910,7 @@
       backdrop-filter: blur(20px);
     }
 
-    .auth-section .login-form .login-form-field ::ng-deep .mat-mdc-text-field-wrapper {
+    .user-section .login-form .login-form-field ::ng-deep .mat-mdc-text-field-wrapper {
       backdrop-filter: blur(20px);
     }
   }

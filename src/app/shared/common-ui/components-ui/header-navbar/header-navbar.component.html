@@ -13,11 +13,11 @@
       <nav class="nav-menu">
         <button mat-button routerLink="/home" routerLinkActive="active" class="nav-button">
           <mat-icon>home</mat-icon>
-          <span>Главная</span>
+          <span class="nav-text">Главная</span>
         </button>
         <button mat-button routerLink="/products" routerLinkActive="active" class="nav-button">
           <mat-icon>shopping_bag</mat-icon>
-          <span>Товары</span>
+          <span class="nav-text">Товары</span>
         </button>
 
         <!-- Кнопка "Пользователи" видна только админам -->
@@ -29,7 +29,7 @@
           class="nav-button"
         >
           <mat-icon>people</mat-icon>
-          <span>Пользователи</span>
+          <span class="nav-text">Пользователи</span>
         </button>
 
         <!-- Кнопка "Dashboard" видна только админам -->
@@ -40,29 +40,71 @@
           routerLinkActive="active"
           class="nav-button"
         >
-          <mat-icon>dashboard</mat-icon> 
-          <span>Dashboard</span> 
+          <mat-icon>dashboard</mat-icon>
+          <span class="nav-text">Dashboard</span>
         </button>
       </nav>
     </div>
 
-    <!-- Правая часть: поиск, тема, авторизация -->
+    <!-- Правая часть: поиск, корзина, тема, пользователь -->
     <div class="right-section">
-      <!-- Поиск с отступом сверху -->
+      <!-- Поиск -->
       <div class="search-wrapper">
         <header-search-ui (search)="onSearch($event)" class="header-search"></header-search-ui>
       </div>
 
+      <!-- Иконка корзины -->
+      <button
+        mat-icon-button
+        class="cart-button"
+        (click)="goToCart()"
+        [matBadge]="cartItemsCount"
+        matBadgeColor="accent"
+        matBadgeSize="small"
+        matTooltip="Корзина"
+      >
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+
       <!-- Переключение темы -->
       <theme-toggle-ui class="theme-toggle"></theme-toggle-ui>
 
-      <!-- Авторизация -->
-      <div class="auth-section">
-        <ng-container *ngIf="isLoggedIn$ | async as isLoggedIn; else showLoginForm">
+      <!-- Блок пользователя -->
+      <div class="user-section">
+        <ng-container *ngIf="isLoggedIn$ | async; else showLoginForm">
           <div class="user-info">
-            <span class="username-text">Привет, {{ userEmail$ | async }}!</span>
+            <!-- Десктоп: текст + иконка -->
+            <div class="desktop-user">
+              <ng-container *ngIf="userEmail$ | async as userEmail">
+                <span class="username-text">
+                  Привет, {{ userEmail.split('@')[0] }}!
+                </span>
+              </ng-container>
+              <button
+                mat-icon-button
+                class="user-button"
+                [matMenuTriggerFor]="userMenu"
+                matTooltip="Меню пользователя"
+              >
+                <mat-icon class="user-icon">account_circle</mat-icon>
+              </button>
+            </div>
+
+            <!-- Мобильный: только иконка -->
+            <div class="mobile-user">
+              <button
+                mat-icon-button
+                class="user-button"
+                [matMenuTriggerFor]="userMenu"
+                matTooltip="Меню пользователя"
+              >
+                <mat-icon class="user-icon">account_circle</mat-icon>
+              </button>
+            </div>
+
+            <!-- Кнопка выхода (только для десктопа) -->
             <button
-              class="logout-button"
+              class="logout-button desktop-only"
               mat-icon-button
               type="button"
               aria-label="Logout"
@@ -110,7 +152,7 @@
               [disabled]="!form.valid"
             >
               <mat-icon>login</mat-icon>
-              <span>Войти</span>
+              <span class="login-text">Войти</span>
             </button>
           </form>
         </ng-template>
@@ -118,6 +160,49 @@
     </div>
   </div>
 </mat-toolbar>
+
+<!-- Меню пользователя -->
+<mat-menu #userMenu="matMenu" class="user-menu" xPosition="before">
+  <div class="user-menu-header">
+    <div class="user-greeting">
+      <mat-icon>account_circle</mat-icon>
+      <div class="user-info-text">
+        <span class="user-email">{{ (userEmail$ | async) || 'Пользователь' }}</span>
+        <span class="user-role">{{ (userRole$ | async) || 'Пользователь' | titlecase }}</span>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <button mat-menu-item routerLink="/profile" (click)="userMenu.closed.emit()">
+    <mat-icon>person</mat-icon>
+    <span>Профиль</span>
+  </button>
+
+  <button mat-menu-item (click)="goToCart(); userMenu.closed.emit()">
+    <mat-icon>shopping_cart</mat-icon>
+    <span>Моя корзина</span>
+    <span class="cart-menu-count" *ngIf="cartItemsCount > 0">{{ cartItemsCount }}</span>
+  </button>
+
+  <button mat-menu-item routerLink="/orders" (click)="userMenu.closed.emit()">
+    <mat-icon>shopping_bag</mat-icon>
+    <span>Мои заказы</span>
+  </button>
+
+  <button mat-menu-item routerLink="/settings" (click)="userMenu.closed.emit()">
+    <mat-icon>settings</mat-icon>
+    <span>Настройки</span>
+  </button>
+
+  <mat-divider></mat-divider>
+
+  <button mat-menu-item (click)="onLogout(); userMenu.closed.emit()">
+    <mat-icon>logout</mat-icon>
+    <span>Выйти</span>
+  </button>
+</mat-menu>
 
 <!-- Логи доступа (можно скрыть или убрать) -->
 <div class="access-logs" *ngIf="showLogs">
