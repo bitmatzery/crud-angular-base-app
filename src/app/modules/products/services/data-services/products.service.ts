@@ -1,10 +1,10 @@
-import { inject, Injectable } from '@angular/core';
-import { forkJoin, of, Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { catchError, finalize, tap, switchMap, debounceTime, distinctUntilChanged, retry, map } from 'rxjs/operators';
-import { ProductsStore } from '../../store/products.store';
-import { ProductsApiService } from './products-api.service';
-import { DataInitializationService } from './data-initialization.service';
-import { ICategory, IProduct } from '../../models/product.interface';
+import {inject, Injectable} from '@angular/core';
+import {BehaviorSubject, forkJoin, Observable, of} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, finalize, map, retry, switchMap, tap} from 'rxjs/operators';
+import {ProductsStore} from '../../store/products.store';
+import {ProductsApiService} from './products-api.service';
+import {DataInitializationService} from './data-initialization.service';
+import {ICategory, IProduct} from '../../models/product.interface';
 
 interface FilterState {
   searchTerm: string;
@@ -123,7 +123,7 @@ export class ProductsService {
         })
       )
     }).pipe(
-      tap(({ products, categories }) => {
+      tap(({products, categories}) => {
         console.log('Service: Loaded initial data', {
           products: products.length,
           categories: categories.length
@@ -386,9 +386,9 @@ export class ProductsService {
     }
 
     // Если поисковый запрос ранее не выполнялся или изменился, используем API
-    const previousSearchTerm = ProductsService.serviceState.currentSearchTerm ;
+    const previousSearchTerm = ProductsService.serviceState.currentSearchTerm;
     if (previousSearchTerm !== searchTerm) {
-      ProductsService.serviceState.currentSearchTerm  = searchTerm;
+      ProductsService.serviceState.currentSearchTerm = searchTerm;
       return true;
     }
 
@@ -596,5 +596,22 @@ export class ProductsService {
   // Получение текущего лимита
   getCurrentLimit(): number {
     return this.filterState.value.limit;
+  }
+
+  // Получить продукт по ID (для корзины)
+  getProductById(id: number): Observable<IProduct | null> {
+    // Сначала ищем в локальном кэше
+    const cachedProduct = this.allProducts.find(p => p.id === id);
+    if (cachedProduct) {
+      return of(cachedProduct);
+    }
+
+    // Если нет в кэше, загружаем с сервера
+    return this.api.getProduct(id).pipe(
+      catchError(error => {
+        console.error(`Failed to get product ${id}:`, error);
+        return of(null);
+      })
+    );
   }
 }

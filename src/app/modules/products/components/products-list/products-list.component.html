@@ -2,17 +2,16 @@
   <div class="container-app">
     <h1>{{ displayType === DisplayType.PRODUCTS ? 'Все Товары' : 'Категории' }}</h1>
 
-<!--    <search-filtration-items-ui-->
-<!--      *ngIf="displayType === DisplayType.PRODUCTS"-->
-<!--      (filterItems)="OnFilteredItems($event)"-->
-<!--    >-->
-<!--    </search-filtration-items-ui>-->
-
     <div class="items">
       <ng-container *ngFor="let item of items">
         <product-card-ui
           *ngIf="isProduct(item)"
           [product]="item"
+          [quantityInCart]="getQuantityInCart(item.id)"
+          (addToCart)="onAddToCart(item.id)"
+          (increaseQuantity)="onIncreaseQuantity(item.id)"
+          (decreaseQuantity)="onDecreaseQuantity(item.id)"
+          (removeFromCart)="onRemoveFromCart(item.id)"
         >
         </product-card-ui>
 
