@@ -23,6 +23,10 @@ export const appRoutes: Routes = [
     data: { displayType: 'categories' }
   },
   {
+    path: 'cart',
+    loadComponent: () => import('@store/cart').then(c => c.CartListContainerComponent)
+  },
+  {
     path: 'users',
     loadComponent: () => import('@store/users').then(c => c.UsersListContainerComponent),
     canActivate: [canActivateAuth, adminGuard],
@@ -38,7 +42,7 @@ export const appRoutes: Routes = [
     canActivate: [canActivateAuth, adminGuard],
   },
   {
-    path: 'dashboard/users', 
+    path: 'dashboard/users',
     loadComponent: () => import('@store/users').then(c => c.UsersListContainerComponent),
     canActivate: [canActivateAuth, adminGuard],
   },
