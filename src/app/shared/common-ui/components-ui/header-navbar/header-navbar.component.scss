@@ -1,4 +1,4 @@
-@use 'scss/media.scss' as media;
+@use 'index' as *;
 
 .header-navbar {
   position: sticky;
@@ -11,32 +11,32 @@
   min-height: var(--header-height);
 
   // Динамическая высота навигации
-  @include media.media-min('ultra') {
+  @include media-min('ultra') {
     --header-height: 80px;
   }
 
-  @include media.media-between('xl', 'ultra') {
+  @include media-between('xl', 'ultra') {
     --header-height: 70px;
   }
 
-  @include media.media-between('lg', 'xl') {
+  @include media-between('lg', 'xl') {
     --header-height: 68px;
   }
 
-  @include media.media-between('md', 'lg') {
+  @include media-between('md', 'lg') {
     --header-height: 64px;
   }
 
-  @include media.media-between('sm', 'md') {
+  @include media-between('sm', 'md') {
     --header-height: 60px;
   }
 
-  @include media.media-max('sm') {
+  @include media-max('sm') {
     --header-height: 56px;
   }
 
   // Решение проблемы с элементами при определенных ширинах
-  @include media.media-between(1400px, 1600px) {
+  @include media-between(1400px, 1600px) {
     .navbar-container {
       gap: 80px;
     }
@@ -56,26 +56,26 @@
   gap: 160px;
   padding: 0 16px;
 
-  @include media.media-between('lg', 'xl') {
+  @include media-between('lg', 'xl') {
     gap: 80px;
   }
 
-  @include media.media-between('md', 'lg') {
+  @include media-between('md', 'lg') {
     gap: 40px;
   }
 
-  @include media.media-max('md') {
+  @include media-max('md') {
     gap: 24px;
     padding: 0 12px;
   }
 
-  @include media.media-max('sm') {
+  @include media-max('sm') {
     gap: 16px;
     padding: 0 8px;
   }
 
   // Особые брейкпоинты для проблемных зон
-  @include media.media-between(1462px, 1522px) {
+  @include media-between(1462px, 1522px) {
     gap: 60px;
 
     .right-section {
@@ -84,11 +84,11 @@
   }
 
   // Исправление: при больших размерах сохраняем все элементы
-  @include media.media-min('wide') {
+  @include media-min('wide') {
     gap: 120px;
   }
 
-  @include media.media-min('ultra') {
+  @include media-min('ultra') {
     gap: 150px;
   }
 }
@@ -113,11 +113,11 @@
       height: 36px;
       width: auto;
 
-      @include media.media-max('md') {
+      @include media-max('md') {
         height: 32px;
       }
 
-      @include media.media-max('sm') {
+      @include media-max('sm') {
         height: 28px;
       }
     }
@@ -129,11 +129,11 @@
       letter-spacing: -0.5px;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
-      @include media.media-max(400px) {
+      @include media-max(400px) {
         display: none;
       }
 
-      @include media.media-min('wide') {
+      @include media-min('wide') {
         font-size: 22px;
       }
     }
@@ -145,11 +145,11 @@
   display: flex;
   justify-content: center;
 
-  @include media.media-between('lg', 'xxxl') {
+  @include media-between('lg', 'xxxl') {
     flex: 0.7;
   }
 
-  @include media.media-between('xxxl', 'wide') {
+  @include media-between('xxxl', 'wide') {
     flex: 0.8;
   }
 
@@ -162,7 +162,7 @@
     padding: 6px;
     border: 1px solid rgba(255, 255, 255, 0.2);
 
-    @include media.media-between(1200px, 1522px) {
+    @include media-between(1200px, 1522px) {
       padding: 4px;
       gap: 6px;
     }
@@ -196,7 +196,7 @@
         width: 18px;
         height: 18px;
 
-        @include media.media-between('lg', 'xxxl') {
+        @include media-between('lg', 'xxxl') {
           margin-right: 6px;
           font-size: 16px;
           width: 16px;
@@ -205,21 +205,21 @@
       }
 
       span {
-        @include media.media-between('lg', 'xxxl') {
+        @include media-between('lg', 'xxxl') {
           display: none;
         }
 
-        @include media.media-max('lg') {
+        @include media-max('lg') {
           display: none;
         }
       }
 
-      @include media.media-between('lg', 'xxxl') {
+      @include media-between('lg', 'xxxl') {
         padding: 8px 16px;
         font-size: 13px;
       }
 
-      @include media.media-max('lg') {
+      @include media-max('lg') {
         padding: 8px;
         min-width: 44px;
       }
@@ -233,7 +233,7 @@
   align-items: center;
   gap: 20px;
 
-  @include media.media-between(1462px, 1522px) {
+  @include media-between(1462px, 1522px) {
     gap: 8px;
 
     .search-wrapper {
@@ -249,7 +249,7 @@
     }
   }
 
-  @include media.media-between('lg', 1462px) {
+  @include media-between('lg', 1462px) {
     gap: 12px;
 
     .search-wrapper {
@@ -264,11 +264,11 @@
     }
   }
 
-  @include media.media-max('lg') {
+  @include media-max('lg') {
     gap: 16px;
   }
 
-  @include media.media-max('md') {
+  @include media-max('md') {
     gap: 12px;
   }
 
@@ -277,7 +277,7 @@
     margin-right: 12px;
     min-width: 0;
 
-    @include media.media-min('ultra') {
+    @include media-min('ultra') {
       ::ng-deep header-search-ui {
         .search-form-field {
           width: 250px;
@@ -285,7 +285,7 @@
       }
     }
 
-    @include media.media-between('wide', 'ultra') {
+    @include media-between('wide', 'ultra') {
       ::ng-deep header-search-ui {
         .search-form-field {
           width: 220px;
@@ -293,7 +293,7 @@
       }
     }
 
-    @include media.media-between('xl', 'wide') {
+    @include media-between('xl', 'wide') {
       ::ng-deep header-search-ui {
         .search-form-field {
           width: 200px;
@@ -301,7 +301,7 @@
       }
     }
 
-    @include media.media-between('lg', 'xl') {
+    @include media-between('lg', 'xl') {
       ::ng-deep header-search-ui {
         .search-form-field {
           width: 180px;
@@ -309,7 +309,7 @@
       }
     }
 
-    @include media.media-between(1480px, 1600px) {
+    @include media-between(1480px, 1600px) {
       ::ng-deep header-search-ui {
         .search-form-field {
           width: 160px;
@@ -317,7 +317,7 @@
       }
     }
 
-    @include media.media-between(1400px, 1480px) {
+    @include media-between(1400px, 1480px) {
       ::ng-deep header-search-ui {
         .search-form-field {
           width: 140px;
@@ -325,7 +325,7 @@
       }
     }
 
-    @include media.media-max(800px) {
+    @include media-max(800px) {
       display: none;
     }
   }
@@ -349,7 +349,7 @@
       font-weight: 600;
     }
 
-    @include media.media-max(400px) {
+    @include media-max(400px) {
       ::ng-deep .mat-badge-content {
         font-size: 8px;
         width: 16px;
@@ -358,7 +358,7 @@
       }
     }
 
-    @include media.media-between(1200px, 1522px) {
+    @include media-between(1200px, 1522px) {
       margin: 0;
     }
   }
@@ -369,7 +369,7 @@
     margin: 4px 0;
     flex-shrink: 0;
 
-    @include media.media-between(1200px, 1522px) {
+    @include media-between(1200px, 1522px) {
       margin: 0;
     }
 
@@ -398,7 +398,7 @@
         align-items: center;
         gap: 8px;
 
-        @include media.media-max('md') {
+        @include media-max('md') {
           display: none;
         }
       }
@@ -406,7 +406,7 @@
       .mobile-user {
         display: none;
 
-        @include media.media-max('md') {
+        @include media-max('md') {
           display: block;
         }
       }
@@ -420,24 +420,24 @@
         text-overflow: ellipsis;
         max-width: 150px;
 
-        @include media.media-between(1770px, 1870px) {
+        @include media-between(1770px, 1870px) {
           max-width: 120px;
         }
 
-        @include media.media-between(1600px, 1770px) {
+        @include media-between(1600px, 1770px) {
           max-width: 100px;
         }
 
-        @include media.media-between(1400px, 1600px) {
+        @include media-between(1400px, 1600px) {
           max-width: 80px;
         }
 
-        @include media.media-max('md') {
+        @include media-max('md') {
           max-width: 120px;
           font-size: 13px;
         }
 
-        @include media.media-max('sm') {
+        @include media-max('sm') {
           display: none;
         }
       }
@@ -458,7 +458,7 @@
           width: 32px;
           height: 32px;
 
-          @include media.media-max('md') {
+          @include media-max('md') {
             font-size: 28px;
             width: 28px;
             height: 28px;
@@ -478,7 +478,7 @@
         }
 
         &.desktop-only {
-          @include media.media-max('md') {
+          @include media-max('md') {
             display: none;
           }
         }
@@ -491,11 +491,11 @@
       gap: 16px;
       padding: 8px 0;
 
-      @include media.media-between(1200px, 1522px) {
+      @include media-between(1200px, 1522px) {
         gap: 8px;
       }
 
-      @include media.media-between(1870px, 2000px) {
+      @include media-between(1870px, 2000px) {
         gap: 12px;
       }
 
@@ -503,11 +503,11 @@
         display: flex;
         gap: 12px;
 
-        @include media.media-between(1200px, 1522px) {
+        @include media-between(1200px, 1522px) {
           gap: 6px;
         }
 
-        @include media.media-max('md') {
+        @include media-max('md') {
           gap: 6px;
         }
       }
@@ -515,34 +515,34 @@
       .login-form-field {
         width: 150px;
 
-        @include media.media-min('ultra') {
+        @include media-min('ultra') {
           width: 160px;
         }
 
-        @include media.media-between('wide', 'ultra') {
+        @include media-between('wide', 'ultra') {
           width: 150px;
         }
 
-        @include media.media-between('xl', 'wide') {
+        @include media-between('xl', 'wide') {
           width: 140px;
         }
 
-        @include media.media-between(1870px, 2000px) {
+        @include media-between(1870px, 2000px) {
           width: 130px;
         }
 
-        @include media.media-between(1600px, 1870px) {
+        @include media-between(1600px, 1870px) {
           width: 120px;
         }
-        @include media.media-between(1400px, 1600px) {
+        @include media-between(1400px, 1600px) {
           width: 110px;
         }
 
-        @include media.media-max('md') {
+        @include media-max('md') {
           width: 120px;
         }
 
-        @include media.media-max('sm') {
+        @include media-max('sm') {
           width: 110px;
         }
 
@@ -560,7 +560,7 @@
           color: white;
           font-size: 14px;
 
-          @include media.media-between(1200px, 1522px) {
+          @include media-between(1200px, 1522px) {
             font-size: 13px;
           }
 
@@ -591,12 +591,12 @@
         margin: 4px 0;
         flex-shrink: 0;
 
-        @include media.media-between(1200px, 1522px) {
+        @include media-between(1200px, 1522px) {
           height: 40px;
           padding: 0 16px;
         }
 
-        @include media.media-max('md') {
+        @include media-max('md') {
           height: 36px;
           padding: 0 16px;
         }
@@ -618,7 +618,7 @@
           width: 18px;
           height: 18px;
 
-          @include media.media-between(1200px, 1522px) {
+          @include media-between(1200px, 1522px) {
             margin-right: 0;
             font-size: 16px;
             width: 16px;
@@ -627,11 +627,11 @@
         }
 
         span {
-          @include media.media-between(1200px, 1522px) {
+          @include media-between(1200px, 1522px) {
             display: none;
           }
 
-          @include media.media-max('md') {
+          @include media-max('md') {
             display: none;
           }
         }
@@ -727,11 +727,11 @@
       width: 180px;
       font-family: monospace;
 
-      @include media.media-max('md') {
+      @include media-max('md') {
         width: 140px;
       }
 
-      @include media.media-max('sm') {
+      @include media-max('sm') {
         width: 120px;
         font-size: 11px;
       }
@@ -741,7 +741,7 @@
       font-weight: 500;
       width: 120px;
 
-      @include media.media-max('sm') {
+      @include media-max('sm') {
         width: 80px;
         font-size: 11px;
       }
@@ -755,7 +755,7 @@
       color: var(--mat-theme-secondary-text);
       width: 80px;
 
-      @include media.media-max('sm') {
+      @include media-max('sm') {
         width: 60px;
         font-size: 11px;
       }
@@ -768,30 +768,30 @@
       text-overflow: ellipsis;
       white-space: nowrap;
 
-      @include media.media-max('md') {
+      @include media-max('md') {
         font-size: 11px;
       }
     }
 
-    @include media.media-max('sm') {
+    @include media-max('sm') {
       gap: 8px;
       padding: 6px 0;
     }
   }
 
-  @include media.media-max('md') {
+  @include media-max('md') {
     padding: 12px;
     font-size: 11px;
   }
 
-  @include media.media-max('sm') {
+  @include media-max('sm') {
     padding: 8px;
   }
 }
 
 // Специальные адаптивные случаи
-@include media.media-between('md', 'lg') {
-  @include media.media-landscape {
+@include media-between('md', 'lg') {
+  @include media-landscape {
     .header-navbar {
       --header-height: 56px;
 
@@ -806,8 +806,8 @@
   }
 }
 
-@include media.media-max('md') {
-  @include media.media-landscape {
+@include media-max('md') {
+  @include media-landscape {
     .header-navbar {
       --header-height: 52px;
 
@@ -822,8 +822,8 @@
   }
 }
 
-@include media.media-min('lg') {
-  @include media.media-min-height(900px) {
+@include media-min('lg') {
+  @include media-min-height(900px) {
     .header-navbar {
       --header-height: 76px;
 
@@ -834,7 +834,7 @@
   }
 }
 
-@include media.media-max(360px) {
+@include media-max(360px) {
   .header-navbar {
     --header-height: 52px;
 
@@ -876,7 +876,7 @@
   }
 }
 
-@include media.media-min('ultra') {
+@include media-min('ultra') {
   .header-navbar {
     padding: 0 32px;
 
@@ -904,7 +904,7 @@
   }
 }
 
-@include media.media-high-dpi {
+@include media-high-dpi {
   .header-navbar {
     .center-section .nav-menu {
       backdrop-filter: blur(20px);
@@ -916,7 +916,7 @@
   }
 }
 
-@include media.media-dark-theme {
+@include media-dark-theme {
   :host-context(.auto-theme) {
     .header-navbar {
       border-bottom: 1px solid rgba(255, 255, 255, 0.15);
@@ -924,7 +924,7 @@
   }
 }
 
-@include media.media-reduced-motion {
+@include media-reduced-motion {
   .header-navbar {
     * {
       transition: none !important;
@@ -933,7 +933,7 @@
   }
 }
 
-@include media.media-high-contrast {
+@include media-high-contrast {
   .header-navbar {
     .center-section .nav-menu {
       background: rgba(255, 255, 255, 0.2);
