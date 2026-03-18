@@ -12,7 +12,7 @@ export class LogoComponent {
   @Input() size: number = 40;
   @Input() variant: 'default' | 'inverted' | 'monochrome' = 'default';
   @Input() className: string = '';
-  @Input() altText: string = 'AlwaysMarket - Ваш надежный маркетплейс';
+  @Input() altText: string = 'AlwaysMarket';
 
   get logoSrc(): string {
     return 'assets/images/svg/logo.svg';
