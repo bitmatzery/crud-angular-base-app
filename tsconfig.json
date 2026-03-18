@@ -21,6 +21,7 @@
       "@store/users": ["app/modules/users/pages/users-list-container/users-list-container.component.ts"],
       "@store/dashboard": ["app/modules/dashboard/pages/dashboard-container/dashboard-container.component.ts"],
       "@store/dashboard/products": ["app/modules/dashboard/pages/dashboard-products/dashboard-products.component.ts"],
+      "@store/cart": ["app/modules/products/pages/cart-list-container/cart-list-container.component.ts"],
     },
     "resolveJsonModule": true,
     "esModuleInterop": true,
