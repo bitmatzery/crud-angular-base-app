@@ -1,0 +1,232 @@
+.dashboard-container {
+  padding: 20px;
+  min-height: 100vh;
+  color: var(--text-color, #212529);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--surface-border, #dee2e6);
+}
+
+.dashboard-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-color, #212529);
+}
+
+.table-container {
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.initial-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+
+  span {
+    font-size: 16px;
+    color: var(--text-color-secondary, #6c757d);
+  }
+}
+
+.scroll-container {
+  max-height: 70vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.users-table {
+  width: 100%;
+
+  // Выравнивание заголовков по левому краю
+  .th-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  // Выравнивание ячеек (кроме аватара и действий) по левому краю
+  td:not(.text-center) {
+    text-align: left;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .user-avatar {
+    display: inline-block;
+  }
+}
+
+.actions-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+
+  .p-button {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: var(--text-color) !important;
+
+    .p-button-icon {
+      font-size: 1.5rem;
+      color: var(--text-color) !important;
+    }
+
+    &:hover {
+      background: var(--surface-hover, rgba(0, 0, 0, 0.04)) !important;
+      .p-button-icon {
+        color: var(--text-color) !important;
+      }
+    }
+
+    &.p-button-danger {
+      color: #f44336 !important;
+      .p-button-icon {
+        color: #f44336 !important;
+      }
+      &:hover {
+        background: rgba(244, 67, 54, 0.1) !important;
+      }
+    }
+  }
+}
+
+.loading-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-top: 1px solid var(--surface-border, #dee2e6);
+  color: var(--text-color-secondary, #6c757d);
+  background: var(--surface-ground, #f8f9fa) !important;
+}
+
+.no-more {
+  text-align: center;
+  padding: 16px;
+  border-top: 1px solid var(--surface-border, #dee2e6);
+  color: var(--text-color-secondary, #6c757d);
+  background: var(--surface-ground, #f8f9fa) !important;
+}
+
+.empty-table-message {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-color-secondary, #6c757d);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    color: var(--text-color-secondary, #6c757d);
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    color: var(--text-color, #212529);
+  }
+
+  p {
+    margin: 0 0 24px 0;
+    font-size: 16px;
+    color: var(--text-color-secondary, #6c757d);
+  }
+}
+
+.form-field {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-color, #212529);
+  }
+
+  input {
+    width: 100%;
+  }
+
+  small {
+    display: block;
+    margin-top: 0.25rem;
+  }
+}
+
+.w-full {
+  width: 100%;
+}
+
+.actions-container {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .dashboard-title {
+    font-size: 24px;
+  }
+
+  .actions-container {
+    flex-direction: row;
+    gap: 4px;
+  }
+}
+
+.p-dark .stats-icon-box {
+  background-color: color-mix(in srgb, var(--p-primary-400), transparent 80%);
+  border-color: color-mix(in srgb, var(--p-primary-400), transparent 70%);
+  color: var(--p-primary-200);
+}
+
+.stats-icon-box {
+  flex-shrink: 0;
+  background-color: var(--p-primary-100);
+  color: var(--p-primary-600);
+  border-radius: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--p-primary-200);
+}
