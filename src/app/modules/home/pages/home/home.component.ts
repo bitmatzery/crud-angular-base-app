@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {ProductsListContainerComponent} from '@store/products';
@@ -8,7 +8,7 @@ import {DisplayType} from '../../../products/models/display-type.enum';
 
 @Component({
   selector: 'store-home',
-  imports: [CommonModule, ProductsListContainerComponent],
+  imports: [ProductsListContainerComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   encapsulation: ViewEncapsulation.None,

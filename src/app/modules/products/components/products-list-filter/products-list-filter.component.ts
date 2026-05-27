@@ -3,7 +3,7 @@ import {
   Component, EventEmitter, inject, Output,
   ViewEncapsulation
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'search-filtration-items-ui',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule],
+  imports: [FormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule],
   templateUrl: './products-list-filter.component.html',
   styleUrls: ['./products-list-filter.component.scss'],
   encapsulation: ViewEncapsulation.Emulated,

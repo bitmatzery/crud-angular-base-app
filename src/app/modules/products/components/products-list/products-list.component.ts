@@ -9,7 +9,7 @@ import {
   Output,
   ViewEncapsulation
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
+
 import {ProductCardComponent} from '../product-card/product-card.component';
 import {ICategory, IProduct} from '../../models/product.interface';
 import {CategoryProductCardComponent} from '../category-product-card/category-product-card.component';
@@ -21,10 +21,9 @@ import {Subscription} from 'rxjs';
   selector: 'product-list-ui',
   standalone: true,
   imports: [
-    CommonModule,
     ProductCardComponent,
     CategoryProductCardComponent
-  ],
+],
   templateUrl: './products-list.component.html',
   styleUrls: ['./products-list.component.scss'],
   encapsulation: ViewEncapsulation.None,

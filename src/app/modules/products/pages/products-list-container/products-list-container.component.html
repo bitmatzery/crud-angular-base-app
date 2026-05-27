@@ -1,35 +1,43 @@
-<ng-container *ngIf="(filteredItems$ | async) as items; else loading">
+@if ((filteredItems$ | async); as items) {
   <div class="container-app">
     <!-- Компонент поиска - передаем текущее значение поиска через Input -->
-    <search-filtration-items-ui
-      *ngIf="displayType === DisplayType.PRODUCTS"
-      [searchTerm]="(currentSearchTerm$ | async) || ''"
-      (filterItems)="onFilteredItems($event)">
-    </search-filtration-items-ui>
-
-    <div class="container-products" *ngIf="displayType === DisplayType.PRODUCTS">
-      <div class="filters-info">
-        <span *ngIf="(selectedCategory$ | async) as category" class="category-badge">
-          Категория: {{ category.name }}
-          <button (click)="clearAllFilters()" class="clear-btn">×</button>
-        </span>
-        <span *ngIf="(currentSearchTerm$ | async) as searchTerm" class="search-badge">
-          Поиск: "{{ searchTerm }}"
-          <span *ngIf="searchResultsCount$ | async as count" class="results-count">
-            (найдено: {{ count }})
-          </span>
-          <button (click)="clearAllFilters()" class="clear-btn">×</button>
-        </span>
-
-        <!-- Информация о режиме поиска -->
-        <span *ngIf="(searchInfo$ | async) as searchInfo" class="search-note">
-          <ng-container *ngIf="searchInfo">
-            🔍 Поиск выполняется {{ searchInfo.allProductsLoaded ? 'локально по ' + searchInfo.loadedCount + ' загруженным товарам' : 'по всем товарам на сервере' }}
-          </ng-container>
-        </span>
+    @if (displayType === DisplayType.PRODUCTS) {
+      <search-filtration-items-ui
+        [searchTerm]="(currentSearchTerm$ | async) || ''"
+        (filterItems)="onFilteredItems($event)">
+      </search-filtration-items-ui>
+    }
+    @if (displayType === DisplayType.PRODUCTS) {
+      <div class="container-products">
+        <div class="filters-info">
+          @if ((selectedCategory$ | async); as category) {
+            <span class="category-badge">
+              Категория: {{ category.name }}
+              <button (click)="clearAllFilters()" class="clear-btn">×</button>
+            </span>
+          }
+          @if ((currentSearchTerm$ | async); as searchTerm) {
+            <span class="search-badge">
+              Поиск: "{{ searchTerm }}"
+              @if (searchResultsCount$ | async; as count) {
+                <span class="results-count">
+                  (найдено: {{ count }})
+                </span>
+              }
+              <button (click)="clearAllFilters()" class="clear-btn">×</button>
+            </span>
+          }
+          <!-- Информация о режиме поиска -->
+          @if ((searchInfo$ | async); as searchInfo) {
+            <span class="search-note">
+              @if (searchInfo) {
+                🔍 Поиск выполняется {{ searchInfo.allProductsLoaded ? 'локально по ' + searchInfo.loadedCount + ' загруженным товарам' : 'по всем товарам на сервере' }}
+              }
+            </span>
+          }
+        </div>
       </div>
-    </div>
-
+    }
     <!-- Используем компонент бесконечного скролла -->
     <infinite-scroll-container-ui
       [isLoading]="(loadingProducts$ | async) || false"
@@ -39,7 +47,6 @@
       [loadingText]="'Загрузка товаров...'"
       [noMoreText]="'Все товары загружены'"
       (loadMore)="onLoadMore()">
-
       <product-list-ui
         [items]="items"
         [displayType]="displayType"
@@ -47,14 +54,12 @@
         (filterItems)="onFilteredItems($event)"
         (categoryItems)="onCategorySelect($event)">
       </product-list-ui>
-
     </infinite-scroll-container-ui>
   </div>
-</ng-container>
-
-<ng-template #loading>
+} @else {
   <div class="loading-container">
     <div class="spinner"></div>
     <div>Загрузка...</div>
   </div>
-</ng-template>
+}
+

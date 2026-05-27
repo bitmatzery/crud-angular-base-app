@@ -17,9 +17,11 @@
     <h2 class="product-card__title">{{ product.title }}</h2>
 
     <!-- Категория товара -->
-    <div *ngIf="product.category" class="product-card__category">
-      {{ product.category.name }}
-    </div>
+    @if (product.category) {
+      <div class="product-card__category">
+        {{ product.category.name }}
+      </div>
+    }
 
     <!-- Цена -->
     <div class="product-card__price">${{ product.price }}</div>
@@ -27,12 +29,14 @@
     <!-- Описание -->
     <p class="product-card__description">
       {{ product.description | slice:0:100 }}
-      <ng-container *ngIf="product.description && product.description.length > 100">…</ng-container>
+      @if (product.description && product.description.length > 100) {
+        …
+      }
     </p>
 
     <!-- Кнопки действий -->
     <div class="product-card__actions">
-      <ng-container *ngIf="quantityInCart === 0; else quantityControls">
+      @if (quantityInCart === 0) {
         <!-- Кнопка добавления в корзину -->
         <button
           (click)="addToCart.emit()"
@@ -42,9 +46,7 @@
           <mat-icon>shopping_cart</mat-icon>
           <span>В корзину</span>
         </button>
-      </ng-container>
-
-      <ng-template #quantityControls>
+      } @else {
         <!-- Управление количеством -->
         <div class="quantity-controls">
           <button
@@ -54,11 +56,9 @@
             aria-label="Уменьшить количество">
             <mat-icon>remove</mat-icon>
           </button>
-
           <div class="quantity-display">
             {{ quantityInCart }}
           </div>
-
           <button
             (click)="increaseQuantity.emit()"
             class="quantity-btn"
@@ -67,7 +67,8 @@
             <mat-icon>add</mat-icon>
           </button>
         </div>
-      </ng-template>
+      }
+
     </div>
   </div>
 </div>

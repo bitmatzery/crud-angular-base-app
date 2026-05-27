@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {IUser} from '../../models/user.interface';
+import {ButtonModule} from 'primeng/button';
 
 
 @Component({
   selector: 'users-user-card-ui',
   standalone: true,
-  imports: [CommonModule],
+  imports: [ButtonModule],
   templateUrl: './user-card.component.html',
   styleUrls: ['./user-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

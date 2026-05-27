@@ -8,7 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {CommonModule} from '@angular/common';
+
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -24,13 +24,12 @@ import {first} from 'rxjs';
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
     FormsModule,
     MatTooltipModule
-  ]
+]
 })
 
 export class UsersListFilterComponent implements OnInit {

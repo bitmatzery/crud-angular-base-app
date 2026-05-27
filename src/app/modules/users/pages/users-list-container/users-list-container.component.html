@@ -1,14 +1,13 @@
-  <!-- <ng-container *ngIf="users$ | ngrxPush as users"> -->
-  <ng-container *ngIf="filteredUsers$ | async as users; else loading">
-    <users-list-ui
-      [users] = "users"
-      (deleteUser)="OnDeleteUser($event)"
-      (filterUsers)="onFilteredUsersAndNavigate($event)"
+<!-- <ng-container *ngIf="users$ | ngrxPush as users"> -->
+@if (filteredUsers$ | async; as users) {
+  <users-list-ui
+    [users] = "users"
+    (deleteUser)="OnDeleteUser($event)"
+    (filterUsers)="onFilteredUsersAndNavigate($event)"
     >
-    </users-list-ui>
-  </ng-container>
+  </users-list-ui>
+} @else {
+  <div>Loading...</div>
+}
 
-  <ng-template #loading>
-    <div>Loading...</div>
-  </ng-template>
 

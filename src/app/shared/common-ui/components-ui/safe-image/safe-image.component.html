@@ -10,17 +10,21 @@
     class="safe-image"
     #imageElement>
 
-  <!-- Индикатор загрузки только для внешних изображений -->
-  <div *ngIf="isLoading && !hasError" class="safe-image-loading">
-    <img [src]="loadingImage" alt="Loading..." class="loading-spinner-img">
-    <span class="loading-text">Loading image...</span>
-  </div>
+    <!-- Индикатор загрузки только для внешних изображений -->
+    @if (isLoading && !hasError) {
+      <div class="safe-image-loading">
+        <img [src]="loadingImage" alt="Loading..." class="loading-spinner-img">
+        <span class="loading-text">Loading image...</span>
+      </div>
+    }
 
-  <!-- Сообщение об ошибке -->
-  <div *ngIf="hasError && !isLoading" class="safe-image-error">
-    <div class="error-content">
-      <img [src]="errorImage" alt="Error" class="error-image">
-      <span class="error-text">Image not available</span>
-    </div>
+    <!-- Сообщение об ошибке -->
+    @if (hasError && !isLoading) {
+      <div class="safe-image-error">
+        <div class="error-content">
+          <img [src]="errorImage" alt="Error" class="error-image">
+          <span class="error-text">Image not available</span>
+        </div>
+      </div>
+    }
   </div>
-</div>

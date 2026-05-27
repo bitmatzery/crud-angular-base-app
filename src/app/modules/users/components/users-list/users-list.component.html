@@ -5,13 +5,15 @@
       (filterUsers)="OnFilteredUsers($event)"
     ></users-list-filter>
     <div class="cards">
-      <div class="card" *ngFor="let user of users">
-        <users-user-card-ui
-          [user] = user
-          (deleteUser)="OnDeleteUser($event)"
-        >
-        </users-user-card-ui>
-      </div>
+      @for (user of users; track user) {
+        <div class="card">
+          <users-user-card-ui
+            [user] = user
+            (deleteUser)="OnDeleteUser($event)"
+            >
+          </users-user-card-ui>
+        </div>
+      }
     </div>
   </div>
 </ng-container>

@@ -3,28 +3,36 @@
     <h1>AlwaysMarket is always your go-to place for shopping!</h1>
   </div>
   <!-- Сообщения об ошибках инициализации -->
-  <div *ngIf="initializationMessage"
-       class="initialization-message"
-       [class.error]="initializationError"
-       [class.recovering]="isRecovering">
-    <span>{{ initializationMessage }}</span>
-    <div class="action-buttons">
-      <button *ngIf="initializationError && !isRecovering"
-              class="retry-btn"
-              (click)="retryInitialization()">
-        Повторить
-      </button>
-      <button *ngIf="initializationError && !isRecovering"
-              class="recovery-btn"
-              (click)="forceDataRecovery()">
-        Восстановить данные
-      </button>
-      <div *ngIf="isRecovering" class="recovery-progress">
-        <div class="spinner"></div>
-        <span>Восстановление...</span>
+  @if (initializationMessage) {
+    <div
+      class="initialization-message"
+      [class.error]="initializationError"
+      [class.recovering]="isRecovering">
+      <span>{{ initializationMessage }}</span>
+      <div class="action-buttons">
+        @if (initializationError && !isRecovering) {
+          <button
+            class="retry-btn"
+            (click)="retryInitialization()">
+            Повторить
+          </button>
+        }
+        @if (initializationError && !isRecovering) {
+          <button
+            class="recovery-btn"
+            (click)="forceDataRecovery()">
+            Восстановить данные
+          </button>
+        }
+        @if (isRecovering) {
+          <div class="recovery-progress">
+            <div class="spinner"></div>
+            <span>Восстановление...</span>
+          </div>
+        }
       </div>
     </div>
-  </div>
+  }
 
   <!-- Секция категорий -->
   <section class="categories-section">

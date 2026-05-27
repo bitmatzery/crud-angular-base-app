@@ -16,7 +16,7 @@
       <img [src]="user.avatar" alt="user_avatar">
     </div>
   </div>
-  <div class="button-container"> <!-- добавьте этот контейнер -->
-    <button (click)="OnDeleteUser(user.id)">Удалить пользователя</button>
+  <div class="button-container">
+    <p-button (click)="OnDeleteUser(user.id)" label="Удалить пользователя"/>
   </div>
 </div>

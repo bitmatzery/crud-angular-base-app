@@ -3,26 +3,27 @@
     <h1>{{ displayType === DisplayType.PRODUCTS ? 'Все Товары' : 'Категории' }}</h1>
 
     <div class="items">
-      <ng-container *ngFor="let item of items">
-        <product-card-ui
-          *ngIf="isProduct(item)"
-          [product]="item"
-          [quantityInCart]="getQuantityInCart(item.id)"
-          (addToCart)="onAddToCart(item.id)"
-          (increaseQuantity)="onIncreaseQuantity(item.id)"
-          (decreaseQuantity)="onDecreaseQuantity(item.id)"
-          (removeFromCart)="onRemoveFromCart(item.id)"
-        >
-        </product-card-ui>
-
-        <category-product-card-ui
-          *ngIf="isCategory(item)"
-          [category]="item"
-          [isSelected]="isCategorySelected(item)"
-          (categoryItems)="onCategorySelect($event)"
-        >
-        </category-product-card-ui>
-      </ng-container>
+      @for (item of items; track item) {
+        @if (isProduct(item)) {
+          <product-card-ui
+            [product]="item"
+            [quantityInCart]="getQuantityInCart(item.id)"
+            (addToCart)="onAddToCart(item.id)"
+            (increaseQuantity)="onIncreaseQuantity(item.id)"
+            (decreaseQuantity)="onDecreaseQuantity(item.id)"
+            (removeFromCart)="onRemoveFromCart(item.id)"
+            >
+          </product-card-ui>
+        }
+        @if (isCategory(item)) {
+          <category-product-card-ui
+            [category]="item"
+            [isSelected]="isCategorySelected(item)"
+            (categoryItems)="onCategorySelect($event)"
+            >
+          </category-product-card-ui>
+        }
+      }
     </div>
   </div>
 </ng-container>
