@@ -14,18 +14,32 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "paths": {
-      "@store/home": ["app/modules/home/pages/home/home.component.ts"],
-      "@store/products": ["app/modules/products/pages/products-list-container/products-list-container.component.ts"],
-      "@store/users": ["app/modules/users/pages/users-list-container/users-list-container.component.ts"],
-      "@store/dashboard": ["app/modules/dashboard/pages/dashboard-container/dashboard-container.component.ts"],
-      "@store/dashboard/products": ["app/modules/dashboard/pages/dashboard-products/dashboard-products.component.ts"],
-      "@store/cart": ["app/modules/products/pages/cart-list-container/cart-list-container.component.ts"],
+      "@store/home": [
+        "app/modules/home/pages/home/home.component.ts"
+      ],
+      "@store/products": [
+        "app/modules/products/pages/products-list-container/products-list-container.component.ts"
+      ],
+      "@store/users": [
+        "app/modules/users/pages/users-list-container/users-list-container.component.ts"
+      ],
+      "@store/dashboard": [
+        "app/modules/dashboard/pages/dashboard-container/dashboard-container.component.ts"
+      ],
+      "@store/dashboard/products": [
+        "app/modules/dashboard/pages/dashboard-products/dashboard-products.component.ts"
+      ],
+      "@store/dashboard/users": [
+        "app/modules/dashboard/pages/dashboard-users/dashboard-users.component.ts"
+      ],
+      "@store/cart": [
+        "app/modules/products/pages/cart-list-container/cart-list-container.component.ts"
+      ]
     },
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "esModuleInterop": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
