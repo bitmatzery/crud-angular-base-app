@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input, OnChanges,
+  OnInit,
+  Output,
+  ViewEncapsulation
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -30,7 +38,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CartListComponent {
+export class CartListComponent implements OnInit, OnChanges{
   @Input() cartItems: CartItemDetails[] = [];
   @Input() subtotal: number = 0;
   @Input() shipping: number = 0;
