@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ICategory } from '../../models/product.interface';
 import { SafeImageComponent } from '../../../../shared/common-ui/components-ui/safe-image/safe-image.component';
 
 @Component({
   selector: 'category-product-card-ui',
   standalone: true,
-  imports: [CommonModule, SafeImageComponent],
+  imports: [SafeImageComponent],
   templateUrl: './category-product-card.component.html',
   styleUrls: ['./category-product-card.component.scss'],
   encapsulation: ViewEncapsulation.None,
