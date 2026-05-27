@@ -1,5 +1,5 @@
 import { Injectable, inject, Renderer2, RendererFactory2, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
 export type Theme = 'light' | 'dark' | 'auto';
@@ -33,7 +33,7 @@ export class ThemeService implements OnDestroy {
 
   setTheme(theme: Theme): void {
     this.currentThemeSubject.next(theme);
-    this.applyThemeToAppRoot(theme);
+    this.applyThemeToElements(theme);
     this.cookieService.set('theme', theme, {
       path: '/',
       sameSite: 'Strict',
@@ -41,14 +41,19 @@ export class ThemeService implements OnDestroy {
     });
   }
 
-  private applyThemeToAppRoot(theme: Theme): void {
+  private applyThemeToElements(theme: Theme): void {
     const appRoot = document.querySelector('app-root');
-    if (!appRoot) return;
+    // Работаем и с body, и с app-root (для обратной совместимости)
+    const elementsToUpdate = [appRoot, document.body].filter(el => el !== null);
 
-    // Удаляем все тематические классы
-    this.renderer.removeClass(appRoot, 'light-theme');
-    this.renderer.removeClass(appRoot, 'dark-theme');
-    this.renderer.removeClass(appRoot, 'auto-theme');
+    if (elementsToUpdate.length === 0) return;
+
+    // Удаляем все тематические классы со всех элементов
+    elementsToUpdate.forEach(el => {
+      this.renderer.removeClass(el, 'light-theme');
+      this.renderer.removeClass(el, 'dark-theme');
+      this.renderer.removeClass(el, 'auto-theme');
+    });
 
     if (this.mediaQuerySubscription) {
       this.mediaQuery.removeEventListener('change', () => this.handleSystemThemeChange());
@@ -56,11 +61,15 @@ export class ThemeService implements OnDestroy {
     }
 
     if (theme === 'auto') {
-      this.renderer.addClass(appRoot, 'auto-theme');
+      elementsToUpdate.forEach(el => {
+        this.renderer.addClass(el, 'auto-theme');
+      });
       // Добавляем слушатель для изменений системной темы
       this.mediaQuery.addEventListener('change', () => this.handleSystemThemeChange());
     } else {
-      this.renderer.addClass(appRoot, theme + '-theme');
+      elementsToUpdate.forEach(el => {
+        this.renderer.addClass(el, theme + '-theme');
+      });
     }
   }
 
