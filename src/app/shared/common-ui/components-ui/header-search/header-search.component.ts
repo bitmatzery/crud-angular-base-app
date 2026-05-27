@@ -1,5 +1,5 @@
 import {Component, EventEmitter, inject, OnDestroy, OnInit, Output} from '@angular/core';
-import {CommonModule} from '@angular/common';
+
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
@@ -16,13 +16,12 @@ import {ProductsService} from '../../../../modules/products/services/data-servic
   selector: 'header-search-ui',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
     MatIconButton
-  ],
+],
   templateUrl: './header-search.component.html',
   styleUrls: ['./header-search.component.scss']
 })

@@ -21,28 +21,30 @@
         </button>
 
         <!-- Кнопка "Пользователи" видна только админам -->
-        <button
-          *ngIf="(userRole$ | async) === 'admin'"
-          mat-button
-          routerLink="/users"
-          routerLinkActive="active"
-          class="nav-button"
-        >
-          <mat-icon>people</mat-icon>
-          <span class="nav-text">Пользователи</span>
-        </button>
+        @if ((userRole$ | async) === 'admin') {
+          <button
+            mat-button
+            routerLink="/users"
+            routerLinkActive="active"
+            class="nav-button"
+            >
+            <mat-icon>people</mat-icon>
+            <span class="nav-text">Пользователи</span>
+          </button>
+        }
 
         <!-- Кнопка "Dashboard" видна только админам -->
-        <button
-          *ngIf="(userRole$ | async) === 'admin'"
-          mat-button
-          routerLink="/dashboard"
-          routerLinkActive="active"
-          class="nav-button"
-        >
-          <mat-icon>dashboard</mat-icon>
-          <span class="nav-text">Dashboard</span>
-        </button>
+        @if ((userRole$ | async) === 'admin') {
+          <button
+            mat-button
+            routerLink="/dashboard"
+            routerLinkActive="active"
+            class="nav-button"
+            >
+            <mat-icon>dashboard</mat-icon>
+            <span class="nav-text">Dashboard</span>
+          </button>
+        }
       </nav>
     </div>
 
@@ -62,7 +64,7 @@
         matBadgeColor="accent"
         matBadgeSize="small"
         matTooltip="Корзина"
-      >
+        >
         <mat-icon>shopping_cart</mat-icon>
       </button>
 
@@ -71,25 +73,24 @@
 
       <!-- Блок пользователя -->
       <div class="user-section">
-        <ng-container *ngIf="isLoggedIn$ | async; else showLoginForm">
+        @if (isLoggedIn$ | async) {
           <div class="user-info">
             <!-- Десктоп: текст + иконка -->
             <div class="desktop-user">
-              <ng-container *ngIf="userEmail$ | async as userEmail">
+              @if (userEmail$ | async; as userEmail) {
                 <span class="username-text">
                   Привет, {{ userEmail.split('@')[0] }}!
                 </span>
-              </ng-container>
+              }
               <button
                 mat-icon-button
                 class="user-button"
                 [matMenuTriggerFor]="userMenu"
                 matTooltip="Меню пользователя"
-              >
+                >
                 <mat-icon class="user-icon">account_circle</mat-icon>
               </button>
             </div>
-
             <!-- Мобильный: только иконка -->
             <div class="mobile-user">
               <button
@@ -97,11 +98,10 @@
                 class="user-button"
                 [matMenuTriggerFor]="userMenu"
                 matTooltip="Меню пользователя"
-              >
+                >
                 <mat-icon class="user-icon">account_circle</mat-icon>
               </button>
             </div>
-
             <!-- Кнопка выхода (только для десктопа) -->
             <button
               class="logout-button desktop-only"
@@ -110,13 +110,11 @@
               aria-label="Logout"
               (click)="onLogout()"
               matTooltip="Выйти"
-            >
+              >
               <mat-icon>logout</mat-icon>
             </button>
           </div>
-        </ng-container>
-
-        <ng-template #showLoginForm>
+        } @else {
           <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="form-fields">
               <mat-form-field class="login-form-field" appearance="outline">
@@ -128,9 +126,8 @@
                   type="email"
                   aria-label="Email"
                   class="form-input"
-                />
+                  />
               </mat-form-field>
-
               <mat-form-field class="login-form-field" appearance="outline">
                 <mat-label>Пароль</mat-label>
                 <input
@@ -140,22 +137,22 @@
                   type="password"
                   aria-label="Password"
                   class="form-input"
-                />
+                  />
               </mat-form-field>
             </div>
-
             <button
               class="login-button"
               mat-raised-button
               type="submit"
               aria-label="Login"
               [disabled]="!form.valid"
-            >
+              >
               <mat-icon>login</mat-icon>
               <span class="login-text">Войти</span>
             </button>
           </form>
-        </ng-template>
+        }
+
       </div>
     </div>
   </div>
@@ -183,7 +180,9 @@
   <button mat-menu-item (click)="goToCart(); userMenu.closed.emit()">
     <mat-icon>shopping_cart</mat-icon>
     <span>Моя корзина</span>
-    <span class="cart-menu-count" *ngIf="cartItemsCount > 0">{{ cartItemsCount }}</span>
+    @if (cartItemsCount > 0) {
+      <span class="cart-menu-count">{{ cartItemsCount }}</span>
+    }
   </button>
 
   <button mat-menu-item routerLink="/orders" (click)="userMenu.closed.emit()">
@@ -205,14 +204,18 @@
 </mat-menu>
 
 <!-- Логи доступа (можно скрыть или убрать) -->
-<div class="access-logs" *ngIf="showLogs">
-  <h3>Recent Access Attempts</h3>
-  <div class="log-entry" *ngFor="let log of logService.getLogs()">
-    <span class="timestamp">{{ log.timestamp | date:'medium' }}</span>
-    <span class="user" [class.guest]="log.email === 'Guest'">
-      {{ log.email }}
-    </span>
-    <span class="role">({{ log.userRole }})</span>
-    <span class="url">attempted to access: {{ log.targetUrl }}</span>
+@if (showLogs) {
+  <div class="access-logs">
+    <h3>Recent Access Attempts</h3>
+    @for (log of logService.getLogs(); track log) {
+      <div class="log-entry">
+        <span class="timestamp">{{ log.timestamp | date:'medium' }}</span>
+        <span class="user" [class.guest]="log.email === 'Guest'">
+          {{ log.email }}
+        </span>
+        <span class="role">({{ log.userRole }})</span>
+        <span class="url">attempted to access: {{ log.targetUrl }}</span>
+      </div>
+    }
   </div>
-</div>
+}

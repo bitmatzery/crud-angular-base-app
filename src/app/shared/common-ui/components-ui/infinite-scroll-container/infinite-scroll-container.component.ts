@@ -8,13 +8,11 @@ import {
   ViewChild,
   AfterViewInit
 } from '@angular/core';
-import {CommonModule, NgIf} from '@angular/common';
+
 
 @Component({
   selector: 'infinite-scroll-container-ui',
-  imports: [
-    NgIf
-  ],
+  imports: [],
   templateUrl: './infinite-scroll-container.component.html',
   styleUrl: './infinite-scroll-container.component.scss',
 })
@@ -28,7 +26,7 @@ export class InfiniteScrollContainerComponent implements AfterViewInit, OnDestro
   @Input() scrollThreshold = 300;
   @Input() throttleTime = 200;
   @Input() loadingText = 'Загрузка...';
-  @Input() noMoreText = 'Все товары загружены';
+  @Input() noMoreText = 'Все позиции загружены';
   @Input() showNoMoreText = true;
   @Input() autoLoadInitial = true;
 

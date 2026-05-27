@@ -11,7 +11,7 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
+
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
@@ -27,13 +27,7 @@ import {ProductsService} from '../../../../modules/products/services/data-servic
 @Component({
   selector: 'search-filtration-items-ui',
   standalone: true,
-  imports: [CommonModule,
-    FormsModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatTooltipModule],
+  imports: [FormsModule, MatButtonModule, MatFormFieldModule, MatIconModule, MatInputModule, MatTooltipModule],
   templateUrl: './search-filtration-items.component.html',
   styleUrls: ['./search-filtration-items.component.scss'],
   encapsulation: ViewEncapsulation.Emulated,

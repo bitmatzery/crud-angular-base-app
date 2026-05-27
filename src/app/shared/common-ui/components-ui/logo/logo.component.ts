@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'logo-ui',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './logo.component.html',
   styleUrls: ['./logo.component.scss'],
 })
