@@ -6,6 +6,7 @@ scroll-container {
 .scroll-container.scrollable {
   overflow-y: auto;
   padding-right: 8px;
+  background: var(--app-background);
 }
 
 .scroll-container.categories-container {
@@ -16,21 +17,22 @@ scroll-container {
 // Кастомный скроллбар
 .scroll-container.scrollable::-webkit-scrollbar {
   width: 8px;
+  background: var(--app-background);
 }
 
 .scroll-container.scrollable::-webkit-scrollbar-track {
-  background: #f8f9fa;
+  background: var(--app-background);
   border-radius: 4px;
 }
 
 .scroll-container.scrollable::-webkit-scrollbar-thumb {
-  background: #ced4da;
+  background: #adb5bd;
   border-radius: 4px;
-  transition: background-color 0.2s ease;
 }
 
 .scroll-container.scrollable::-webkit-scrollbar-thumb:hover {
-  background: #adb5bd;
+  background: #d1d5db;
+  transition: background-color 0.2s ease;
 }
 
 .loading-more {
@@ -39,8 +41,7 @@ scroll-container {
   justify-content: center;
   padding: 30px 20px;
   border-radius: 8px;
-  margin-top: 20px;
-  background: var(--app-background);
+  margin-top: 0;
   color: var(--app-text-color);
 }
 
@@ -67,6 +68,7 @@ scroll-container {
   background: #f8f9fa;
   border-radius: 8px;
   margin-top: 20px;
+  background: var(--app-background);
 }
 
 @keyframes spin {
