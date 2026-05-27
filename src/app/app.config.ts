@@ -6,6 +6,8 @@ import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {authTokenInterceptor} from './core/auth/auth.interceptor';
 import {API_URL} from './core/http/api-url.token';
 import {environment} from '../environments/environment';
+import {providePrimeNG} from 'primeng/config';
+import Aura from '@primeuix/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,5 +19,10 @@ export const appConfig: ApplicationConfig = {
       provide: API_URL,
       useValue: environment.api_url,
     },
+    providePrimeNG({
+      theme: {
+        preset: Aura
+      }
+    })
   ]
 };
