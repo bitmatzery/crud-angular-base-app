@@ -1,10 +1,10 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {Router} from '@angular/router';
-import {CommonModule} from '@angular/common';
+
 
 @Component({
   selector: 'dashboard-container-ui',
-  imports: [CommonModule],
+  imports: [],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './dashboard-container.component.html',
   styleUrl: './dashboard-container.component.scss',
