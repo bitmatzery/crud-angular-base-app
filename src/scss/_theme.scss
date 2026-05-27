@@ -1,12 +1,12 @@
 @use "@angular/material" as mat;
+@use "primeicons/primeicons.css";
 @use "sass:map";
 @use "utilities";
 @use "media";
 
-// Создание темы с новым синтаксисом
 @include mat.core();
 
-// Светлая тема
+// Светлая тема Material
 $mat-light-theme: mat.define-theme((
   color: (
     theme-type: light,
@@ -15,7 +15,7 @@ $mat-light-theme: mat.define-theme((
   )
 ));
 
-// Темная тема
+// Темная тема Material
 $mat-dark-theme: mat.define-theme((
   color: (
     theme-type: dark,
@@ -24,7 +24,7 @@ $mat-dark-theme: mat.define-theme((
   )
 ));
 
-// Применяем светлую тему по умолчанию
+// Применяем светлую тему Material по умолчанию
 @include mat.all-component-themes($mat-light-theme);
 
 // Базовые CSS переменные
@@ -37,7 +37,6 @@ $mat-dark-theme: mat.define-theme((
 
   // Дополнительные цвета
   --app-card-bg: #ffffff;
-  --app-hover: rgba(0, 0, 0, 0.04);
   --app-shadow: rgba(0, 0, 0, 0.1);
   --app-success: #2e7d32;
 
@@ -76,17 +75,32 @@ $mat-dark-theme: mat.define-theme((
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
   --transition: all 0.3s ease;
+
+  // Переменные PrimeNG
+  --surface-ground: #f8f9fa;
+  --surface-card: #ffffff;
+  --surface-border: #dee2e6;
+  --text-color: #212529;
+  --text-color-secondary: #6c757d;
 }
 
 // Светлая тема
 .light-theme {
   @include mat.all-component-themes($mat-light-theme);
 
-  // Для дашборда
+  // Переменные для дашборда
   --dashboard-card-bg: var(--dashboard-card-bg-light);
   --dashboard-card-text: var(--dashboard-card-text-light);
   --dashboard-card-secondary: var(--dashboard-card-secondary-light);
   --dashboard-stat-card-bg: var(--dashboard-stat-card-bg-light);
+
+  // Переменные PrimeNG
+  --surface-ground: #f8f9fa;
+  --surface-card: #ffffff;
+  --surface-border: #dee2e6;
+  --text-color: #212529;
+  --text-color-secondary: #6c757d;
+  --app-hover: #f0f0f0;
 }
 
 // Темная тема
@@ -109,11 +123,18 @@ $mat-dark-theme: mat.define-theme((
   --app-button-bg: #bb86fc;
   --app-button-text: #000000;
 
-  // Для дашборда
+  // Переменные для дашборда
   --dashboard-card-bg: var(--dashboard-card-bg-dark);
   --dashboard-card-text: var(--dashboard-card-text-dark);
   --dashboard-card-secondary: var(--dashboard-card-secondary-dark);
   --dashboard-stat-card-bg: var(--dashboard-stat-card-bg-dark);
+
+  // Переменные PrimeNG
+  --surface-ground: #121212;
+  --surface-card: #1e1e1e;
+  --surface-border: #2c2c2c;
+  --text-color: #ffffff;
+  --text-color-secondary: #a0a0a0;
 }
 
 // Авто тема
@@ -126,6 +147,13 @@ $mat-dark-theme: mat.define-theme((
   --dashboard-card-secondary: var(--dashboard-card-secondary-light);
   --dashboard-stat-card-bg: var(--dashboard-stat-card-bg-light);
 
+  // Переменные PrimeNG по умолчанию
+  --surface-ground: #f8f9fa;
+  --surface-card: #ffffff;
+  --surface-border: #dee2e6;
+  --text-color: #212529;
+  --text-color-secondary: #6c757d;
+
   @media (prefers-color-scheme: dark) {
     @include mat.all-component-colors($mat-dark-theme);
 
@@ -134,7 +162,7 @@ $mat-dark-theme: mat.define-theme((
     --app-surface: #1e1e1e;
     --app-border: #333333;
     --app-card-bg: #1e1e1e;
-    --app-hover: rgba(255, 255, 255, 0.04);
+    --app-hover: #f0f0f0;
     --app-shadow: rgba(0, 0, 0, 0.3);
     --app-success: #4caf50;
     --app-header-bg: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
@@ -144,11 +172,160 @@ $mat-dark-theme: mat.define-theme((
     --app-button-bg: #bb86fc;
     --app-button-text: #000000;
 
-    // Для дашборда
+    // Переменные для дашборда
     --dashboard-card-bg: var(--dashboard-card-bg-dark);
     --dashboard-card-text: var(--dashboard-card-text-dark);
     --dashboard-card-secondary: var(--dashboard-card-secondary-dark);
     --dashboard-stat-card-bg: var(--dashboard-stat-card-bg-dark);
+
+    // Переменные PrimeNG для темной темы
+    --surface-ground: #121212;
+    --surface-card: #1e1e1e;
+    --surface-border: #2c2c2c;
+    --text-color: #ffffff;
+    --text-color-secondary: #a0a0a0;
+  }
+}
+
+// Стили для PrimeNG компонентов с поддержкой тем
+.p-datatable {
+  background: var(--surface-card);
+
+  .p-datatable-thead > tr > th {
+    background: var(--surface-ground);
+    color: var(--text-color);
+    border-color: var(--surface-border);
+  }
+
+  .p-datatable-tbody > tr > td {
+    background: var(--surface-card);
+    color: var(--text-color);
+    border-color: var(--surface-border);
+  }
+
+  .p-datatable-tbody > tr:hover > td {
+    background: var(--app-hover);
+  }
+
+  // Ховер строк
+  .p-datatable-tbody > tr:hover > td {
+    background: var(--surface-border) !important;
+  }
+
+  // Ховер заголовков с сортировкой
+  .p-datatable-thead > tr > th.p-sortable-column:hover {
+    background: var(--app-hover) !important;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+}
+
+.p-dialog {
+  .p-dialog-header {
+    background: var(--surface-card);
+    color: var(--text-color);
+    border-color: var(--surface-border);
+  }
+
+  .p-dialog-content {
+    background: var(--surface-card);
+    color: var(--text-color);
+  }
+
+  .p-dialog-footer {
+    background: var(--surface-card);
+    border-color: var(--surface-border);
+  }
+}
+
+.p-toast {
+  .p-toast-message {
+    background: var(--surface-card);
+    color: var(--text-color);
+  }
+}
+
+// Стили для полей ввода PrimeNG
+.p-inputtext {
+  background: var(--surface-card) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--surface-border) !important;
+  border-radius: var(--border-radius) !important;
+  padding: 0.5rem 0.75rem !important;
+  transition: var(--transition) !important;
+
+  &:focus {
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.2) !important;
+    outline: none !important;
+  }
+
+  &:disabled {
+    background: var(--surface-ground) !important;
+    opacity: 0.6;
+  }
+}
+
+// Стили для меток в модальных окнах
+.p-dialog .form-field label {
+  color: var(--text-color) !important;
+}
+
+.p-progress-spinner {
+  color: var(--accent-primary);
+}
+
+.p-button.p-button-text {
+  color: var(--text-color);
+
+  &:hover {
+    background: var(--app-hover);
+  }
+}
+
+.p-button.p-button-primary {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+// Глобальный класс для кнопок PrimeNG в стиле Material "raised" (elevated) со скруглением
+.p-button-raised-light {
+  background: var(--surface-card, #ffffff) !important;
+  border: none !important;
+  color: rgb(0, 127, 255) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 9999px !important; // полное скругление
+  transition: all 0.3s ease;
+  padding: 0.75rem 1.25rem !important;
+
+  .p-button-label {
+    font-weight: 500;
+  }
+
+  .p-button-icon {
+    color: rgb(0, 127, 255) !important;
+    margin-right: 0.5rem;
+  }
+
+  &:hover {
+    background: var(--surface-border) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  // Адаптация для тёмной темы
+  .dark-theme & {
+    background: var(--surface-card, #1e1e1e) !important;
+    color: rgb(0, 127, 255)  !important;
+    .p-button-icon {
+      color: rgb(0, 127, 255)  !important;
+    }
+    &:hover {
+      background: var(--surface-border) !important;
+    }
   }
 }
 

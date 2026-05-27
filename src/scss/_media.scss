@@ -39,8 +39,15 @@ $breakpoints: (
 
 // Миксины для диапазона
 @mixin media-between($min, $max) {
-  $min-width: if(map-has-key($breakpoints, $min), map-get($breakpoints, $min), $min);
-  $max-width: if(map-has-key($breakpoints, $max), map-get($breakpoints, $max), $max);
+  $min-width: $min;
+  $max-width: $max;
+
+  @if map-has-key($breakpoints, $min) {
+    $min-width: map-get($breakpoints, $min);
+  }
+  @if map-has-key($breakpoints, $max) {
+    $max-width: map-get($breakpoints, $max);
+  }
 
   @media (min-width: $min-width) and (max-width: #{$max-width - 0.02px}) {
     @content;
@@ -80,8 +87,6 @@ $breakpoints: (
     @content;
   }
 }
-
-// Удаляем media-reduced-data, так как эта функция не поддерживается
 
 // Миксины для темных/светлых тем
 @mixin media-dark-theme {
