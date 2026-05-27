@@ -1,36 +1,44 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BehaviorSubject, catchError, finalize, of, Subject, takeUntil, tap } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {BehaviorSubject, catchError, finalize, of, Subject, takeUntil, tap} from 'rxjs';
 
 // PrimeNG Modules
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { DialogModule } from 'primeng/dialog';
-import { ToastModule } from 'primeng/toast';
-import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { TooltipModule } from 'primeng/tooltip';
-import { AvatarModule } from 'primeng/avatar';
-import { MessageService } from 'primeng/api';
-import { ConfirmationService } from 'primeng/api';
-import { RippleModule } from 'primeng/ripple';
+import {TableModule} from 'primeng/table';
+import {ButtonModule} from 'primeng/button';
+import {InputTextModule} from 'primeng/inputtext';
+import {DialogModule} from 'primeng/dialog';
+import {ToastModule} from 'primeng/toast';
+import {ConfirmPopupModule} from 'primeng/confirmpopup';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {TooltipModule} from 'primeng/tooltip';
+import {AvatarModule} from 'primeng/avatar';
+import {ConfirmationService, MessageService} from 'primeng/api';
+import {RippleModule} from 'primeng/ripple';
+import {DialogService} from 'primeng/dynamicdialog';
 
 // Модели и сервисы
-import {IUser, IUserUpdateDTO} from '../../../users/models/user.interface';
-import { UsersService } from '../../../users/services/users.service';
+import {IUser} from '../../../users/models/user.interface';
+import {UsersService} from '../../../users/services/users.service';
 import {
   InfiniteScrollContainerComponent
 } from '../../../../shared/common-ui/components-ui/infinite-scroll-container/infinite-scroll-container.component';
+import {AddUserModalComponent} from '../../components/add-user/add-user-modal.component';
+import {UpdateUserModalComponent} from '../../components/update-user/update-user-modal.component';
+
 
 @Component({
   selector: 'dashboard-users',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
     TableModule,
     ButtonModule,
     InputTextModule,
@@ -43,7 +51,7 @@ import {
     RippleModule,
     InfiniteScrollContainerComponent,
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService, ConfirmationService, DialogService],
   templateUrl: './dashboard-users.component.html',
   styleUrls: ['./dashboard-users.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -54,6 +62,7 @@ export class DashboardUsersComponent implements OnInit, OnDestroy {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private cdr = inject(ChangeDetectorRef);
+  private dialogService = inject(DialogService);
   private destroy$ = new Subject<void>();
 
   // Данные и состояния
@@ -72,12 +81,6 @@ export class DashboardUsersComponent implements OnInit, OnDestroy {
   private currentPage = 0;
   private readonly itemsPerPage = 20;
 
-  // Для модальных окон
-  displayAddDialog = false;
-  displayEditDialog = false;
-  selectedUser: IUser | null = null;
-  userForm = this.createFormGroup();
-
   // Сохраняем позицию скролла
   private scrollPosition = 0;
 
@@ -90,26 +93,6 @@ export class DashboardUsersComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  private createFormGroup() {
-    return new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      name: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required),
-      role: new FormControl('', Validators.required),
-      avatar: new FormControl(''),
-    });
-  }
-
-  // Метод для получения URL аватара
-  getAvatarUrl(user: IUser): string {
-    if (user.avatar && user.avatar.trim()) {
-      return user.avatar;
-    }
-    // SVG заглушка с инициалами
-    const initials = user.name ? user.name.charAt(0).toUpperCase() : 'U';
-    return `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"%3E%3Crect width="40" height="40" fill="%234C9AFF"/%3E%3Ctext x="50%25" y="50%25" font-size="20" fill="white" text-anchor="middle" dy=".3em"%3E${initials}%3C/text%3E%3C/svg%3E`;
   }
 
   // Метод для получения инициалов
@@ -212,81 +195,53 @@ export class DashboardUsersComponent implements OnInit, OnDestroy {
     this.loadMoreUsers();
   }
 
-  // Модальное окно добавления
+  // Открытие модального окна добавления пользователя
   openAddUserModal(): void {
-    this.userForm.reset();
-    this.displayAddDialog = true;
-  }
+    const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+    const ref = this.dialogService.open(AddUserModalComponent, {
+      header: 'Add User',        // заголовок
+      closable: true,            // показать кнопку закрытия
+      closeOnEscape: true,       // закрытие по ESC
+      width: '500px',
+      modal: true,
+      draggable: false,
+      resizable: false,
+      data: {theme: currentTheme}
+    });
 
-  addUser(): void {
-    if (this.userForm.invalid) return;
-
-    const formValue = this.userForm.value;
-    const newUser: IUserUpdateDTO = {
-      email: formValue.email || '',
-      name: formValue.name || '',
-      password: formValue.password || '',
-      role: formValue.role || '',
-      avatar: formValue.avatar || ''
-    };
-
-    this.usersService.postUsers([newUser]).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: () => {
-        this.messageService.add({ severity: 'success', summary: 'Успех', detail: 'Пользователь создан' });
-        this.displayAddDialog = false;
+    ref?.onClose.subscribe((result: string) => {
+      if (result === 'success') {
         this.loadInitialUsers();
-      },
-      error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Ошибка', detail: 'Не удалось создать пользователя' });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Успех',
+          detail: 'Пользователь создан',
+        });
       }
     });
   }
 
-  // Модальное окно редактирования
+  // Открытие модального окна редактирования пользователя
   openEditUserModal(user: IUser): void {
-    this.selectedUser = user;
-    this.userForm.patchValue({
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      avatar: user.avatar,
-      password: ''
+    const ref = this.dialogService.open(UpdateUserModalComponent, {
+      header: 'Edit User',
+      closable: true,            // показать кнопку закрытия
+      closeOnEscape: true,       // закрытие по ESC
+      width: '500px',
+      modal: true,
+      draggable: false,
+      resizable: false,
+      data: {user},
     });
-    this.displayEditDialog = true;
-  }
 
-  updateUser(): void {
-    if (this.userForm.invalid || !this.selectedUser) return;
-
-    const formValue = this.userForm.value;
-
-    // Создаем объект без password, если он не введен
-    const updatedData: IUserUpdateDTO = {
-      email: formValue.email || '',
-      name: formValue.name || '',
-      role: formValue.role || '',
-      avatar: formValue.avatar || '',
-      password: formValue.password || '',
-    };
-
-    // Добавляем password только если он введен
-    if (formValue.password === '' && formValue.password.trim()) {
-      updatedData.password = '0000';
-    }
-
-    this.usersService.putUser(this.selectedUser.id, updatedData).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: () => {
-        this.messageService.add({ severity: 'success', summary: 'Успех', detail: 'Пользователь обновлён' });
-        this.displayEditDialog = false;
-        this.selectedUser = null;
+    ref?.onClose.subscribe((result: string) => {
+      if (result === 'success') {
         this.loadInitialUsers();
-      },
-      error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Ошибка', detail: 'Не удалось обновить пользователя' });
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Успех',
+          detail: 'Пользователь обновлён',
+        });
       }
     });
   }
@@ -302,24 +257,16 @@ export class DashboardUsersComponent implements OnInit, OnDestroy {
           takeUntil(this.destroy$)
         ).subscribe({
           next: () => {
-            this.messageService.add({ severity: 'success', summary: 'Удалено', detail: 'Пользователь удалён' });
+            this.messageService.add({severity: 'success', summary: 'Удалено', detail: 'Пользователь удалён'});
             const current = this.usersSubject.value;
             this.usersSubject.next(current.filter(u => u.id !== userId));
             this.cdr.markForCheck();
           },
           error: () => {
-            this.messageService.add({ severity: 'error', summary: 'Ошибка', detail: 'Не удалось удалить пользователя' });
+            this.messageService.add({severity: 'error', summary: 'Ошибка', detail: 'Не удалось удалить пользователя'});
           }
         });
       }
     });
-  }
-
-  // Отмена модалок
-  closeDialogs(): void {
-    this.displayAddDialog = false;
-    this.displayEditDialog = false;
-    this.selectedUser = null;
-    this.userForm.reset();
   }
 }

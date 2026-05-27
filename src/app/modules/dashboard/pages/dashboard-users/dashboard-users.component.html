@@ -14,7 +14,7 @@
     @if (initialLoading$ | async) {
       <div class="initial-loading">
         <p-progressSpinner></p-progressSpinner>
-        <span>Loading users...</span>
+        <span>Загрузка элементов...</span>
       </div>
     }
 
@@ -25,10 +25,10 @@
         [hasMore]="(hasMore$ | async) || false"
         [isScrollable]="true"
         [maxHeight]="'70vh'"
-        [loadingText]="'Loading more products...'"
-        [noMoreText]="'All products loaded'"
+        [loadingText]="'Загрузить ещё...'"
+        [noMoreText]="'Все элементы загружены'"
         (loadMore)="onLoadMore()">
-      <!-- Таблица пользователей -->
+        <!-- Таблица пользователей -->
         <p-table
           [value]="(users$ | async) || []"
           dataKey="id"
@@ -49,7 +49,6 @@
                   <p-sortIcon field="role"></p-sortIcon>
                 </div>
               </th>
-              <!-- Аватар теперь сразу после роли -->
               <th>Avatar</th>
               <th pSortableColumn="name">
                 <div class="th-content">
@@ -103,14 +102,14 @@
                   <p-button
                     icon="pi pi-pencil"
                     styleClass="p-button-rounded p-button-text p-button-sm"
-                    pTooltip="Edit user"
+                    pTooltip="Изменить"
                     tooltipPosition="top"
                     (click)="openEditUserModal(user)">
                   </p-button>
                   <p-button
                     icon="pi pi-trash"
                     styleClass="p-button-rounded p-button-text p-button-danger p-button-sm"
-                    pTooltip="Delete user"
+                    pTooltip="Удалить"
                     tooltipPosition="top"
                     (click)="deleteUser($event, user.id)">
                   </p-button>
@@ -120,17 +119,17 @@
           </ng-template>
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="7" class="empty-table-message">No users</td>
+              <td colspan="7" class="empty-table-message">Нет элементов</td>
             </tr>
           </ng-template>
         </p-table>
-    </infinite-scroll-container-ui>
+      </infinite-scroll-container-ui>
       <!-- Состояние пустого списка -->
       @if ((users$ | async)?.length === 0) {
         <div class="empty-state">
           <i class="pi pi-users empty-icon"></i>
-          <h3>No users found</h3>
-          <p>Get started by adding your first user</p>
+          <h3>Нет элементов для загрузки</h3>
+          <p>Нажми кнопку "Add User" чтобы добавить первого пользователя!</p>
           <p-button
             label="Add User"
             icon="pi pi-plus"
@@ -143,80 +142,3 @@
   </div>
   <p-toast position="top-right"></p-toast>
   <p-confirmpopup></p-confirmpopup>
-
-  <!-- Модальное окно добавления пользователя  -->
-  <p-dialog
-    header="Add User"
-    [(visible)]="displayAddDialog"
-    [modal]="true"
-    [style]="{width: '500px'}"
-    [draggable]="false"
-    [resizable]="false">
-    <form [formGroup]="userForm" (ngSubmit)="addUser()">
-      <div class="form-field">
-        <label for="email">Email *</label>
-        <input id="email" type="email" pInputText formControlName="email" class="w-full">
-        @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
-          <small class="p-error">Введите корректный email</small>
-        }
-      </div>
-      <div class="form-field">
-        <label for="name">Name *</label>
-        <input id="name" type="text" pInputText formControlName="name" class="w-full">
-      </div>
-      <div class="form-field">
-        <label for="password">Password *</label>
-        <input id="password" type="password" pInputText formControlName="password" class="w-full">
-      </div>
-      <div class="form-field">
-        <label for="role">Role *</label>
-        <input id="role" type="text" pInputText formControlName="role" class="w-full">
-      </div>
-      <div class="form-field">
-        <label for="avatar">Avatar (URL)</label>
-        <input id="avatar" type="text" pInputText formControlName="avatar" class="w-full">
-      </div>
-    </form>
-    <ng-template pTemplate="footer">
-      <p-button label="Отмена" icon="pi pi-times" styleClass="p-button-text p-button-raised-light" (click)="closeDialogs()"></p-button>
-      <p-button label="Создать" icon="pi pi-check" styleClass="p-button-primary p-button-raised-light" (click)="addUser()" [disabled]="userForm.invalid"></p-button>
-    </ng-template>
-  </p-dialog>
-
-  <!-- Модальное окно редактирования пользователя -->
-  <p-dialog
-    header="Редактировать пользователя"
-    [(visible)]="displayEditDialog"
-    [modal]="true"
-    [style]="{width: '500px'}"
-    [draggable]="false"
-    [resizable]="false">
-    <form [formGroup]="userForm" (ngSubmit)="updateUser()">
-      <div class="form-field">
-        <label for="edit-email">Email *</label>
-        <input id="edit-email" type="email" pInputText formControlName="email" class="w-full">
-      </div>
-      <div class="form-field">
-        <label for="edit-name">Name *</label>
-        <input id="edit-name" type="text" pInputText formControlName="name" class="w-full">
-      </div>
-      <div class="form-field">
-        <label for="edit-password">Password</label>
-        <input id="edit-password" type="password" pInputText formControlName="password" class="w-full">
-        <small>Оставьте пустым, если не хотите менять пароль</small>
-      </div>
-      <div class="form-field">
-        <label for="edit-role">Role *</label>
-        <input id="edit-role" type="text" pInputText formControlName="role" class="w-full">
-      </div>
-      <div class="form-field">
-        <label for="edit-avatar">Avatar (URL)</label>
-        <input id="edit-avatar" type="text" pInputText formControlName="avatar" class="w-full">
-      </div>
-    </form>
-    <ng-template pTemplate="footer">
-      <p-button label="Отмена" icon="pi pi-times" styleClass="p-button-text p-button-raised-light" (click)="closeDialogs()"></p-button>
-      <p-button label="Сохранить" icon="pi pi-check" styleClass="p-button-primary p-button-raised-light" (click)="updateUser()" [disabled]="userForm.invalid"></p-button>
-    </ng-template>
-  </p-dialog>
-</div>
