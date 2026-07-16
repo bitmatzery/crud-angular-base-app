@@ -156,11 +156,12 @@ export class DataInitializationService {
 
     backupCategories.forEach(backupCat => {
       const exists = currentCategories.some(currentCat =>
-        currentCat.name.toLowerCase() === backupCat.name.toLowerCase()
+        currentCat.name.toLowerCase() === backupCat.name.toLowerCase() &&
+        currentCat.slug === backupCat.slug
       );
 
       if (!exists) {
-        missing.push(backupCat.name);
+        missing.push(`${backupCat.name} (slug: ${backupCat.slug})`);
       }
     });
 
@@ -175,11 +176,12 @@ export class DataInitializationService {
 
     backupProducts.forEach(backupProd => {
       const exists = currentProducts.some(currentProd =>
-        currentProd.title.toLowerCase() === backupProd.title.toLowerCase()
+        currentProd.title.toLowerCase() === backupProd.title.toLowerCase() &&
+        currentProd.slug === backupProd.slug
       );
 
       if (!exists) {
-        missing.push(backupProd.title);
+        missing.push(`${backupProd.title} (slug: ${backupProd.slug})`);
       }
     });
 
