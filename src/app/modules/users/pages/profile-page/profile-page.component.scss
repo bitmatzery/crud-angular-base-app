@@ -1,0 +1,155 @@
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+// Дополнительные глобальные улучшения
+:host {
+  display: block;
+  background: inherit;
+}
+
+// Кастомные тени
+.shadow-3xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+// Анимация для загрузки
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.animate-pulse {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+// Для улучшения доступности
+input, select, button {
+  &:focus {
+    outline: none;
+    ring: 2px solid #6366f1;
+  }
+}
+
+// Основной контейнер профиля
+.profile-container {
+  background-color: var(--app-background);
+  color: var(--app-text);
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+// Карточки
+.profile-card {
+  background-color: var(--app-card-bg);
+  color: var(--app-text);
+  box-shadow: var(--shadow-md);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+  border-radius: 1rem;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+// Заголовки карточек
+.profile-card-header {
+  background: var(--app-surface);
+  border-bottom: 1px solid var(--app-border);
+  padding: 1rem 1.5rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+// Поля ввода данных профиля
+.profile-input {
+  background-color: var(--app-input-bg);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  }
+}
+
+// Селект (для роли)
+.profile-select {
+  background-color: var(--app-input-bg);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  }
+}
+
+// Кнопки
+.profile-btn {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.2s;
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// Чекбокс подписки
+.profile-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--accent-primary);
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+// Детали заказа
+.order-details {
+  border: 1px solid var(--app-border);
+  background-color: var(--app-surface);
+  transition: background-color 0.3s, border-color 0.3s;
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+// Статус заказа
+.order-status {
+  background-color: #4caf50;
+  color: white;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+}
