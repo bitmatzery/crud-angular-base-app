@@ -14,6 +14,7 @@ export class ThemeService implements OnDestroy {
   public currentTheme$ = this.currentThemeSubject.asObservable();
   private mediaQuery: MediaQueryList;
   private mediaQuerySubscription?: Subscription;
+  private mediaQueryListener: (() => void) | null = null;
 
   constructor(rendererFactory: RendererFactory2) {
     this.renderer = rendererFactory.createRenderer(null, null);
@@ -39,6 +40,7 @@ export class ThemeService implements OnDestroy {
       sameSite: 'Strict',
       secure: window.location.protocol === 'https:'
     });
+    this.updateTailwindDarkClass(theme);
   }
 
   private applyThemeToElements(theme: Theme): void {
@@ -64,12 +66,24 @@ export class ThemeService implements OnDestroy {
       elementsToUpdate.forEach(el => {
         this.renderer.addClass(el, 'auto-theme');
       });
+      this.mediaQueryListener = () => this.updateTailwindDarkClass('auto');
       // Добавляем слушатель для изменений системной темы
       this.mediaQuery.addEventListener('change', () => this.handleSystemThemeChange());
     } else {
       elementsToUpdate.forEach(el => {
         this.renderer.addClass(el, theme + '-theme');
       });
+    }
+  }
+
+  // Обновление класса dark на html для Tailwind
+  private updateTailwindDarkClass(theme: Theme): void {
+    const html = document.documentElement;
+    const shouldBeDark = theme === 'dark' || (theme === 'auto' && this.mediaQuery.matches);
+    if (shouldBeDark) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
     }
   }
 
