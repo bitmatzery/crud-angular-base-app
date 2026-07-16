@@ -22,11 +22,15 @@ export class AuthService {
 
   private isAuthSubject = new BehaviorSubject<boolean>(false);
   private userEmailSubject = new BehaviorSubject<string | null>(null);
-  private userRoleSubject = new BehaviorSubject<string | null>(null); // Добавлено
+  private userRoleSubject = new BehaviorSubject<string | null>(null);
+  private currentUserSubject = new BehaviorSubject<UserDTO | null>(null);
 
   isAuth$ = this.isAuthSubject.asObservable();
   userEmail$ = this.userEmailSubject.asObservable();
-  userRole$ = this.userRoleSubject.asObservable(); // Добавлено
+  userRole$ = this.userRoleSubject.asObservable();
+  public currentUser$ = this.currentUserSubject.asObservable();
+
+  private readonly USER_COOKIE_KEY = 'user_data';
 
   constructor() {
     // Проверяем начальное состояние авторизации
@@ -36,11 +40,43 @@ export class AuthService {
   private checkInitialAuth() {
     const token = this.cookieService.get('token');
     const email = this.cookieService.get('userEmail');
-    const role = this.cookieService.get('userRole'); // Добавлено
+    const role = this.cookieService.get('userRole');
 
     this.isAuthSubject.next(!!token);
     this.userEmailSubject.next(email || null);
-    this.userRoleSubject.next(role || null); // Добавлено
+    this.userRoleSubject.next(role || null);
+
+    if (token) {
+      // Пытаемся восстановить пользователя из куки
+      const savedUser = this.loadUserFromCookie();
+      if (savedUser) {
+        this.currentUserSubject.next(savedUser);
+        // синхронизируем email и роль из сохранённого пользователя
+        this.userEmailSubject.next(savedUser.email);
+        this.userRoleSubject.next(savedUser.role);
+        this.cookieService.set('userEmail', savedUser.email);
+        this.cookieService.set('userRole', savedUser.role);
+      }
+      // В любом случае обновляем данные через API
+      this.getMe().subscribe();
+    }
+  }
+
+  private loadUserFromCookie(): UserDTO | null {
+    const data = this.cookieService.get(this.USER_COOKIE_KEY);
+    if (data) {
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        console.warn('Failed to parse user data from cookie', e);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  private saveUserToCookie(user: UserDTO): void {
+    this.cookieService.set(this.USER_COOKIE_KEY, JSON.stringify(user), 1, '/'); // кука на 1 день
   }
 
   get isAuth() {
@@ -48,7 +84,6 @@ export class AuthService {
       this.token = this.cookieService.get('token');
       this.refreshToken = this.cookieService.get('refreshToken');
     }
-
     return !!this.token;
   }
 
@@ -59,7 +94,13 @@ export class AuthService {
           console.log('profile.role = ', profile.role);
           this.userRoleSubject.next(profile.role); // Сохраняем роль
           this.cookieService.set('userRole', profile.role); // Сохраняем в cookie
+          this.userEmailSubject.next(profile.email);
+          this.cookieService.set('userEmail', profile.email);
+          this.currentUserSubject.next(profile);
+          this.saveUserToCookie(profile);
+          // this.cookieService.set('currentUser', JSON.stringify(profile), 1, '/'); // кука на 1 день
         }),
+        catchError(err => throwError(() => err))
       );
   }
 
@@ -97,6 +138,21 @@ export class AuthService {
           return throwError(err);
         })
       );
+  }
+
+  // Обновление локальных данных пользователя (без вызова API)
+  updateLocalUser(updatedUser: UserDTO): void {
+    this.currentUserSubject.next(updatedUser);
+    this.userEmailSubject.next(updatedUser.email);
+    this.userRoleSubject.next(updatedUser.role);
+    this.cookieService.set('userEmail', updatedUser.email);
+    this.cookieService.set('userRole', updatedUser.role);
+    this.cookieService.set('currentUser', JSON.stringify(updatedUser), 1, '/');
+  }
+
+  // Синхронное получение текущего пользователя
+  getCurrentUser(): UserDTO | null {
+    return this.currentUserSubject.value;
   }
 
   logout() {
