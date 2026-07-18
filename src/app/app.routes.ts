@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { canActivateAuth } from './core/auth/access.guard';
 import { adminGuard } from './core/auth/admin.guard';
-import {DashboardUsersComponent} from '@store/dashboard/users';
 
 export const appRoutes: Routes = [
   {
@@ -31,6 +30,11 @@ export const appRoutes: Routes = [
     path: 'users',
     loadComponent: () => import('@store/users').then(c => c.UsersListContainerComponent),
     canActivate: [canActivateAuth, adminGuard],
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('@store/profile').then(m => m.ProfilePageComponent),
+    canActivate: [canActivateAuth],
   },
   {
     path: 'dashboard',
