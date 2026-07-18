@@ -1,11 +1,12 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
 
 export interface CartItem {
   productId: number;
   quantity: number;
-  addedAt: Date;
+  addedAt: string;
 }
 
 export interface CartItemDetails {
@@ -18,12 +19,11 @@ export interface CartItemDetails {
   category?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CartService {
-  private readonly CART_STORAGE_KEY = 'AlwaysMarket_cart';
-  private cartItemsSubject = new BehaviorSubject<CartItem[]>(this.getCartFromStorage());
+  private readonly CART_COOKIE_KEY = 'AlwaysMarket_cart';
+  private cookieService = inject(CookieService);
+  private cartItemsSubject = new BehaviorSubject<CartItem[]>(this.getCartFromCookies());
 
   cartItems$ = this.cartItemsSubject.asObservable();
   cartCount$ = this.cartItems$.pipe(
@@ -31,62 +31,62 @@ export class CartService {
   );
 
   constructor() {
-    // Восстановление корзины из localStorage
+    // Восстановление корзины из Cookies
     this.initializeCart();
   }
 
   private initializeCart(): void {
-    const savedCart = this.getCartFromStorage();
+    const savedCart = this.getCartFromCookies();
     this.cartItemsSubject.next(savedCart);
   }
 
-  private getCartFromStorage(): CartItem[] {
-    try {
-      const cartJson = localStorage.getItem(this.CART_STORAGE_KEY);
-      return cartJson ? JSON.parse(cartJson) : [];
-    } catch (error) {
-      console.error('Error reading cart from localStorage:', error);
-      return [];
+  private getCartFromCookies(): CartItem[] {
+    const cartJson = this.cookieService.get(this.CART_COOKIE_KEY);
+    if (cartJson) {
+      try {
+        return JSON.parse(cartJson);
+      } catch (e) {
+        console.error('Error parsing cart cookie', e);
+        return [];
+      }
     }
+    return [];
   }
 
-  private saveCartToStorage(cartItems: CartItem[]): void {
-    try {
-      localStorage.setItem(this.CART_STORAGE_KEY, JSON.stringify(cartItems));
-      this.cartItemsSubject.next(cartItems);
-      // Эмитируем событие для обновления в других компонентах
-      window.dispatchEvent(new Event('cartUpdated'));
-    } catch (error) {
-      console.error('Error saving cart to localStorage:', error);
-    }
+  private saveCartToCookies(cartItems: CartItem[]): void {
+    const cartJson = JSON.stringify(cartItems);
+    // Устанавливаем куку на 30 дней с путем /
+    this.cookieService.set(this.CART_COOKIE_KEY, cartJson, 30, '/');
+    this.cartItemsSubject.next(cartItems);
+    // Эмитируем событие для обновления в других компонентах
+    window.dispatchEvent(new Event('cartUpdated'));
   }
 
   // Добавить товар в корзину
   addToCart(productId: number, quantity: number = 1): void {
-    const currentCart = this.getCartFromStorage();
+    const currentCart = this.getCartFromCookies();
     const existingItemIndex = currentCart.findIndex(item => item.productId === productId);
 
     if (existingItemIndex >= 0) {
       // Увеличиваем количество существующего товара
       currentCart[existingItemIndex].quantity += quantity;
-      currentCart[existingItemIndex].addedAt = new Date();
+      currentCart[existingItemIndex].addedAt = new Date().toISOString();
     } else {
-      // Добавляем новый товар
       currentCart.push({
         productId,
         quantity,
-        addedAt: new Date()
+        addedAt: new Date().toISOString()
       });
     }
 
-    this.saveCartToStorage(currentCart);
+    this.saveCartToCookies(currentCart);
   }
 
   // Удалить товар из корзины
   removeFromCart(productId: number): void {
-    const currentCart = this.getCartFromStorage();
+    const currentCart = this.getCartFromCookies();
     const updatedCart = currentCart.filter(item => item.productId !== productId);
-    this.saveCartToStorage(updatedCart);
+    this.saveCartToCookies(updatedCart);
   }
 
   // Обновить количество товара
@@ -96,24 +96,24 @@ export class CartService {
       return;
     }
 
-    const currentCart = this.getCartFromStorage();
+    const currentCart = this.getCartFromCookies();
     const itemIndex = currentCart.findIndex(item => item.productId === productId);
 
     if (itemIndex >= 0) {
       currentCart[itemIndex].quantity = quantity;
-      currentCart[itemIndex].addedAt = new Date();
-      this.saveCartToStorage(currentCart);
+      currentCart[itemIndex].addedAt = new Date().toISOString();
+      this.saveCartToCookies(currentCart);
     }
   }
 
   // Получить все товары в корзине
   getCartItems(): CartItem[] {
-    return this.getCartFromStorage();
+    return this.getCartFromCookies();
   }
 
   // Получить количество конкретного товара
   getItemQuantity(productId: number): number {
-    const cart = this.getCartFromStorage();
+    const cart = this.getCartFromCookies();
     const item = cart.find(i => i.productId === productId);
     return item ? item.quantity : 0;
   }
@@ -125,18 +125,18 @@ export class CartService {
 
   // Очистить корзину
   clearCart(): void {
-    this.saveCartToStorage([]);
+    this.saveCartToCookies([]);
   }
 
   // Получить общее количество товаров
   getTotalItemsCount(): number {
-    const cart = this.getCartFromStorage();
+    const cart = this.getCartFromCookies();
     return cart.reduce((total, item) => total + item.quantity, 0);
   }
 
-  // Получить общую стоимость (нужен сервис продуктов для расчета)
+  // Получить общую стоимость
   getTotalPrice(productsMap: Map<number, { price: number }>): number {
-    const cart = this.getCartFromStorage();
+    const cart = this.getCartFromCookies();
     return cart.reduce((total, item) => {
       const product = productsMap.get(item.productId);
       return total + (product ? product.price * item.quantity : 0);
@@ -145,7 +145,7 @@ export class CartService {
 
   // Получить количество уникальных товаров
   getUniqueItemsCount(): number {
-    return this.getCartFromStorage().length;
+    return this.getCartFromCookies().length;
   }
 
   // Подписка на изменения корзины
