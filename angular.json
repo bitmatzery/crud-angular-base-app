@@ -47,7 +47,8 @@
               }
             ],
             "styles": [
-              "src/scss/styles.scss"
+              "src/scss/styles.scss",
+              "src/tailwind.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
