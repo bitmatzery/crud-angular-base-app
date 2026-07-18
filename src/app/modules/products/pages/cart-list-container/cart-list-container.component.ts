@@ -9,12 +9,12 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Router} from '@angular/router';
-
-import {CartListComponent} from '../../../../shared/common-ui/components-ui/cart-list/cart-list.component';
-import {CartItemDetails, CartService} from '../../../../core/cart/cart.service';
-import {ProductsService} from '../../services/data-services/products.service';
 import {forkJoin} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {CartListComponent} from '../../../../shared/common-ui/components-ui/cart-list/cart-list.component';
+import {CartItemDetails, CartService} from '../../../../core/cart/cart.service';
+import { OrderService } from '../../../../core/cart/order.service';
+import {ProductsService} from '../../services/data-services/products.service';
 
 @Component({
   selector: 'cart-list-container',
@@ -38,6 +38,7 @@ export class CartListContainerComponent implements OnInit {
   private router = inject(Router);
   private cartService = inject(CartService);
   private productsService = inject(ProductsService);
+  private orderService = inject(OrderService);
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
 
@@ -139,11 +140,23 @@ export class CartListContainerComponent implements OnInit {
       return;
     }
 
-    this.snackBar.open('Функция оформления заказа в разработке', 'OK', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top'
+    // Сохраняем заказ
+    const orderItems = this.cartItemsDetails.map(item => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      title: item.title,
+      price: item.price,
+      image: item.image
+    }));
+
+    this.orderService.addOrder({
+      items: orderItems,
+      total: this.total,
+      status: 'completed'
     });
+
+    this.cartService.clearCart();
+    this.snackBar.open('Заказ оформлен! Спасибо за покупку', 'OK', { duration: 3000 });
   }
 
   onContinueShopping(): void {
