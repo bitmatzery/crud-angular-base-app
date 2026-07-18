@@ -1,22 +1,51 @@
-<div class="user-card">
-  <div class="user-card__body">
-    <div class="user-card__body-text">
-      <p>ID:</p>
-      <span>{{ user.id }}</span>
-      <p>Роль:</p>
-      <span>{{ user.role }}</span>
-      <p>Имя:</p>
-      <span>{{ user.name }}</span>
-      <p>Эл. почта:</p>
-      <span>{{ user.email }}</span>
-      <p>Дата регистрации:</p>
-      <span>{{ user.creationAt | date: "short"}}</span>
+<div class="user-card
+            bg-[var(--app-card-bg)]
+            rounded-xl
+            shadow-[var(--shadow-sm)]
+            transition-all
+            duration-300
+            hover:translate-y-[-4px]
+            hover:shadow-[var(--shadow-md)]
+            max-w-lg
+            w-full
+            m-8">
+  <div class="user-card__body flex flex-row gap-2 p-4 items-center">
+    <!-- Текстовая часть -->
+    <div class="user-card__body-text basis-3xs text-[var(--app-text)]">
+      <p class="font-semibold text-base mb-1">ID:</p>
+      <span class="text-sm">{{ user.id }}</span>
+      <p class="font-semibold text-base mt-2 mb-1">Роль:</p>
+      <span class="text-sm">{{ user.role }}</span>
+      <p class="font-semibold text-base mt-2 mb-1">Имя:</p>
+      <span class="text-sm">{{ user.name }}</span>
+      <p class="font-semibold text-base mt-2 mb-1">Эл. почта:</p>
+      <span class="text-sm">{{ user.email }}</span>
+      <p class="font-semibold text-base mt-2 mb-1">Дата регистрации:</p>
+      <span class="text-sm">{{ user.creationAt | date: "short" }}</span>
     </div>
-    <div class="user-card__body-avatar">
-      <img [src]="user.avatar" alt="user_avatar">
+
+    <!-- Аватар -->
+    <div class="user-card__body-avatar max-w-[256px] max-h-[256px] flex items-center justify-center">
+      <img [src]="user.avatar" alt="user_avatar"
+           class="max-w-full max-h-full object-contain block">
     </div>
   </div>
-  <div class="button-container">
-    <p-button (click)="OnDeleteUser(user.id)" label="Удалить пользователя"/>
+
+  <!-- Кнопки действий -->
+  <div class="button-container flex justify-center gap-2 p-4">
+    <button class="px-4 py-2 rounded-full font-semibold text-sm transition-all duration-300
+                   bg-gradient-to-r from-blue-500 to-indigo-600
+                   hover:from-blue-600 hover:to-indigo-700
+                   active:scale-95 shadow-md text-white"
+            (click)="OnEditUser($event, user.id)">
+      Редактировать пользователя
+    </button>
+    <button class="px-4 py-2 rounded-full font-semibold text-sm transition-all duration-300
+                   bg-gradient-to-r from-rose-500 to-red-600
+                   hover:from-rose-600 hover:to-red-700
+                   active:scale-95 shadow-md text-white"
+            (click)="OnDeleteUser($event, user.id)">
+      Удалить пользователя
+    </button>
   </div>
 </div>
