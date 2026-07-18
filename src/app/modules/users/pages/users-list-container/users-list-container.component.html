@@ -1,9 +1,11 @@
 <!-- <ng-container *ngIf="users$ | ngrxPush as users"> -->
+<p-confirmDialog></p-confirmDialog>
 @if (filteredUsers$ | async; as users) {
   <users-list-ui
-    [users] = "users"
-    (deleteUser)="OnDeleteUser($event)"
-    (filterUsers)="onFilteredUsersAndNavigate($event)"
+    [users]       = "users"
+    (deleteUser)  = "OnDeleteUser($event)"
+    (editUser)    = "OnEditUser($event)"
+    (filterUsers) = "OnFilteredUsersAndNavigate($event)"
     >
   </users-list-ui>
 } @else {

@@ -1,19 +1,22 @@
 <ng-container>
+  <div class="container-app">
   <div class="container">
-    <h1>Список Пользователей</h1>
+    <h1 class="text-center py-4">Список Пользователей</h1>
     <users-list-filter
       (filterUsers)="OnFilteredUsers($event)"
     ></users-list-filter>
-    <div class="cards">
+    <div class="cards grid grid-cols-2">
       @for (user of users; track user) {
         <div class="card">
           <users-user-card-ui
-            [user] = user
-            (deleteUser)="OnDeleteUser($event)"
+            [user]       = user
+            (deleteUser) = "OnDeleteUser($event)"
+            (editUser)   = "OnEditUser($event)"
             >
           </users-user-card-ui>
         </div>
       }
     </div>
+  </div>
   </div>
 </ng-container>
