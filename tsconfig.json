@@ -25,6 +25,9 @@
       "@store/users": [
         "app/modules/users/pages/users-list-container/users-list-container.component.ts"
       ],
+      "@store/profile": [
+        "app/modules/users/pages/profile-page/profile-page.component.ts"
+      ],
       "@store/dashboard": [
         "app/modules/dashboard/pages/dashboard-container/dashboard-container.component.ts"
       ],
