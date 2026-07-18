@@ -252,6 +252,7 @@ export class DashboardUsersComponent implements OnInit, OnDestroy {
       target: event.target as EventTarget,
       message: 'Вы уверены, что хотите удалить этого пользователя?',
       icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
         this.usersService.deleteUser(userId).pipe(
           takeUntil(this.destroy$)
